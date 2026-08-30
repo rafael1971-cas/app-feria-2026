@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Feria Tocina-Rosales 2026</title>
     
-    <!-- CONFIGURACIÓN DEL ICONO PARA EL MÓVIL (PWA) -->
+    <!-- CONFIGURACIÓN PWA / ICONO APP -->
     <link rel="icon" type="image/jpeg" href="1000834195.jpeg">
     <link rel="apple-touch-icon" href="1000834195.jpeg">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,7 +13,6 @@
     <meta name="apple-mobile-web-app-title" content="La Premierr">
     <meta name="theme-color" content="#b91c1c">
     
-    <!-- MANIFEST DIRECTO PARA EL ICONO AL INSTALAR -->
     <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Feria%202026%20Tocina-Rosales%22%2C%22short_name%22%3A%22La%20Premierr%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23b91c1c%22%2C%22theme_color%22%3A%22%23b91c1c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%221000834195.jpeg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%7D%5D%7D">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -36,7 +35,7 @@
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-2">¿Reiniciar la aplicación?</h3>
             <p class="text-sm text-gray-600 mb-6 leading-relaxed">
-                La aplicación se reiniciará por completo a cero como antes de su primer uso. Se borrarán los tickets, el historial y el saldo volverá a los <strong>360,00 €</strong> iniciales.
+                Se borrarán todos los tickets registrados y el saldo volverá a los <strong>360,00 €</strong> iniciales. Tu nombre de socio se mantendrá guardado.
             </p>
             <div class="flex flex-col gap-3">
                 <button onclick="executeReset()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-base">
@@ -110,7 +109,7 @@
         <div class="bg-red-700 text-white p-6 rounded-b-3xl shadow-md">
             <div class="flex justify-between items-center mb-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-xs bg-red-800/80 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold text-red-200">Socio</span>
+                    <span class="text-xs bg-red-800/80 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold text-red-200">Socio:</span>
                     <span id="dash-name" class="font-bold text-lg">Rafael y Natalia</span>
                 </div>
                 <button onclick="openResetModal()" title="Reiniciar datos" class="text-red-200 hover:text-white bg-red-800/50 hover:bg-red-800 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors">
@@ -122,14 +121,15 @@
         </div>
 
         <div class="flex-1 p-4 overflow-y-auto pb-6">
-            <div class="flex gap-4 mb-6">
-                <button onclick="openTpv()" class="flex-1 bg-gray-900 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform flex flex-col items-center justify-center gap-2">
+            <!-- BOTONES PRINCIPALES -->
+            <div class="flex gap-3 mb-6">
+                <button onclick="openTpv()" class="flex-1 bg-gray-900 text-white font-bold py-4 px-3 rounded-2xl shadow-lg active:scale-95 transition-transform flex flex-col items-center justify-center gap-2 text-center">
                     <i class="fas fa-plus-circle text-2xl text-red-500"></i>
-                    <span>Nuevo Ticket</span>
+                    <span class="text-sm sm:text-base leading-tight">Agregar Pedido</span>
                 </button>
-                <button onclick="openRecharge()" class="flex-1 bg-white text-gray-800 border border-gray-200 font-bold py-4 rounded-2xl shadow-sm active:scale-95 transition-transform flex flex-col items-center justify-center gap-2">
+                <button onclick="openRecharge()" class="flex-1 bg-white text-gray-800 border border-gray-200 font-bold py-4 px-3 rounded-2xl shadow-sm active:scale-95 transition-transform flex flex-col items-center justify-center gap-2 text-center">
                     <i class="fas fa-wallet text-2xl text-red-600"></i>
-                    <span>Recargar</span>
+                    <span class="text-sm sm:text-base leading-tight">Recargar más saldo</span>
                 </button>
             </div>
 
@@ -158,7 +158,7 @@
     <div id="screen-recharge" class="h-full w-full bg-white flex flex-col z-30 absolute hidden-screen p-6">
         <button onclick="closeRecharge()" class="text-gray-500 mb-6 text-left font-semibold text-sm flex items-center gap-2"><i class="fas fa-arrow-left"></i> Volver al panel</button>
         <h2 class="text-2xl font-bold mb-1 text-gray-900">Comprar Tickets</h2>
-        <p class="text-gray-500 text-sm mb-6">Introduce el dinero REAL que vas a pagar. La app sumará automáticamente el 20% extra en consumición.</p>
+        <p class="text-gray-500 text-sm mb-6">Introduce el dinero REAL que vas a pagar. La app sumará automáticamente el 20% extra en tickets de consumición.</p>
         
         <div class="relative mb-6">
             <span class="absolute left-4 top-4 text-2xl text-gray-400 font-bold">€</span>
@@ -179,7 +179,7 @@
     <div id="screen-tpv" class="h-full w-full bg-gray-50 flex flex-col z-30 absolute hidden-screen">
         <div class="bg-white p-4 shadow-sm flex justify-between items-center z-10 shrink-0">
             <button onclick="closeTpv()" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
-            <span class="font-bold text-lg text-gray-800">Toma de Pedido</span>
+            <span class="font-bold text-lg text-gray-800">Agregar Pedido</span>
             <div class="w-8"></div>
         </div>
 
@@ -401,7 +401,7 @@
             }
         }
 
-        // --- REINICIO DE APLICACIÓN ---
+        // --- REINICIO INTELIGENTE ---
         function openResetModal() {
             document.getElementById('modal-reset').classList.remove('hidden-screen');
         }
@@ -411,9 +411,21 @@
         }
 
         function executeReset() {
+            const savedName = localStorage.getItem('feria_socio_name') || socioName || 'Rafael y Natalia';
             localStorage.clear();
+            
+            // Reestablecer conservando al socio y evitando pantallas iniciales
+            localStorage.setItem('feria_init', 'true');
+            localStorage.setItem('feria_socio_name', savedName);
+            localStorage.setItem('feria_balance', '360.00');
+            localStorage.setItem('feria_history', JSON.stringify({}));
+            localStorage.setItem('feria_all_tickets', JSON.stringify([]));
+            localStorage.setItem('feria_favorites', JSON.stringify([]));
+            
             closeResetModal();
-            location.reload();
+            loadData();
+            renderTpvMenu();
+            showScreen('screen-dashboard');
         }
 
         // --- RECARGA ---
