@@ -9,12 +9,39 @@
     <style>
         body { -webkit-tap-highlight-color: transparent; }
         .hidden-screen { display: none !important; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans antialiased h-screen w-screen overflow-hidden">
+<body class="bg-gray-100 text-gray-800 font-sans antialiased h-screen w-screen overflow-hidden relative">
+
+    <!-- MODAL CANTIDAD (La solución para los cubatas 🤣) -->
+    <div id="modal-qty" class="absolute inset-0 bg-black bg-opacity-70 z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl transform transition-all">
+            <h3 class="text-lg font-bold text-gray-500 mb-1">¿Cuántas unidades?</h3>
+            <h2 class="text-2xl font-bold text-red-600 mb-6" id="modal-qty-name">Producto</h2>
+            
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <button onclick="confirmQty(1)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">1</button>
+                <button onclick="confirmQty(2)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">2</button>
+                <button onclick="confirmQty(3)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">3</button>
+                <button onclick="confirmQty(4)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">4</button>
+                <button onclick="confirmQty(5)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">5</button>
+                <button onclick="confirmQty(6)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">6</button>
+                <button onclick="confirmQty(7)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">7</button>
+                <button onclick="confirmQty(8)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">8</button>
+                <button onclick="confirmQty(9)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">9</button>
+                <button onclick="confirmQty(10)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">10</button>
+                <button onclick="confirmQty(15)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">15</button>
+                <button onclick="confirmQty(20)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">20</button>
+            </div>
+            
+            <button onclick="closeQtyModal()" class="text-gray-500 font-bold py-3 w-full border-2 border-gray-200 rounded-xl active:bg-gray-100">Cancelar</button>
+        </div>
+    </div>
 
     <!-- PANTALLA 0: CRÉDITOS -->
-    <div id="screen-credits" class="h-full w-full bg-gray-900 text-white flex flex-col items-center justify-center p-6 text-center z-50 absolute hidden-screen">
+    <div id="screen-credits" class="h-full w-full bg-gray-900 text-white flex flex-col items-center justify-center p-6 text-center z-40 absolute hidden-screen">
         <h1 class="text-3xl font-bold text-red-500 mb-8">FERIA 2026</h1>
         <div class="border border-gray-600 p-6 rounded-lg bg-gray-800 mb-10 w-full max-w-sm shadow-xl">
             <p class="text-sm text-gray-400 mb-2 tracking-widest">DISEÑO - DESARROLLO - PROGRAMACIÓN</p>
@@ -27,9 +54,9 @@
     </div>
 
     <!-- PANTALLA 1: LOGIN -->
-    <div id="screen-login" class="h-full w-full bg-white flex flex-col items-center justify-center p-6 z-40 absolute hidden-screen">
+    <div id="screen-login" class="h-full w-full bg-white flex flex-col items-center justify-center p-6 z-30 absolute hidden-screen">
         <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Feria 2026<br><span class="text-red-600">Tocina-Rosales</span></h2>
-        <!-- AQUÍ ESTÁ CORREGIDO EL .jpeg -->
+        <!-- Imagen vinculada tal como está en GitHub -->
         <img src="1000834195.jpeg" alt="Logo Caseta La Premierr" class="w-48 h-48 object-contain mb-8 rounded-xl shadow-sm" onerror="this.src='https://via.placeholder.com/200?text=Logo+Caseta'">
         
         <div class="w-full max-w-xs">
@@ -43,7 +70,7 @@
     </div>
 
     <!-- PANTALLA 2: DASHBOARD -->
-    <div id="screen-dashboard" class="h-full w-full bg-gray-100 flex flex-col z-30 absolute hidden-screen">
+    <div id="screen-dashboard" class="h-full w-full bg-gray-100 flex flex-col z-20 absolute hidden-screen">
         <div class="bg-red-700 text-white p-6 rounded-b-3xl shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <span id="dash-name" class="font-semibold text-lg">Socio</span>
@@ -53,7 +80,7 @@
             <h1 class="text-5xl font-bold mt-1" id="dash-balance">0,00 €</h1>
         </div>
 
-        <div class="flex-1 p-4 overflow-y-auto pb-24">
+        <div class="flex-1 p-4 overflow-y-auto pb-6">
             <div class="flex gap-4 mb-6">
                 <button onclick="openTpv()" class="flex-1 bg-gray-900 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform flex flex-col items-center justify-center gap-2">
                     <i class="fas fa-plus-circle text-2xl"></i>
@@ -73,8 +100,8 @@
     </div>
 
     <!-- PANTALLA 3: RECARGA -->
-    <div id="screen-recharge" class="h-full w-full bg-white flex flex-col z-40 absolute hidden-screen p-6">
-        <button onclick="closeRecharge()" class="text-gray-500 mb-6 text-left"><i class="fas fa-arrow-left"></i> Volver</button>
+    <div id="screen-recharge" class="h-full w-full bg-white flex flex-col z-30 absolute hidden-screen p-6">
+        <button onclick="closeRecharge()" class="text-gray-500 mb-6 text-left"><i class="fas fa-arrow-left"></i> Volver al panel</button>
         <h2 class="text-2xl font-bold mb-2">Comprar Tickets</h2>
         <p class="text-gray-500 mb-8">Introduce el dinero REAL que vas a pagar. La app sumará automáticamente el 20% extra.</p>
         
@@ -93,39 +120,49 @@
         </button>
     </div>
 
-    <!-- PANTALLA 4: TPV -->
-    <div id="screen-tpv" class="h-full w-full bg-gray-50 flex flex-col z-40 absolute hidden-screen">
-        <div class="bg-white p-4 shadow-sm flex justify-between items-center z-10">
-            <button onclick="closeTpv()" class="text-gray-500 px-2 py-1"><i class="fas fa-times text-xl"></i></button>
+    <!-- PANTALLA 4: TPV (Estructura rediseñada) -->
+    <div id="screen-tpv" class="h-full w-full bg-gray-50 flex flex-col z-30 absolute hidden-screen">
+        <!-- Cabecera -->
+        <div class="bg-white p-4 shadow-sm flex justify-between items-center z-10 shrink-0">
+            <button onclick="closeTpv()" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
             <span class="font-bold text-lg text-gray-800">Toma de Pedido</span>
-            <button onclick="undoLastItem()" class="text-red-500 px-2 py-1" id="btn-undo"><i class="fas fa-undo"></i> Deshacer</button>
+            <div class="w-8"></div> <!-- Espaciador -->
         </div>
 
         <!-- Categorías -->
-        <div class="flex overflow-x-auto bg-white border-b py-2 px-2 gap-2 hide-scrollbar sticky top-0" id="tpv-categories">
+        <div class="flex overflow-x-auto bg-white border-b py-2 px-2 gap-2 hide-scrollbar shrink-0 shadow-sm z-10" id="tpv-categories">
             <!-- Se llena con JS -->
         </div>
 
-        <!-- Productos -->
-        <div class="flex-1 overflow-y-auto p-2 pb-32" id="tpv-products">
+        <!-- Productos (Zona scrolleable) -->
+        <div class="flex-1 overflow-y-auto p-2" id="tpv-products">
             <!-- Se llena con JS -->
         </div>
 
-        <!-- Barra inferior Ticket -->
-        <div class="bg-white border-t border-gray-200 p-4 absolute bottom-0 w-full shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-            <div class="flex justify-between items-end mb-3">
-                <div>
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Total Pedido</p>
-                    <p class="text-3xl font-bold text-gray-900" id="tpv-total">0,00 €</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-xs text-gray-500">Saldo restante tras pago:</p>
-                    <p class="text-sm font-semibold text-gray-600" id="tpv-remaining">0,00 €</p>
-                </div>
+        <!-- Barra inferior con LISTA VISUAL y Total -->
+        <div class="shrink-0 bg-white shadow-[0_-5px_15px_rgba(0,0,0,0.05)] border-t z-20 flex flex-col">
+            
+            <!-- Lista de productos en el ticket -->
+            <div id="tpv-current-list" class="max-h-40 overflow-y-auto px-4 py-2 bg-slate-50 border-b">
+                <!-- Se llena con JS -->
             </div>
-            <button onclick="confirmTicket()" id="btn-confirm-ticket" class="w-full bg-red-600 text-white font-bold py-4 rounded-xl shadow-md text-lg active:bg-red-700 transition-colors disabled:opacity-50 disabled:active:bg-red-600">
-                PAGAR TICKET
-            </button>
+
+            <!-- Botonera Final -->
+            <div class="p-4">
+                <div class="flex justify-between items-end mb-3">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Total Pedido</p>
+                        <p class="text-3xl font-bold text-gray-900" id="tpv-total">0,00 €</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Saldo restante:</p>
+                        <p class="text-sm font-semibold text-gray-600" id="tpv-remaining">0,00 €</p>
+                    </div>
+                </div>
+                <button onclick="confirmTicket()" id="btn-confirm-ticket" class="w-full bg-red-600 text-white font-bold py-4 rounded-xl shadow-md text-lg active:bg-red-700 transition-colors disabled:opacity-50 disabled:active:bg-red-600">
+                    PAGAR TICKET
+                </button>
+            </div>
         </div>
     </div>
 
@@ -133,9 +170,13 @@
         // --- BASE DE DATOS LOCAL Y ESTADO ---
         let balance = 0;
         let history = {};
-        let currentTicket = [];
+        let currentTicket = []; // Ahora guardará objetos: {name, price, qty}
         let ticketTotal = 0;
         let socioName = "";
+
+        // Variables temporales para el Modal
+        let tempProdName = "";
+        let tempProdPrice = 0;
 
         const DATA = {
             "Bebidas": [
@@ -207,7 +248,7 @@
 
         // --- NAVEGACIÓN ---
         function showScreen(id) {
-            document.querySelectorAll('body > div').forEach(el => el.classList.add('hidden-screen'));
+            document.querySelectorAll('body > div:not(#modal-qty)').forEach(el => el.classList.add('hidden-screen'));
             document.getElementById(id).classList.remove('hidden-screen');
         }
 
@@ -241,7 +282,7 @@
                 localStorage.setItem('feria_socio', 'true');
                 localStorage.setItem('feria_socio_name', socioName);
                 
-                // Si es la primera vez que entra, le damos los 360€ (300 + 20%)
+                // Saldo inicial 360€
                 if (!localStorage.getItem('feria_balance')) {
                     localStorage.setItem('feria_balance', '360.00');
                     localStorage.setItem('feria_history', JSON.stringify({}));
@@ -266,7 +307,6 @@
             document.getElementById('dash-name').innerText = socioName;
             document.getElementById('dash-balance').innerText = balance.toFixed(2).replace('.', ',') + ' €';
             
-            // Render History
             const histContainer = document.getElementById('dash-history');
             histContainer.innerHTML = '';
             
@@ -316,7 +356,6 @@
             const catContainer = document.getElementById('tpv-categories');
             const prodContainer = document.getElementById('tpv-products');
             
-            // Botón Favoritos
             let catHTML = `<button onclick="showCategory('Favs')" class="cat-btn px-4 py-2 rounded-full whitespace-nowrap font-semibold bg-red-600 text-white" id="cat-btn-Favs">⭐ Favs</button>`;
             
             Object.keys(DATA).forEach(cat => {
@@ -324,13 +363,10 @@
             });
             catContainer.innerHTML = catHTML;
 
-            // Render All Products (Hidden by default)
             let prodHTML = `<div id="cat-Favs" class="cat-group grid grid-cols-2 gap-2">`;
             Object.keys(DATA).forEach(cat => {
                 DATA[cat].forEach(prod => {
-                    if(prod.fav) {
-                        prodHTML += createProductBtn(prod);
-                    }
+                    if(prod.fav) prodHTML += createProductBtn(prod);
                 });
             });
             prodHTML += `</div>`;
@@ -347,7 +383,7 @@
 
         function createProductBtn(prod) {
             return `
-            <button onclick="addToTicket('${prod.name}', ${prod.price})" class="bg-white border border-gray-200 p-3 rounded-xl shadow-sm text-left active:bg-gray-100 flex flex-col justify-between h-24">
+            <button onclick="openQtyModal('${prod.name}', ${prod.price})" class="bg-white border border-gray-200 p-3 rounded-xl shadow-sm text-left active:bg-gray-100 flex flex-col justify-between h-24">
                 <span class="font-semibold text-gray-800 text-sm leading-tight">${prod.name}</span>
                 <span class="text-red-600 font-bold">${prod.price.toFixed(2).replace('.', ',')} €</span>
             </button>`;
@@ -374,21 +410,39 @@
         }
         function closeTpv() { showScreen('screen-dashboard'); }
 
-        function addToTicket(name, price) {
-            currentTicket.push({name, price});
-            ticketTotal += price;
-            updateTicketUI();
+        // --- NUEVA LÓGICA DE CANTIDAD ---
+        function openQtyModal(name, price) {
+            tempProdName = name;
+            tempProdPrice = price;
+            document.getElementById('modal-qty-name').innerText = name;
+            document.getElementById('modal-qty').classList.remove('hidden-screen');
+        }
+
+        function closeQtyModal() {
+            document.getElementById('modal-qty').classList.add('hidden-screen');
+        }
+
+        function confirmQty(qty) {
+            // Verificar si el producto ya está en el ticket
+            let existingProd = currentTicket.find(p => p.name === tempProdName);
+            if (existingProd) {
+                existingProd.qty += qty;
+            } else {
+                currentTicket.push({name: tempProdName, price: tempProdPrice, qty: qty});
+            }
             
-            // Pequeña vibración si el móvil lo soporta (Feedback táctil)
+            ticketTotal += (tempProdPrice * qty);
+            updateTicketUI();
+            closeQtyModal();
+            
             if (navigator.vibrate) navigator.vibrate(50);
         }
 
-        function undoLastItem() {
-            if (currentTicket.length > 0) {
-                const removed = currentTicket.pop();
-                ticketTotal -= removed.price;
-                updateTicketUI();
-            }
+        function removeLineItem(index) {
+            let item = currentTicket[index];
+            ticketTotal -= (item.price * item.qty);
+            currentTicket.splice(index, 1);
+            updateTicketUI();
         }
 
         function updateTicketUI() {
@@ -406,14 +460,32 @@
             }
 
             const btnConfirm = document.getElementById('btn-confirm-ticket');
-            const btnUndo = document.getElementById('btn-undo');
-            
+            const listEl = document.getElementById('tpv-current-list');
+
             if (currentTicket.length === 0) {
                 btnConfirm.disabled = true;
-                btnUndo.classList.add('opacity-50');
+                listEl.innerHTML = '<p class="text-center text-gray-400 text-sm py-4 italic">El ticket está vacío</p>';
             } else {
                 btnConfirm.disabled = false;
-                btnUndo.classList.remove('opacity-50');
+                let html = '';
+                currentTicket.forEach((item, index) => {
+                    let totalLine = item.price * item.qty;
+                    html += `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200 last:border-0">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-gray-800 text-sm">${item.qty}x ${item.name}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-bold text-gray-900">${totalLine.toFixed(2).replace('.', ',')} €</span>
+                            <button onclick="removeLineItem(${index})" class="text-red-500 bg-red-100 w-8 h-8 rounded-full flex items-center justify-center active:bg-red-200">
+                                <i class="fas fa-trash-alt text-sm"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                });
+                listEl.innerHTML = html;
+                // Auto-scroll hacia abajo
+                listEl.scrollTop = listEl.scrollHeight;
             }
         }
 
@@ -427,7 +499,7 @@
             balance -= ticketTotal;
             localStorage.setItem('feria_balance', balance.toString());
             
-            // Guardar en historial (Agrupado por Día: Ej. "15/8/2026")
+            // Guardar en historial
             const today = new Date().toLocaleDateString('es-ES');
             if(!history[today]) history[today] = 0;
             history[today] += ticketTotal;
