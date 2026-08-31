@@ -23,25 +23,82 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .ticket-bg { background: white; position: relative; }
+
+        /* EFECTO NEÓN PARPADEANTE */
+        @keyframes neonGlow {
+            0%, 100% {
+                box-shadow: 0 0 6px #facc15, 0 0 15px #eab308, inset 0 0 6px #fef08a;
+                border-color: #fef08a;
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 12px #f59e0b, 0 0 25px #ef4444, inset 0 0 10px #facc15;
+                border-color: #ffffff;
+                transform: scale(1.03);
+            }
+        }
+        .neon-btn {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            color: #fef08a;
+            border: 2px solid #facc15;
+            animation: neonGlow 1.6s infinite ease-in-out;
+            text-shadow: 0 0 8px rgba(250, 204, 21, 0.9);
+            cursor: pointer;
+        }
+        .neon-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22c55e, 0 0 12px #4ade80;
+            display: inline-block;
+            animation: blink 0.9s infinite alternate;
+        }
+        @keyframes blink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans antialiased h-screen w-screen overflow-hidden relative">
 
-    <!-- MODAL DE ADVERTENCIA: REINICIO A CERO -->
-    <div id="modal-reset" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-5">
+    <!-- MODAL DE CONFIGURACIÓN Y REINICIO (PERMITE ELEGIR SOLTERO O MATRIMONIO) -->
+    <div id="modal-reset" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl border border-gray-100">
-            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
-                <i class="fas fa-trash-restore-alt"></i>
+            <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl shadow-inner">
+                <i class="fas fa-user-cog"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">¿Reiniciar la aplicación?</h3>
-            <p class="text-sm text-gray-600 mb-6 leading-relaxed">
-                Se borrarán todos los tickets registrados y el saldo volverá a los <strong>360,00 €</strong> iniciales. Tu nombre de socio se mantendrá guardado.
+            <h3 class="text-xl font-bold text-gray-900 mb-1">Configurar y Reiniciar</h3>
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">
+                Elige tu modalidad para empezar la feria con tu saldo exacto:
             </p>
-            <div class="flex flex-col gap-3">
-                <button onclick="executeReset()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-base">
-                    Sí, Reiniciar a Cero
+            
+            <!-- Nombre editable -->
+            <div class="text-left mb-3">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1 ml-1">Nombre del Socio / Pareja</label>
+                <input type="text" id="reset-input-name" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2 px-3 text-sm font-semibold focus:outline-none focus:border-red-500">
+            </div>
+
+            <!-- Selector Matrimonio vs Soltero -->
+            <div class="mb-5 text-left">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1.5 ml-1">Modalidad de Cuota</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="setResetType('couple')" id="reset-btn-couple" class="p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all">
+                        <span>👫 Matrimonio</span>
+                        <span class="text-sm font-extrabold text-red-600">360,00 €</span>
+                    </button>
+                    <button type="button" onclick="setResetType('single')" id="reset-btn-single" class="p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60">
+                        <span>👤 Soltero(a)</span>
+                        <span class="text-sm font-extrabold text-gray-800">180,00 €</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2.5">
+                <button onclick="executeReset()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">
+                    Guardar y Reiniciar a Cero
                 </button>
-                <button onclick="closeResetModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl transition-all text-sm">
+                <button onclick="closeResetModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl transition-all text-xs">
                     Cancelar
                 </button>
             </div>
@@ -127,20 +184,36 @@
         </button>
     </div>
 
-    <!-- PANTALLA 1: REGISTRO DE SOCIO (SOLO PRIMER USO) -->
-    <div id="screen-login" class="h-full w-full bg-white flex flex-col items-center justify-center p-6 z-30 absolute hidden-screen">
-        <h2 class="text-2xl font-extrabold text-gray-900 mb-1 text-center">Feria 2026</h2>
-        <p class="text-sm font-semibold text-red-600 mb-6 uppercase tracking-wider">Tocina - Los Rosales</p>
+    <!-- PANTALLA 1: REGISTRO DE SOCIO -->
+    <div id="screen-login" class="h-full w-full bg-white flex flex-col items-center justify-center p-6 z-30 absolute hidden-screen overflow-y-auto">
+        <h2 class="text-2xl font-extrabold text-gray-900 mb-0.5 text-center">Feria 2026</h2>
+        <p class="text-xs font-semibold text-red-600 mb-4 uppercase tracking-wider">Tocina - Los Rosales</p>
         
-        <img src="1000834195.jpeg" alt="Logo Caseta La Premierr" class="w-44 h-44 object-contain mb-8 rounded-2xl shadow-sm" onerror="this.src='https://via.placeholder.com/200?text=Logo+Caseta'">
+        <img src="1000834195.jpeg" alt="Logo Caseta La Premierr" class="w-36 h-36 object-contain mb-4 rounded-2xl shadow-sm" onerror="this.src='1000834195.jpg'">
         
         <div class="w-full max-w-xs space-y-4">
             <div>
-                <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Nombre del Socio / Socios</label>
-                <input type="text" id="login-name" placeholder="Ej. Rafael y Natalia" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3.5 px-4 text-center text-lg font-medium focus:outline-none focus:border-red-500 transition-colors">
+                <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Nombre del Socio / Pareja</label>
+                <input type="text" id="login-name" placeholder="Ej. Rafael y Natalia" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-center text-base font-medium focus:outline-none focus:border-red-500 transition-colors">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1 uppercase">Modalidad de Socio</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="selectSocioType('couple')" id="btn-type-couple" class="p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs">
+                        <span class="text-sm">👫 Matrimonio</span>
+                        <span class="text-base font-extrabold text-red-600">360,00 €</span>
+                        <span class="text-[10px] text-gray-500 font-normal">300€ + 20%</span>
+                    </button>
+                    <button type="button" onclick="selectSocioType('single')" id="btn-type-single" class="p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-70">
+                        <span class="text-sm">👤 Soltero(a)</span>
+                        <span class="text-base font-extrabold text-gray-800">180,00 €</span>
+                        <span class="text-[10px] text-gray-500 font-normal">150€ + 20%</span>
+                    </button>
+                </div>
             </div>
             
-            <button onclick="completeRegistration()" class="w-full bg-gray-900 text-white font-bold py-4 rounded-xl shadow-lg active:bg-gray-800 transition-transform active:scale-95 text-lg">
+            <button onclick="completeRegistration()" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl shadow-lg active:bg-gray-800 transition-transform active:scale-95 text-base">
                 Entrar a la Caseta
             </button>
         </div>
@@ -148,18 +221,26 @@
 
     <!-- PANTALLA 2: DASHBOARD -->
     <div id="screen-dashboard" class="h-full w-full bg-gray-100 flex flex-col z-20 absolute hidden-screen">
-        <div class="bg-red-700 text-white p-6 rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs bg-red-800/80 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold text-red-200">Socio:</span>
-                    <span id="dash-name" class="font-bold text-lg">Rafael y Natalia</span>
+        <div class="bg-red-700 text-white p-5 rounded-b-3xl shadow-md">
+            <div class="flex justify-between items-start mb-2">
+                <div>
+                    <!-- Tocar sobre el nombre también abre la configuración -->
+                    <div onclick="openResetModal()" class="flex items-center gap-1.5 cursor-pointer active:opacity-80">
+                        <span class="text-[11px] bg-red-800 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold text-red-200">Socio:</span>
+                        <span id="dash-name" class="font-bold text-base border-b border-dashed border-red-300">Rafael y Natalia</span>
+                    </div>
+                    <p class="text-red-200 text-xs uppercase tracking-wider font-medium mt-1">Saldo Disponible</p>
+                    <h1 class="text-4xl font-extrabold tracking-tight" id="dash-balance">360,00 €</h1>
                 </div>
-                <button onclick="openResetModal()" title="Reiniciar datos" class="text-red-200 hover:text-white bg-red-800/50 hover:bg-red-800 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors">
-                    <i class="fas fa-redo-alt"></i> Reiniciar
-                </button>
+                <div class="flex flex-col items-end gap-2">
+                    <button onclick="openResetModal()" title="Configurar y Reiniciar" class="text-red-200 hover:text-white bg-red-800/60 hover:bg-red-800 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors border border-red-600/50">
+                        <i class="fas fa-redo-alt text-[10px]"></i> Reiniciar
+                    </button>
+                    <button onclick="openScheduleModal()" class="neon-btn text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg active:scale-95 transition-all">
+                        <span class="neon-dot"></span> 🎶 ACTUACIONES 🎭
+                    </button>
+                </div>
             </div>
-            <p class="text-red-200 text-xs uppercase tracking-wider font-medium">Saldo Disponible (Tickets)</p>
-            <h1 class="text-5xl font-extrabold mt-1 tracking-tight" id="dash-balance">360,00 €</h1>
         </div>
 
         <div class="flex-1 p-4 overflow-y-auto pb-6">
@@ -215,6 +296,45 @@
         </div>
         <div class="flex-1 overflow-y-auto p-4 space-y-4" id="full-ticket-list">
             <!-- Se llena con JS -->
+        </div>
+    </div>
+
+    <!-- PANTALLA 2.8: MODAL CARTEL Y ACTUACIONES (CON VENCIMIENTO 3H) -->
+    <div id="modal-schedule" class="absolute inset-0 bg-black/85 backdrop-blur-md z-50 hidden-screen flex flex-col p-4 overflow-hidden">
+        <div class="bg-white rounded-3xl flex flex-col h-full overflow-hidden shadow-2xl max-w-lg mx-auto w-full">
+            <div class="bg-gradient-to-r from-red-800 to-red-600 text-white p-4 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🎶</span>
+                    <div>
+                        <h3 class="font-extrabold text-base leading-tight">Actuaciones La Premierr</h3>
+                        <p class="text-[11px] text-red-200">Feria 2026 Tocina - Los Rosales</p>
+                    </div>
+                </div>
+                <button onclick="closeScheduleModal()" class="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center text-white text-base">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-5">
+                <div class="rounded-2xl overflow-hidden border-2 border-red-100 shadow-md">
+                    <img src="1000834934.jpg" alt="Cartel Actuaciones 2026" class="w-full h-auto object-cover" onerror="this.src='1000834934.jpeg'">
+                </div>
+
+                <div class="border-t border-gray-200 pt-3">
+                    <h4 class="font-extrabold text-gray-900 text-sm mb-3 flex items-center gap-1.5">
+                        <i class="far fa-clock text-red-600"></i> Estado de las Actuaciones en Tiempo Real
+                    </h4>
+                    <div id="schedule-events-container" class="space-y-3">
+                        <!-- JS dinámico -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-gray-50 border-t shrink-0">
+                <button onclick="closeScheduleModal()" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-xl text-sm">
+                    Cerrar Programación
+                </button>
+            </div>
         </div>
     </div>
 
@@ -292,7 +412,7 @@
                     </div>
                 </div>
 
-                <!-- BOTÓN AZUL LLAMATIVO: GUARDAR Y SALIR (SEGUIR EN LA MESA) -->
+                <!-- BOTÓN AZUL LLAMATIVO: GUARDAR Y SALIR -->
                 <button onclick="closeTpv()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md text-base active:scale-95 transition-all flex items-center justify-center gap-2">
                     <i class="fas fa-save text-lg"></i> GUARDAR RONDA Y SALIR (Seguir luego)
                 </button>
@@ -357,11 +477,60 @@
         let currentTicket = []; 
         let ticketTotal = 0;
         let socioName = "";
+        let socioType = "couple";
+        let tempResetType = "couple";
         let favoriteNames = [];
         let receiptReturnScreen = 'screen-dashboard';
 
         let tempProdName = "";
         let tempProdPrice = 0;
+
+        // --- PROGRAMACIÓN DE ACTUACIONES (FERIA 2026) ---
+        const SCHEDULE_DATA = [
+            {
+                dayTitle: "MARTES PRE-FERIA",
+                events: [
+                    { time: "22:00h", title: "Picoteo Socios", detail: "Apertura oficial caseta", startISO: "2026-09-01T22:00:00" },
+                    { time: "00:00h", title: "Grupo TATEMAE", detail: "Música en directo", startISO: "2026-09-02T00:00:00" }
+                ]
+            },
+            {
+                dayTitle: "MIÉRCOLES",
+                events: [
+                    { time: "22:00h", title: "Cena Pescaíto", detail: "Tradicional cena de socios", startISO: "2026-09-02T22:00:00" },
+                    { time: "01:00h", title: "Grupo DE LUNARES", detail: "Concierto flamenco / pop", startISO: "2026-09-03T01:00:00" },
+                    { time: "A continuación", title: "DJ ÁLVARO ESCAMILLA", detail: "Sesión DJ hasta el cierre", startISO: "2026-09-03T03:00:00" }
+                ]
+            },
+            {
+                dayTitle: "JUEVES NOCHE",
+                events: [
+                    { time: "23:00h", title: "DJ ÁLVARO ESCAMILLA", detail: "Noche de fiesta y ambientazo", startISO: "2026-09-03T23:00:00" }
+                ]
+            },
+            {
+                dayTitle: "VIERNES",
+                events: [
+                    { time: "17:30h", title: "Grupo ALPECE", detail: "Tarde de concierto", startISO: "2026-09-04T17:30:00" },
+                    { time: "01:00h", title: "Grupo CASAVIEJA", detail: "Directo noche de viernes", startISO: "2026-09-05T01:00:00" },
+                    { time: "A continuación", title: "DJ ÁLVARO ESCAMILLA", detail: "Sesión DJ de madrugada", startISO: "2026-09-05T03:00:00" }
+                ]
+            },
+            {
+                dayTitle: "SÁBADO",
+                events: [
+                    { time: "17:00h (Tarde)", title: "DJ ÁLVARO ESCAMILLA", detail: "Tardeo de feria", startISO: "2026-09-05T17:00:00" },
+                    { time: "01:00h", title: "Grupo TRASTEANDO 3.0", detail: "Gran concierto sábado noche", startISO: "2026-09-06T01:00:00" },
+                    { time: "03:00h", title: "DJ RUBÉN RODRÍGUEZ", detail: "Cierre por todo lo alto", startISO: "2026-09-06T03:00:00" }
+                ]
+            },
+            {
+                dayTitle: "DOMINGO",
+                events: [
+                    { time: "18:00h", title: "Grupo POP GRASA", detail: "Fin de fiesta y despedida", startISO: "2026-09-06T18:00:00" }
+                ]
+            }
+        ];
 
         const DATA = {
             "Bebidas": [
@@ -433,7 +602,7 @@
 
         // --- NAVEGACIÓN ---
         function showScreen(id) {
-            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom)').forEach(el => el.classList.add('hidden-screen'));
+            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule)').forEach(el => el.classList.add('hidden-screen'));
             document.getElementById(id).classList.remove('hidden-screen');
         }
 
@@ -445,6 +614,7 @@
                 showScreen('screen-credits');
             } else {
                 socioName = localStorage.getItem('feria_socio_name') || 'Rafael y Natalia';
+                socioType = localStorage.getItem('feria_socio_type') || 'couple';
                 loadData();
                 showScreen('screen-dashboard');
             }
@@ -455,13 +625,30 @@
             showScreen('screen-login');
         }
 
+        function selectSocioType(type) {
+            socioType = type;
+            const btnCouple = document.getElementById('btn-type-couple');
+            const btnSingle = document.getElementById('btn-type-single');
+            
+            if(type === 'couple') {
+                btnCouple.className = "p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs";
+                btnSingle.className = "p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-70";
+            } else {
+                btnSingle.className = "p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs";
+                btnCouple.className = "p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-70";
+            }
+        }
+
         function completeRegistration() {
             const nameInput = document.getElementById('login-name').value.trim();
-            socioName = nameInput || 'Rafael y Natalia';
+            socioName = nameInput || (socioType === 'couple' ? 'Rafael y Natalia' : 'Socio');
+            
+            const initialAmount = (socioType === 'couple') ? '360.00' : '180.00';
             
             localStorage.setItem('feria_init', 'true');
             localStorage.setItem('feria_socio_name', socioName);
-            localStorage.setItem('feria_balance', '360.00');
+            localStorage.setItem('feria_socio_type', socioType);
+            localStorage.setItem('feria_balance', initialAmount);
             localStorage.setItem('feria_history', JSON.stringify({}));
             localStorage.setItem('feria_all_tickets', JSON.stringify([]));
             localStorage.setItem('feria_favorites', JSON.stringify([]));
@@ -478,6 +665,7 @@
             allTickets = JSON.parse(localStorage.getItem('feria_all_tickets')) || [];
             currentTicket = JSON.parse(localStorage.getItem('feria_open_tab')) || [];
             socioName = localStorage.getItem('feria_socio_name') || 'Rafael y Natalia';
+            socioType = localStorage.getItem('feria_socio_type') || 'couple';
             
             document.getElementById('dash-name').innerText = socioName;
             document.getElementById('dash-balance').innerText = balance.toFixed(2).replace('.', ',') + ' €';
@@ -518,17 +706,45 @@
             }
         }
 
-        // --- REINICIO INTELIGENTE ---
-        function openResetModal() { document.getElementById('modal-reset').classList.remove('hidden-screen'); }
+        // --- REINICIO Y CONFIGURACIÓN DINÁMICA ---
+        function openResetModal() { 
+            tempResetType = socioType || 'couple';
+            document.getElementById('reset-input-name').value = socioName;
+            updateResetModalUI();
+            document.getElementById('modal-reset').classList.remove('hidden-screen'); 
+        }
+
+        function setResetType(type) {
+            tempResetType = type;
+            updateResetModalUI();
+        }
+
+        function updateResetModalUI() {
+            const btnCouple = document.getElementById('reset-btn-couple');
+            const btnSingle = document.getElementById('reset-btn-single');
+            
+            if(tempResetType === 'couple') {
+                btnCouple.className = "p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs";
+                btnSingle.className = "p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60";
+            } else {
+                btnSingle.className = "p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs";
+                btnCouple.className = "p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60";
+            }
+        }
+
         function closeResetModal() { document.getElementById('modal-reset').classList.add('hidden-screen'); }
 
         function executeReset() {
-            const savedName = localStorage.getItem('feria_socio_name') || socioName || 'Rafael y Natalia';
+            const inputName = document.getElementById('reset-input-name').value.trim();
+            const finalName = inputName || (tempResetType === 'couple' ? 'Rafael y Natalia' : 'Socio');
+            const initialAmount = (tempResetType === 'single') ? '180.00' : '360.00';
+            
             localStorage.clear();
             
             localStorage.setItem('feria_init', 'true');
-            localStorage.setItem('feria_socio_name', savedName);
-            localStorage.setItem('feria_balance', '360.00');
+            localStorage.setItem('feria_socio_name', finalName);
+            localStorage.setItem('feria_socio_type', tempResetType);
+            localStorage.setItem('feria_balance', initialAmount);
             localStorage.setItem('feria_history', JSON.stringify({}));
             localStorage.setItem('feria_all_tickets', JSON.stringify([]));
             localStorage.setItem('feria_favorites', JSON.stringify([]));
@@ -538,6 +754,73 @@
             loadData();
             renderTpvMenu();
             showScreen('screen-dashboard');
+        }
+
+        // --- PROGRAMACIÓN Y ACTUACIONES ---
+        function openScheduleModal() {
+            renderScheduleEvents();
+            document.getElementById('modal-schedule').classList.remove('hidden-screen');
+        }
+
+        function closeScheduleModal() {
+            document.getElementById('modal-schedule').classList.add('hidden-screen');
+        }
+
+        function renderScheduleEvents() {
+            const container = document.getElementById('schedule-events-container');
+            container.innerHTML = '';
+            const now = new Date();
+
+            SCHEDULE_DATA.forEach(day => {
+                let dayCard = document.createElement('div');
+                dayCard.className = "bg-gray-50 rounded-2xl p-3.5 border border-gray-200 shadow-2xs";
+                
+                let html = `<div class="font-extrabold text-red-700 text-xs uppercase tracking-wider mb-2.5 pb-1 border-b border-gray-200 flex items-center justify-between">
+                    <span>${day.dayTitle}</span>
+                    <i class="fas fa-music text-[10px] text-gray-400"></i>
+                </div><div class="space-y-2">`;
+
+                day.events.forEach(ev => {
+                    const start = new Date(ev.startISO);
+                    const finishTime = new Date(start.getTime() + (3 * 60 * 60 * 1000));
+
+                    let badgeHtml = '';
+                    let isFinished = false;
+
+                    if (now > finishTime) {
+                        isFinished = true;
+                        badgeHtml = `<span class="text-[10px] font-bold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <i class="fas fa-check"></i> Actuación finalizada
+                        </span>`;
+                    } else if (now >= start && now <= finishTime) {
+                        badgeHtml = `<span class="text-[10px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-xs flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 bg-white rounded-full"></span> ¡EN DIRECTO AHORA!
+                        </span>`;
+                    } else {
+                        badgeHtml = `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">
+                            ⏳ Próximamente
+                        </span>`;
+                    }
+
+                    html += `
+                    <div class="flex justify-between items-start p-2 rounded-xl bg-white border border-gray-100 ${isFinished ? 'opacity-50 grayscale' : ''}">
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs font-mono font-bold text-red-600">${ev.time}</span>
+                                <span class="text-xs font-bold text-gray-800">${ev.title}</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500 mt-0.5">${ev.detail}</p>
+                        </div>
+                        <div class="shrink-0 ml-2">
+                            ${badgeHtml}
+                        </div>
+                    </div>`;
+                });
+
+                html += `</div>`;
+                dayCard.innerHTML = html;
+                container.appendChild(dayCard);
+            });
         }
 
         // --- RECARGA ---
