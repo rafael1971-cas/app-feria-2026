@@ -24,33 +24,33 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .ticket-bg { background: white; position: relative; }
 
-        /* EFECTO NEÓN PARPADEANTE */
+        /* EFECTO NEÓN PARPADEANTE - MÁS FINO Y ELEGANTE */
         @keyframes neonGlow {
             0%, 100% {
-                box-shadow: 0 0 6px #facc15, 0 0 15px #eab308, inset 0 0 6px #fef08a;
+                box-shadow: 0 0 4px #facc15, 0 0 8px #eab308;
                 border-color: #fef08a;
                 transform: scale(1);
             }
             50% {
-                box-shadow: 0 0 12px #f59e0b, 0 0 25px #ef4444, inset 0 0 10px #facc15;
+                box-shadow: 0 0 8px #f59e0b, 0 0 12px #ef4444;
                 border-color: #ffffff;
-                transform: scale(1.03);
+                transform: scale(1.02);
             }
         }
         .neon-btn {
             background: linear-gradient(135deg, #1e1b4b, #312e81);
             color: #fef08a;
-            border: 2px solid #facc15;
+            border: 1px solid #facc15;
             animation: neonGlow 1.6s infinite ease-in-out;
-            text-shadow: 0 0 8px rgba(250, 204, 21, 0.9);
+            text-shadow: 0 0 4px rgba(250, 204, 21, 0.8);
             cursor: pointer;
         }
         .neon-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #22c55e;
+            width: 6px;
+            height: 6px;
+            background-color: #4ade80;
             border-radius: 50%;
-            box-shadow: 0 0 8px #22c55e, 0 0 12px #4ade80;
+            box-shadow: 0 0 5px #22c55e, 0 0 8px #4ade80;
             display: inline-block;
             animation: blink 0.9s infinite alternate;
         }
@@ -222,22 +222,25 @@
     <!-- PANTALLA 2: DASHBOARD -->
     <div id="screen-dashboard" class="h-full w-full bg-gray-100 flex flex-col z-20 absolute hidden-screen">
         <div class="bg-red-700 text-white p-5 rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-start mb-2">
-                <div>
-                    <!-- Tocar sobre el nombre también abre la configuración -->
-                    <div onclick="openResetModal()" class="flex items-center gap-1.5 cursor-pointer active:opacity-80">
-                        <span class="text-[11px] bg-red-800 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold text-red-200">Socio:</span>
-                        <span id="dash-name" class="font-bold text-base border-b border-dashed border-red-300">Rafael y Natalia</span>
+            <div class="flex justify-between items-start mb-2 gap-2">
+                <!-- Columna Izquierda: Socio y Saldo -->
+                <div class="min-w-0 flex-1">
+                    <div onclick="openResetModal()" class="flex items-center gap-1.5 cursor-pointer active:opacity-80 flex-wrap">
+                        <span class="text-[11px] bg-red-800 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold text-red-200 shrink-0">Socio:</span>
+                        <span id="dash-name" class="font-bold text-base border-b border-dashed border-red-300 truncate">Rafael y Natalia</span>
                     </div>
-                    <p class="text-red-200 text-xs uppercase tracking-wider font-medium mt-1">Saldo Disponible</p>
-                    <h1 class="text-4xl font-extrabold tracking-tight" id="dash-balance">360,00 €</h1>
+                    <p class="text-red-200 text-xs uppercase tracking-wider font-medium mt-2">Saldo Disponible</p>
+                    <h1 class="text-4xl font-extrabold tracking-tight mt-0.5" id="dash-balance">360,00 €</h1>
                 </div>
-                <div class="flex flex-col items-end gap-2">
-                    <button onclick="openResetModal()" title="Configurar y Reiniciar" class="text-red-200 hover:text-white bg-red-800/60 hover:bg-red-800 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors border border-red-600/50">
-                        <i class="fas fa-redo-alt text-[10px]"></i> Reiniciar
+                <!-- Columna Derecha: Botones -->
+                <div class="flex flex-col items-end gap-2.5 shrink-0 pt-1">
+                    <!-- Botón Reiniciar Ajustado -->
+                    <button onclick="openResetModal()" title="Configurar y Reiniciar" class="text-red-200 hover:text-white bg-red-800/80 hover:bg-red-800 px-2.5 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1.5 transition-colors border border-red-600/50">
+                        <i class="fas fa-redo-alt"></i> Reiniciar
                     </button>
-                    <button onclick="openScheduleModal()" class="neon-btn text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg active:scale-95 transition-all">
-                        <span class="neon-dot"></span> 🎶 ACTUACIONES 🎭
+                    <!-- Botón Neón Ajustado -->
+                    <button onclick="openScheduleModal()" class="neon-btn text-[11px] font-black px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition-all whitespace-nowrap">
+                        <span class="neon-dot"></span> ACTUACIONES
                     </button>
                 </div>
             </div>
@@ -322,7 +325,7 @@
 
                 <div class="border-t border-gray-200 pt-3">
                     <h4 class="font-extrabold text-gray-900 text-sm mb-3 flex items-center gap-1.5">
-                        <i class="far fa-clock text-red-600"></i> Estado de las Actuaciones en Tiempo Real
+                        <i class="far fa-clock text-red-600"></i> Estado en Tiempo Real
                     </h4>
                     <div id="schedule-events-container" class="space-y-3">
                         <!-- JS dinámico -->
