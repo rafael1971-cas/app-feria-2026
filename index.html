@@ -242,9 +242,7 @@
     <!-- PANTALLA 4: TPV / CUENTA ABIERTA -->
     <div id="screen-tpv" class="h-full w-full bg-gray-50 flex flex-col z-30 absolute hidden-screen">
         <div class="bg-white p-3.5 shadow-sm flex justify-between items-center z-10 shrink-0 border-b">
-            <button onclick="closeTpv()" class="text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors">
-                <i class="fas fa-arrow-left"></i> Guardar y Salir
-            </button>
+            <button onclick="closeTpv()" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
             <span class="font-bold text-base text-gray-800">Mesa / Comanda</span>
             <button onclick="openCustomModal()" class="bg-purple-100 text-purple-700 font-bold text-xs px-3 py-1.5 rounded-full active:bg-purple-200 flex items-center gap-1.5 transition-colors">
                 <i class="fas fa-plus"></i> Extra
@@ -272,7 +270,7 @@
             <!-- Se llena con JS -->
         </div>
 
-        <!-- Barra inferior: Lista de la Cuenta y Botón Final -->
+        <!-- Barra inferior: Lista de la Cuenta y Botones de Acción -->
         <div class="shrink-0 bg-white shadow-[0_-5px_15px_rgba(0,0,0,0.05)] border-t z-20 flex flex-col">
             <div class="flex justify-between items-center px-4 pt-2 bg-slate-50 border-b">
                 <span class="text-xs font-bold text-gray-500 uppercase">Productos en la mesa:</span>
@@ -282,8 +280,8 @@
                 <!-- Se llena con JS -->
             </div>
 
-            <div class="p-4">
-                <div class="flex justify-between items-end mb-3">
+            <div class="p-4 space-y-2.5">
+                <div class="flex justify-between items-end mb-1">
                     <div>
                         <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Total Acumulado</p>
                         <p class="text-3xl font-extrabold text-gray-900" id="tpv-total">0,00 €</p>
@@ -293,8 +291,15 @@
                         <p class="text-sm font-bold text-gray-700" id="tpv-remaining">0,00 €</p>
                     </div>
                 </div>
-                <button onclick="confirmTicket()" id="btn-confirm-ticket" class="w-full bg-red-600 text-white font-bold py-4 rounded-xl shadow-md text-lg active:bg-red-700 transition-colors disabled:opacity-50 disabled:active:bg-red-600">
-                    PAGAR Y CERRAR CUENTA
+
+                <!-- BOTÓN AZUL LLAMATIVO: GUARDAR Y SALIR (SEGUIR EN LA MESA) -->
+                <button onclick="closeTpv()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md text-base active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-save text-lg"></i> GUARDAR RONDA Y SALIR (Seguir luego)
+                </button>
+
+                <!-- BOTÓN ROJO: PAGAR Y CERRAR CUENTA -->
+                <button onclick="confirmTicket()" id="btn-confirm-ticket" class="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl shadow-md text-base active:bg-red-700 transition-colors disabled:opacity-50 disabled:active:bg-red-600 flex items-center justify-center gap-2">
+                    <i class="fas fa-check-circle text-lg"></i> PAGAR Y CERRAR CUENTA
                 </button>
             </div>
         </div>
