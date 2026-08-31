@@ -328,7 +328,7 @@
         <button onclick="confirmRecharge()" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl mt-auto text-lg active:scale-95">Confirmar Recarga</button>
     </div>
 
-    <!-- PANTALLA 4: TPV (AQUÍ ESTÁ LA MAGIA DE "✨ NUEVO") -->
+    <!-- PANTALLA 4: TPV (CON "✨ NUEVO") -->
     <div id="screen-tpv" class="h-full w-full bg-gray-50 flex flex-col z-30 absolute hidden-screen">
         <div class="bg-white p-3.5 shadow-sm flex justify-between items-center z-10 shrink-0 border-b">
             <button onclick="closeTpv()" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
@@ -355,7 +355,6 @@
                 <button onclick="clearCurrentTicket()" id="btn-empty-ticket" class="text-xs text-red-500 font-semibold">Vaciar cuenta</button>
             </div>
             
-            <!-- LISTA DE CUENTA EN TPV -->
             <div id="tpv-current-list" class="max-h-36 overflow-y-auto px-2 py-2 bg-slate-50 border-b"></div>
 
             <div class="p-4 space-y-2.5">
@@ -415,7 +414,7 @@
         let balance = 0; let history = {}; let allTickets = []; let currentTicket = []; 
         let ticketTotal = 0; let socioName = ""; let socioType = "couple"; let tempResetType = "couple";
         let favoriteNames = []; let receiptReturnScreen = 'screen-dashboard';
-        let tempProdName = ""; let tempProdPrice = 0; let tempProdIcon = "🍽️";
+        let tempProdName = ""; let tempProdPrice = 0; let tempProdIcon = "";
 
         const SCHEDULE_DATA = [
             { dayTitle: "MARTES PRE-FERIA", events: [ { time: "22:00h", title: "Picoteo Socios", detail: "Apertura oficial caseta", startISO: "2026-09-01T22:00:00" }, { time: "00:00h", title: "Grupo TATEMAE", detail: "Música en directo", startISO: "2026-09-02T00:00:00" } ] },
@@ -426,46 +425,47 @@
             { dayTitle: "DOMINGO", events: [ { time: "18:00h", title: "Grupo POP GRASA", detail: "Fin de fiesta", startISO: "2026-09-06T18:00:00" } ] }
         ];
 
+        // 🌟 CARTA ACTUALIZADA LIMPIA (SIN CACHARROS NI CONSOLADORES 🤣) 🌟
         const DATA = {
             "Bebidas": [
                 {name: "Cerveza", price: 1.70, icon: "🍺"}, {name: "Refrescos", price: 2.00, icon: "🥤"},
-                {name: "Jarra rebujito", price: 10.00, icon: "🏺"}, {name: "Agua mineral", price: 1.00, icon: "💧"},
+                {name: "Jarra rebujito", price: 10.00, icon: "🧊🍹"}, {name: "Agua mineral", price: 1.00, icon: "💧"},
                 {name: "Tinto de Verano", price: 2.00, icon: "🍷"}, {name: "Vino manzanilla", price: 7.00, icon: "🥂"},
-                {name: "Jarra tinto/cerveza", price: 9.00, icon: "🍻"}, {name: "Combinados ancho", price: 6.00, icon: "🥃"},
+                {name: "Jarra tinto/cerveza", price: 9.00, icon: "🍺🍷"}, {name: "Combinados ancho", price: 6.00, icon: "🥃"},
                 {name: "Combinados esp.", price: 7.00, icon: "🍹"}
             ],
             "Chacina": [
-                {name: "Jamón de bellota", price: 16.00, icon: "🥩"}, {name: "Caña de lomo", price: 12.00, icon: "🥓"},
-                {name: "Queso", price: 11.00, icon: "🧀"}, {name: "Chacina variada", price: 15.00, icon: "🍱"}
+                {name: "Jamón de bellota", price: 16.00, icon: ""}, {name: "Caña de lomo", price: 12.00, icon: ""},
+                {name: "Queso", price: 11.00, icon: "🧀"}, {name: "Chacina variada", price: 15.00, icon: "🧀🥓"}
             ],
             "Marisco": [
                 {name: "Gambas blancas", price: 17.00, icon: "🦐"}, {name: "Langostinos", price: 10.00, icon: "🍤"},
-                {name: "Cazuela gambas", price: 12.00, icon: "🥘"}, {name: "Mejillones", price: 10.00, icon: "🦪"},
+                {name: "Cazuela gambas", price: 12.00, icon: "🍲🍤"}, {name: "Mejillones", price: 10.00, icon: "🦪"},
                 {name: "Almejas al carril", price: 14.00, icon: "🐚"}
             ],
             "Pescados": [
                 {name: "Calamares", price: 11.00, icon: "🦑"}, {name: "Adobo", price: 11.00, icon: "🐟"},
-                {name: "Frito variado", price: 14.00, icon: "🧺"}, {name: "Bacalao salmorejo", price: 12.00, icon: "🍲"},
+                {name: "Frito variado", price: 14.00, icon: "🐟🍤"}, {name: "Bacalao salmorejo", price: 12.00, icon: "🍲🐟"},
                 {name: "Boquerones", price: 11.00, icon: "🐠"}, {name: "Patitas calamar", price: 11.00, icon: "🐙"},
-                {name: "Pulpo a la brasa", price: 25.00, icon: "🔥"}
+                {name: "Pulpo a la brasa", price: 25.00, icon: "🔥🐙"}
             ],
             "Varios": [
                 {name: "Tosta jamón", price: 12.00, icon: "🥖"}, {name: "Tosta mantecaito", price: 12.00, icon: "🥪"},
                 {name: "Tosta gamba", price: 12.00, icon: "🍤"}, {name: "Tosta anchoa", price: 12.00, icon: "🐟"},
-                {name: "Alcachofas", price: 12.00, icon: "🥬"}, {name: "Pimientos", price: 7.00, icon: "🌶️"},
+                {name: "Alcachofas", price: 12.00, icon: ""}, {name: "Pimientos", price: 7.00, icon: "🌶️"},
                 {name: "Patatas Foster", price: 11.00, icon: "🍟"}, {name: "Patatas arrieras", price: 11.00, icon: "🥔"},
-                {name: "Huevos jamón", price: 12.00, icon: "🍳"}, {name: "Huevos ibéricos", price: 14.00, icon: "🥘"},
-                {name: "Revuelto bacalao", price: 11.00, icon: "🥚"}, {name: "Revuelto casa", price: 11.00, icon: "🍳"},
+                {name: "Huevos jamón", price: 12.00, icon: "🍳"}, {name: "Huevos ibéricos", price: 14.00, icon: "🍳🥓"},
+                {name: "Revuelto bacalao", price: 11.00, icon: "🥚🐟"}, {name: "Revuelto casa", price: 11.00, icon: "🍳"},
                 {name: "Salmorejo", price: 6.00, icon: "🥣"}, {name: "Croquetas rabo", price: 11.00, icon: "🧆"},
                 {name: "Croquetas puchero", price: 11.00, icon: "🧆"}
             ],
             "Carnes": [
-                {name: "Solomillo whisky", price: 12.00, icon: "🥩"}, {name: "Presa ibérica", price: 14.00, icon: "🥩"},
+                {name: "Solomillo whisky", price: 12.00, icon: "🥩🥃"}, {name: "Presa ibérica", price: 14.00, icon: "🥩"},
                 {name: "Montadito (ud)", price: 3.00, icon: "🥪"}, {name: "Pechuga pollo", price: 11.00, icon: "🍗"},
-                {name: "Pinchos (ud)", price: 3.00, icon: "🍢"}, {name: "Carrillera", price: 11.00, icon: "🍖"},
-                {name: "Parrillada", price: 25.00, icon: "♨️"}, {name: "Hamburguesa", price: 8.00, icon: "🍔"},
-                {name: "Sanjacobo", price: 11.00, icon: "🧀"}, {name: "Flamenquín", price: 11.00, icon: "🥖"},
-                {name: "Lagartito", price: 12.00, icon: "🥓"}, {name: "Entrecot", price: 18.00, icon: "🥩"},
+                {name: "Pinchos (ud)", price: 3.00, icon: "🍢"}, {name: "Carrillera", price: 11.00, icon: "🍲"},
+                {name: "Parrillada", price: 25.00, icon: "♨️🥩"}, {name: "Hamburguesa", price: 8.00, icon: "🍔"},
+                {name: "Sanjacobo", price: 11.00, icon: "🧀🥩"}, {name: "Flamenquín", price: 11.00, icon: ""},
+                {name: "Lagartito", price: 12.00, icon: ""}, {name: "Entrecot", price: 18.00, icon: "🥩"},
                 {name: "Costillar", price: 12.00, icon: "🍖"}
             ]
         };
@@ -586,15 +586,17 @@
         }
 
         function createProductBtn(prod) {
-            const icon = prod.icon || '🍽️';
+            const iconHtml = prod.icon ? `<div class="text-3xl mb-1 transform group-active:scale-110 transition-transform">${prod.icon}</div>` : `<div class="text-3xl mb-1 h-9"></div>`;
+            const bgIconHtml = prod.icon ? `<div class="absolute -bottom-4 -right-2 text-6xl opacity-[0.04] rotate-12 pointer-events-none">${prod.icon}</div>` : ``;
+            
             return `
-            <button onclick="openQtyModal('${prod.name}', ${prod.price}, '${icon}')" class="product-card p-3 text-left flex flex-col justify-between h-28 relative overflow-hidden group">
-                <div class="text-3xl mb-1 transform group-active:scale-110 transition-transform">${icon}</div>
+            <button onclick="openQtyModal('${prod.name}', ${prod.price}, '${prod.icon}')" class="product-card p-3 text-left flex flex-col justify-between h-28 relative overflow-hidden group">
+                ${iconHtml}
                 <div class="flex flex-col relative z-10">
                     <span class="font-bold text-gray-800 text-[13px] leading-tight line-clamp-2">${prod.name}</span>
                     <span class="text-red-600 font-extrabold text-sm mt-0.5">${prod.price.toFixed(2).replace('.', ',')} €</span>
                 </div>
-                <div class="absolute -bottom-4 -right-2 text-6xl opacity-[0.04] rotate-12 pointer-events-none">${icon}</div>
+                ${bgIconHtml}
             </button>`;
         }
 
@@ -629,15 +631,12 @@
             const name = document.getElementById('custom-name').value.trim() || 'Extra / Varios'; const price = parseFloat(document.getElementById('custom-price').value);
             if (!price || price <= 0) return alert("Introduce un importe válido");
             let cIcon = "✨"; if(name.toLowerCase().includes("churro")) cIcon = "🥖"; if(name.toLowerCase().includes("tabaco")) cIcon = "🚬"; if(name.toLowerCase().includes("propina")) cIcon = "💰";
-            
-            // LOS ITEMS CUSTOM TAMBIÉN SE MARCAN COMO NUEVOS
             currentTicket.push({name: name.replace(/🥖|🚬|💰/, '').trim(), price: price, qty: 1, icon: cIcon, isNew: true});
             updateTicketUI(); closeCustomModal(); if (navigator.vibrate) navigator.vibrate(50);
         }
 
         function openTpv() { 
             currentTicket = JSON.parse(localStorage.getItem('feria_open_tab')) || []; 
-            // Asegurar que al entrar, todo lo viejo NO es "NUEVO"
             currentTicket.forEach(item => item.isNew = false);
             clearSearch(); updateTicketUI(); showScreen('screen-tpv'); 
         }
@@ -653,20 +652,20 @@
         }
 
         function closeTpv() { 
-            currentTicket = consolidateTicket(currentTicket); // Limpia las etiquetas de NUEVO
+            currentTicket = consolidateTicket(currentTicket); 
             saveOpenTab(); loadData(); showScreen('screen-dashboard'); 
         }
         function saveOpenTab() { localStorage.setItem('feria_open_tab', JSON.stringify(currentTicket)); }
 
         function openQtyModal(name, price, icon) {
-            tempProdName = name; tempProdPrice = price; tempProdIcon = icon;
-            document.getElementById('modal-qty-name').innerHTML = `<span class="text-4xl block mb-2">${icon}</span>${name}`;
+            tempProdName = name; tempProdPrice = price; tempProdIcon = icon || '';
+            const showIcon = icon ? `<span class="text-4xl block mb-2">${icon}</span>` : ``;
+            document.getElementById('modal-qty-name').innerHTML = `${showIcon}${name}`;
             document.getElementById('modal-qty').classList.remove('hidden-screen');
         }
         function closeQtyModal() { document.getElementById('modal-qty').classList.add('hidden-screen'); }
         
         function confirmQty(qty) {
-            // AL AÑADIR, COMPROBAMOS SI YA HAY UNO "NUEVO" EN ESTA TANDA
             let existing = currentTicket.find(p => p.name === tempProdName && p.isNew === true);
             if (existing) existing.qty += qty; 
             else currentTicket.push({name: tempProdName, price: tempProdPrice, qty: qty, icon: tempProdIcon, isNew: true});
@@ -689,15 +688,15 @@
             } else {
                 btnConfirm.disabled = false; btnEmpty.classList.remove('hidden');
                 
-                // RENDERIZAR LA LISTA (CON ETIQUETA "NUEVO" SI CORRESPONDE)
                 listEl.innerHTML = currentTicket.map((item, idx) => {
                     const isNewClass = item.isNew ? 'bg-green-50 border-l-4 border-green-500 rounded-r-md' : 'border-b border-gray-200';
                     const newBadge = item.isNew ? '<span class="text-[9px] bg-green-500 text-white font-bold px-1.5 py-0.5 rounded shadow-xs ml-2 animate-pulse">✨ NUEVO</span>' : '';
+                    const itemIcon = item.icon ? `<span class="text-xl">${item.icon}</span>` : `<span class="w-5"></span>`;
                     
                     return `
                     <div class="flex justify-between items-center py-2 px-2.5 mb-1 last:mb-0 ${isNewClass}">
                         <div class="flex items-center gap-2">
-                            <span class="text-xl">${item.icon || '🍽️'}</span>
+                            ${itemIcon}
                             <span class="font-bold text-gray-800 text-sm flex items-center">${item.qty}x ${item.name} ${newBadge}</span>
                         </div>
                         <div class="flex items-center gap-3">
@@ -713,7 +712,6 @@
         function confirmTicket() {
             if (ticketTotal > balance) return alert("No tienes saldo suficiente. ¡Recarga tickets antes de pagar!");
             
-            // CONSOLIDAMOS EL TICKET ANTES DE PAGAR PARA QUE EL RECIBO QUEDE LIMPIO
             currentTicket = consolidateTicket(currentTicket);
             
             const oldBalance = balance; balance -= ticketTotal; localStorage.setItem('feria_balance', balance.toString());
