@@ -24,45 +24,34 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .ticket-bg { background: white; position: relative; }
 
-        /* EFECTO NEÓN PARPADEANTE - MÁS FINO Y ELEGANTE */
+        /* EFECTO NEÓN PARPADEANTE */
         @keyframes neonGlow {
-            0%, 100% {
-                box-shadow: 0 0 4px #facc15, 0 0 8px #eab308;
-                border-color: #fef08a;
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 0 8px #f59e0b, 0 0 12px #ef4444;
-                border-color: #ffffff;
-                transform: scale(1.02);
-            }
+            0%, 100% { box-shadow: 0 0 4px #facc15, 0 0 8px #eab308; border-color: #fef08a; transform: scale(1); }
+            50% { box-shadow: 0 0 8px #f59e0b, 0 0 12px #ef4444; border-color: #ffffff; transform: scale(1.02); }
         }
         .neon-btn {
             background: linear-gradient(135deg, #1e1b4b, #312e81);
-            color: #fef08a;
-            border: 1px solid #facc15;
-            animation: neonGlow 1.6s infinite ease-in-out;
-            text-shadow: 0 0 4px rgba(250, 204, 21, 0.8);
-            cursor: pointer;
+            color: #fef08a; border: 1px solid #facc15; animation: neonGlow 1.6s infinite ease-in-out;
+            text-shadow: 0 0 4px rgba(250, 204, 21, 0.8); cursor: pointer;
         }
         .neon-dot {
-            width: 6px;
-            height: 6px;
-            background-color: #4ade80;
-            border-radius: 50%;
-            box-shadow: 0 0 5px #22c55e, 0 0 8px #4ade80;
-            display: inline-block;
-            animation: blink 0.9s infinite alternate;
+            width: 6px; height: 6px; background-color: #4ade80; border-radius: 50%;
+            box-shadow: 0 0 5px #22c55e, 0 0 8px #4ade80; display: inline-block; animation: blink 0.9s infinite alternate;
         }
-        @keyframes blink {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
+        @keyframes blink { 0% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* ESTILO PREMIUM PARA LAS TARJETAS DE PRODUCTOS */
+        .product-card {
+            background: #ffffff; border: 1px solid #f3f4f6; border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02), 0 4px 10px rgba(0,0,0,0.04);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .product-card:active { transform: scale(0.95); box-shadow: 0 1px 2px rgba(0,0,0,0.02); background: #fafafa; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans antialiased h-screen w-screen overflow-hidden relative">
 
-    <!-- MODAL DE CONFIGURACIÓN Y REINICIO (PERMITE ELEGIR SOLTERO O MATRIMONIO) -->
+    <!-- MODAL DE CONFIGURACIÓN Y REINICIO -->
     <div id="modal-reset" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl border border-gray-100">
             <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl shadow-inner">
@@ -73,13 +62,11 @@
                 Elige tu modalidad para empezar la feria con tu saldo exacto:
             </p>
             
-            <!-- Nombre editable -->
             <div class="text-left mb-3">
                 <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1 ml-1">Nombre del Socio / Pareja</label>
                 <input type="text" id="reset-input-name" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2 px-3 text-sm font-semibold focus:outline-none focus:border-red-500">
             </div>
 
-            <!-- Selector Matrimonio vs Soltero -->
             <div class="mb-5 text-left">
                 <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1.5 ml-1">Modalidad de Cuota</label>
                 <div class="grid grid-cols-2 gap-2">
@@ -109,7 +96,9 @@
     <div id="modal-qty" class="absolute inset-0 bg-black/70 backdrop-blur-xs z-50 hidden-screen flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
             <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">¿Cuántas unidades?</h3>
-            <h2 class="text-2xl font-bold text-red-600 mb-6" id="modal-qty-name">Producto</h2>
+            <div id="modal-qty-name" class="text-xl font-bold text-gray-800 mb-6 flex flex-col items-center justify-center gap-2">
+                <!-- Se llena con JS -->
+            </div>
             
             <div class="grid grid-cols-3 gap-3 mb-6">
                 <button onclick="confirmQty(1)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">1</button>
@@ -139,26 +128,25 @@
                 </div>
                 <div>
                     <h3 class="font-bold text-gray-900 text-lg">Añadir Extra / Libre</h3>
-                    <p class="text-xs text-gray-500">Para churros, tabaco o gastos especiales</p>
+                    <p class="text-xs text-gray-500">Para churros, tabaco o imprevistos</p>
                 </div>
             </div>
 
             <div class="space-y-3 mb-5">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Concepto / Nombre</label>
-                    <input type="text" id="custom-name" placeholder="Ej. Churros, Tabaco, Extra..." class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-base font-semibold focus:outline-none focus:border-purple-500 transition-colors">
+                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Concepto</label>
+                    <input type="text" id="custom-name" placeholder="Ej. Churros, Tabaco..." class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-base font-semibold focus:outline-none focus:border-purple-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Importe (€)</label>
-                    <input type="number" id="custom-price" placeholder="0.00" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-2xl font-bold text-purple-700 focus:outline-none focus:border-purple-500 transition-colors" inputmode="decimal">
+                    <input type="number" id="custom-price" placeholder="0.00" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-2xl font-bold text-purple-700 focus:outline-none focus:border-purple-500" inputmode="decimal">
                 </div>
             </div>
 
             <div class="flex flex-wrap gap-1.5 mb-6">
-                <button onclick="fillCustomPreset('Churros')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">Churros</button>
-                <button onclick="fillCustomPreset('Tabaco')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">Tabaco</button>
-                <button onclick="fillCustomPreset('Ronda especial')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">Ronda especial</button>
-                <button onclick="fillCustomPreset('Propina')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">Propina</button>
+                <button onclick="fillCustomPreset('🥖 Churros')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">🥖 Churros</button>
+                <button onclick="fillCustomPreset('🚬 Tabaco')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">🚬 Tabaco</button>
+                <button onclick="fillCustomPreset('💰 Propina')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">💰 Propina</button>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -172,7 +160,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA 0: CRÉDITOS (SOLO PRIMER USO) -->
+    <!-- PANTALLA 0: CRÉDITOS -->
     <div id="screen-credits" class="h-full w-full bg-gray-900 text-white flex flex-col items-center justify-center p-6 text-center z-40 absolute hidden-screen">
         <h1 class="text-3xl font-bold text-red-500 mb-8 tracking-wider">FERIA 2026</h1>
         <div class="border border-gray-700 p-6 rounded-2xl bg-gray-800/80 mb-10 w-full max-w-sm shadow-2xl">
@@ -194,18 +182,18 @@
         <div class="w-full max-w-xs space-y-4">
             <div>
                 <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Nombre del Socio / Pareja</label>
-                <input type="text" id="login-name" placeholder="Ej. Rafael y Natalia" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-center text-base font-medium focus:outline-none focus:border-red-500 transition-colors">
+                <input type="text" id="login-name" placeholder="Ej. Rafael y Natalia" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-center text-base font-medium focus:outline-none focus:border-red-500">
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1 uppercase">Modalidad de Socio</label>
                 <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="selectSocioType('couple')" id="btn-type-couple" class="p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs">
+                    <button type="button" onclick="selectSocioType('couple')" id="btn-type-couple" class="p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 shadow-xs">
                         <span class="text-sm">👫 Matrimonio</span>
                         <span class="text-base font-extrabold text-red-600">360,00 €</span>
                         <span class="text-[10px] text-gray-500 font-normal">300€ + 20%</span>
                     </button>
-                    <button type="button" onclick="selectSocioType('single')" id="btn-type-single" class="p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-70">
+                    <button type="button" onclick="selectSocioType('single')" id="btn-type-single" class="p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 opacity-70">
                         <span class="text-sm">👤 Soltero(a)</span>
                         <span class="text-base font-extrabold text-gray-800">180,00 €</span>
                         <span class="text-[10px] text-gray-500 font-normal">150€ + 20%</span>
@@ -213,7 +201,7 @@
                 </div>
             </div>
             
-            <button onclick="completeRegistration()" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl shadow-lg active:bg-gray-800 transition-transform active:scale-95 text-base">
+            <button onclick="completeRegistration()" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl shadow-lg active:scale-95 text-base">
                 Entrar a la Caseta
             </button>
         </div>
@@ -223,7 +211,6 @@
     <div id="screen-dashboard" class="h-full w-full bg-gray-100 flex flex-col z-20 absolute hidden-screen">
         <div class="bg-red-700 text-white p-5 rounded-b-3xl shadow-md">
             <div class="flex justify-between items-start mb-2 gap-2">
-                <!-- Columna Izquierda: Socio y Saldo -->
                 <div class="min-w-0 flex-1">
                     <div onclick="openResetModal()" class="flex items-center gap-1.5 cursor-pointer active:opacity-80 flex-wrap">
                         <span class="text-[11px] bg-red-800 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold text-red-200 shrink-0">Socio:</span>
@@ -232,14 +219,11 @@
                     <p class="text-red-200 text-xs uppercase tracking-wider font-medium mt-2">Saldo Disponible</p>
                     <h1 class="text-4xl font-extrabold tracking-tight mt-0.5" id="dash-balance">360,00 €</h1>
                 </div>
-                <!-- Columna Derecha: Botones -->
                 <div class="flex flex-col items-end gap-2.5 shrink-0 pt-1">
-                    <!-- Botón Reiniciar Ajustado -->
-                    <button onclick="openResetModal()" title="Configurar y Reiniciar" class="text-red-200 hover:text-white bg-red-800/80 hover:bg-red-800 px-2.5 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1.5 transition-colors border border-red-600/50">
+                    <button onclick="openResetModal()" class="text-red-200 bg-red-800/80 px-2.5 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1.5 border border-red-600/50">
                         <i class="fas fa-redo-alt"></i> Reiniciar
                     </button>
-                    <!-- Botón Neón Ajustado -->
-                    <button onclick="openScheduleModal()" class="neon-btn text-[11px] font-black px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition-all whitespace-nowrap">
+                    <button onclick="openScheduleModal()" class="neon-btn text-[11px] font-black px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 shadow-lg active:scale-95 whitespace-nowrap">
                         <span class="neon-dot"></span> ACTUACIONES
                     </button>
                 </div>
@@ -247,13 +231,11 @@
         </div>
 
         <div class="flex-1 p-4 overflow-y-auto pb-6">
-            
-            <!-- TARJETA DESTACADA: CUENTA ABIERTA / MESA EN CURSO -->
             <div id="dash-open-tab-card" class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-5 shadow-sm hidden">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-2">
                         <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
-                        <span class="font-bold text-amber-900 text-sm uppercase tracking-wide">Mesa / Cuenta Abierta</span>
+                        <span class="font-bold text-amber-900 text-sm uppercase tracking-wide">Mesa Abierta</span>
                     </div>
                     <span class="text-xs bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded-full" id="dash-open-tab-count">0 items</span>
                 </div>
@@ -261,18 +243,17 @@
                     <span class="text-xs text-amber-700">Total acumulado:</span>
                     <span class="text-2xl font-black text-amber-900" id="dash-open-tab-total">0,00 €</span>
                 </div>
-                <button onclick="openTpv()" class="w-full mt-3 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl shadow-xs text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                <button onclick="openTpv()" class="w-full mt-3 bg-amber-500 text-white font-bold py-2.5 rounded-xl shadow-xs text-sm flex items-center justify-center gap-2 active:scale-95">
                     <i class="fas fa-utensils"></i> Ver / Añadir más a la Cuenta
                 </button>
             </div>
 
-            <!-- BOTONES PRINCIPALES -->
             <div class="flex gap-3 mb-6">
-                <button onclick="openTpv()" id="dash-btn-pedido" class="flex-1 bg-gray-900 text-white font-bold py-4 px-3 rounded-2xl shadow-lg active:scale-95 transition-transform flex flex-col items-center justify-center gap-2 text-center">
+                <button onclick="openTpv()" id="dash-btn-pedido" class="flex-1 bg-gray-900 text-white font-bold py-4 px-3 rounded-2xl shadow-lg active:scale-95 flex flex-col items-center justify-center gap-2 text-center">
                     <i class="fas fa-plus-circle text-2xl text-red-500"></i>
                     <span class="text-sm sm:text-base leading-tight" id="dash-btn-pedido-text">Agregar Pedido</span>
                 </button>
-                <button onclick="openRecharge()" class="flex-1 bg-white text-gray-800 border border-gray-200 font-bold py-4 px-3 rounded-2xl shadow-sm active:scale-95 transition-transform flex flex-col items-center justify-center gap-2 text-center">
+                <button onclick="openRecharge()" class="flex-1 bg-white text-gray-800 border border-gray-200 font-bold py-4 px-3 rounded-2xl shadow-sm active:scale-95 flex flex-col items-center justify-center gap-2 text-center">
                     <i class="fas fa-wallet text-2xl text-red-600"></i>
                     <span class="text-sm sm:text-base leading-tight">Recargar más saldo</span>
                 </button>
@@ -280,15 +261,13 @@
 
             <div class="flex justify-between items-end mb-3 border-b border-gray-200 pb-2">
                 <h3 class="font-bold text-gray-700">Gastos por Día</h3>
-                <button onclick="openHistory()" class="text-xs font-bold text-red-600 hover:underline">Ver todos los tickets <i class="fas fa-chevron-right text-xs"></i></button>
+                <button onclick="openHistory()" class="text-xs font-bold text-red-600">Ver todos los tickets <i class="fas fa-chevron-right text-xs"></i></button>
             </div>
-            <div id="dash-history" class="space-y-3">
-                <!-- Se llena con JS -->
-            </div>
+            <div id="dash-history" class="space-y-3"></div>
         </div>
     </div>
 
-    <!-- PANTALLA 2.5: HISTORIAL COMPLETO DE TICKETS -->
+    <!-- PANTALLA 2.5: HISTORIAL -->
     <div id="screen-history-list" class="h-full w-full bg-gray-100 flex flex-col z-30 absolute hidden-screen">
         <div class="bg-white p-4 shadow-sm flex items-center justify-between z-10 shrink-0">
             <div class="flex items-center">
@@ -297,12 +276,10 @@
             </div>
             <span class="text-xs font-medium text-gray-500">Toca para abrir</span>
         </div>
-        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="full-ticket-list">
-            <!-- Se llena con JS -->
-        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="full-ticket-list"></div>
     </div>
 
-    <!-- PANTALLA 2.8: MODAL CARTEL Y ACTUACIONES (CON VENCIMIENTO 3H) -->
+    <!-- PANTALLA 2.8: MODAL ACTUACIONES -->
     <div id="modal-schedule" class="absolute inset-0 bg-black/85 backdrop-blur-md z-50 hidden-screen flex flex-col p-4 overflow-hidden">
         <div class="bg-white rounded-3xl flex flex-col h-full overflow-hidden shadow-2xl max-w-lg mx-auto w-full">
             <div class="bg-gradient-to-r from-red-800 to-red-600 text-white p-4 flex justify-between items-center shrink-0">
@@ -310,33 +287,24 @@
                     <span class="text-xl">🎶</span>
                     <div>
                         <h3 class="font-extrabold text-base leading-tight">Actuaciones La Premierr</h3>
-                        <p class="text-[11px] text-red-200">Feria 2026 Tocina - Los Rosales</p>
+                        <p class="text-[11px] text-red-200">Feria 2026</p>
                     </div>
                 </div>
-                <button onclick="closeScheduleModal()" class="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center text-white text-base">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button onclick="closeScheduleModal()" class="w-8 h-8 rounded-full bg-black/20 text-white"><i class="fas fa-times"></i></button>
             </div>
 
             <div class="flex-1 overflow-y-auto p-4 space-y-5">
                 <div class="rounded-2xl overflow-hidden border-2 border-red-100 shadow-md">
-                    <img src="1000834934.jpg" alt="Cartel Actuaciones 2026" class="w-full h-auto object-cover" onerror="this.src='1000834934.jpeg'">
+                    <img src="1000834934.jpg" class="w-full h-auto object-cover" onerror="this.src='1000834934.jpeg'">
                 </div>
-
                 <div class="border-t border-gray-200 pt-3">
-                    <h4 class="font-extrabold text-gray-900 text-sm mb-3 flex items-center gap-1.5">
-                        <i class="far fa-clock text-red-600"></i> Estado en Tiempo Real
-                    </h4>
-                    <div id="schedule-events-container" class="space-y-3">
-                        <!-- JS dinámico -->
-                    </div>
+                    <h4 class="font-extrabold text-gray-900 text-sm mb-3 flex items-center gap-1.5"><i class="far fa-clock text-red-600"></i> Estado en Tiempo Real</h4>
+                    <div id="schedule-events-container" class="space-y-3"></div>
                 </div>
             </div>
 
             <div class="p-3 bg-gray-50 border-t shrink-0">
-                <button onclick="closeScheduleModal()" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-xl text-sm">
-                    Cerrar Programación
-                </button>
+                <button onclick="closeScheduleModal()" class="w-full bg-gray-900 text-white font-bold py-3 rounded-xl text-sm">Cerrar Programación</button>
             </div>
         </div>
     </div>
@@ -344,69 +312,56 @@
     <!-- PANTALLA 3: RECARGA -->
     <div id="screen-recharge" class="h-full w-full bg-white flex flex-col z-30 absolute hidden-screen p-6">
         <button onclick="closeRecharge()" class="text-gray-500 mb-6 text-left font-semibold text-sm flex items-center gap-2"><i class="fas fa-arrow-left"></i> Volver al panel</button>
-        <h2 class="text-2xl font-bold mb-1 text-gray-900">Comprar Tickets</h2>
-        <p class="text-gray-500 text-sm mb-6">Introduce el dinero REAL que vas a pagar. La app sumará automáticamente el 20% extra en tickets de consumición.</p>
+        <h2 class="text-2xl font-bold mb-1">Comprar Tickets</h2>
+        <p class="text-gray-500 text-sm mb-6">Introduce el dinero REAL que vas a pagar. Se sumará el +20%.</p>
         
         <div class="relative mb-6">
             <span class="absolute left-4 top-4 text-2xl text-gray-400 font-bold">€</span>
-            <input type="number" id="recharge-amount" placeholder="0.00" class="w-full bg-gray-50 border-2 border-gray-200 rounded-2xl py-4 pl-12 pr-4 text-3xl font-bold focus:outline-none focus:border-red-500 transition-colors" inputmode="decimal">
+            <input type="number" id="recharge-amount" placeholder="0.00" class="w-full bg-gray-50 border-2 border-gray-200 rounded-2xl py-4 pl-12 pr-4 text-3xl font-bold focus:outline-none focus:border-red-500">
         </div>
 
         <div class="bg-red-50 p-4 rounded-2xl mb-8 border border-red-100 text-center">
-            <p class="text-xs font-bold text-red-800 uppercase tracking-wider">Recibirás en tickets (+20%):</p>
+            <p class="text-xs font-bold text-red-800 uppercase">Recibirás en tickets (+20%):</p>
             <p class="text-4xl font-extrabold text-red-600 mt-1" id="recharge-preview">0,00 €</p>
         </div>
 
-        <button onclick="confirmRecharge()" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl shadow-lg mt-auto text-lg active:scale-95 transition-transform">
-            Confirmar Recarga
-        </button>
+        <button onclick="confirmRecharge()" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl mt-auto text-lg active:scale-95">Confirmar Recarga</button>
     </div>
 
-    <!-- PANTALLA 4: TPV / CUENTA ABIERTA -->
+    <!-- PANTALLA 4: TPV (AQUÍ ESTÁ LA MAGIA DE "✨ NUEVO") -->
     <div id="screen-tpv" class="h-full w-full bg-gray-50 flex flex-col z-30 absolute hidden-screen">
         <div class="bg-white p-3.5 shadow-sm flex justify-between items-center z-10 shrink-0 border-b">
             <button onclick="closeTpv()" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
             <span class="font-bold text-base text-gray-800">Mesa / Comanda</span>
-            <button onclick="openCustomModal()" class="bg-purple-100 text-purple-700 font-bold text-xs px-3 py-1.5 rounded-full active:bg-purple-200 flex items-center gap-1.5 transition-colors">
+            <button onclick="openCustomModal()" class="bg-purple-100 text-purple-700 font-bold text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
                 <i class="fas fa-plus"></i> Extra
             </button>
         </div>
 
-        <!-- BARRA DE BÚSQUEDA RÁPIDA -->
         <div class="bg-white px-3 py-2 border-b shrink-0">
             <div class="relative">
                 <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-                <input type="text" id="tpv-search" oninput="handleSearch(this.value)" placeholder="Buscar plato o bebida..." class="w-full bg-gray-100 rounded-xl py-2 pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
-                <button onclick="clearSearch()" id="btn-clear-search" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 hidden text-xs bg-gray-200 w-5 h-5 rounded-full items-center justify-center">
-                    <i class="fas fa-times"></i>
-                </button>
+                <input type="text" id="tpv-search" oninput="handleSearch(this.value)" placeholder="Buscar plato o bebida..." class="w-full bg-gray-100 rounded-xl py-2 pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                <button onclick="clearSearch()" id="btn-clear-search" class="absolute right-3 top-2.5 text-gray-400 hidden text-xs bg-gray-200 w-5 h-5 rounded-full items-center justify-center"><i class="fas fa-times"></i></button>
             </div>
         </div>
 
-        <!-- Categorías -->
-        <div class="flex overflow-x-auto bg-white border-b py-2 px-2 gap-2 hide-scrollbar shrink-0 shadow-sm z-10" id="tpv-categories">
-            <!-- Se llena con JS -->
-        </div>
+        <div class="flex overflow-x-auto bg-white border-b py-2 px-2 gap-2 hide-scrollbar shrink-0 shadow-sm z-10" id="tpv-categories"></div>
+        <div class="flex-1 overflow-y-auto p-2" id="tpv-products"></div>
 
-        <!-- Productos -->
-        <div class="flex-1 overflow-y-auto p-2" id="tpv-products">
-            <!-- Se llena con JS -->
-        </div>
-
-        <!-- Barra inferior: Lista de la Cuenta y Botones de Acción -->
         <div class="shrink-0 bg-white shadow-[0_-5px_15px_rgba(0,0,0,0.05)] border-t z-20 flex flex-col">
             <div class="flex justify-between items-center px-4 pt-2 bg-slate-50 border-b">
                 <span class="text-xs font-bold text-gray-500 uppercase">Productos en la mesa:</span>
-                <button onclick="clearCurrentTicket()" id="btn-empty-ticket" class="text-xs text-red-500 hover:underline hidden font-semibold">Vaciar cuenta</button>
+                <button onclick="clearCurrentTicket()" id="btn-empty-ticket" class="text-xs text-red-500 font-semibold">Vaciar cuenta</button>
             </div>
-            <div id="tpv-current-list" class="max-h-36 overflow-y-auto px-4 py-2 bg-slate-50 border-b">
-                <!-- Se llena con JS -->
-            </div>
+            
+            <!-- LISTA DE CUENTA EN TPV -->
+            <div id="tpv-current-list" class="max-h-36 overflow-y-auto px-2 py-2 bg-slate-50 border-b"></div>
 
             <div class="p-4 space-y-2.5">
                 <div class="flex justify-between items-end mb-1">
                     <div>
-                        <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Total Acumulado</p>
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Total Acumulado</p>
                         <p class="text-3xl font-extrabold text-gray-900" id="tpv-total">0,00 €</p>
                     </div>
                     <div class="text-right">
@@ -415,26 +370,23 @@
                     </div>
                 </div>
 
-                <!-- BOTÓN AZUL LLAMATIVO: GUARDAR Y SALIR -->
-                <button onclick="closeTpv()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md text-base active:scale-95 transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-save text-lg"></i> GUARDAR RONDA Y SALIR (Seguir luego)
+                <button onclick="closeTpv()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-md text-base active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fas fa-save text-lg"></i> GUARDAR RONDA Y SALIR
                 </button>
-
-                <!-- BOTÓN ROJO: PAGAR Y CERRAR CUENTA -->
-                <button onclick="confirmTicket()" id="btn-confirm-ticket" class="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl shadow-md text-base active:bg-red-700 transition-colors disabled:opacity-50 disabled:active:bg-red-600 flex items-center justify-center gap-2">
+                <button onclick="confirmTicket()" id="btn-confirm-ticket" class="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl shadow-md text-base disabled:opacity-50 flex items-center justify-center gap-2">
                     <i class="fas fa-check-circle text-lg"></i> PAGAR Y CERRAR CUENTA
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- PANTALLA 5: EL RECIBO DE LA MÁQUINA (MODAL VISOR) -->
+    <!-- PANTALLA 5: RECIBO -->
     <div id="screen-receipt" class="h-full w-full bg-gray-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 z-50 absolute hidden-screen">
         <div class="ticket-bg w-full max-w-sm rounded-lg shadow-2xl p-6 font-mono text-sm text-gray-800">
             <div class="text-center mb-3">
-                <h2 class="text-xl font-black tracking-wider uppercase text-gray-900">Caseta "La Premierr"</h2>
-                <p class="text-[11px] uppercase font-bold text-red-600 mt-0.5">Feria 2026 Tocina - Los Rosales</p>
-                <div class="mt-2 text-xs bg-gray-100 py-1 px-3 rounded-full inline-block font-bold text-gray-700 border border-gray-200">
+                <h2 class="text-xl font-black uppercase text-gray-900">Caseta "La Premierr"</h2>
+                <p class="text-[11px] font-bold text-red-600 mt-0.5">Feria 2026 Tocina - Los Rosales</p>
+                <div class="mt-2 text-xs bg-gray-100 py-1 px-3 rounded-full inline-block font-bold border">
                     Socio: <span id="receipt-socio">Rafael y Natalia</span>
                 </div>
                 <p class="text-[11px] mt-2 text-gray-600" id="receipt-datetime">...</p>
@@ -442,781 +394,364 @@
             </div>
             
             <div class="border-t-2 border-dashed border-gray-300 my-3"></div>
-            
-            <div id="receipt-items" class="my-3 space-y-1">
-                <!-- JS -->
-            </div>
-            
+            <div id="receipt-items" class="my-3 space-y-1"></div>
             <div class="border-t-2 border-dashed border-gray-300 my-3"></div>
             
             <div class="flex justify-between font-black text-lg mb-2">
-                <span>TOTAL:</span>
-                <span id="receipt-total">0,00 €</span>
+                <span>TOTAL:</span><span id="receipt-total">0,00 €</span>
             </div>
             <div class="flex justify-between text-xs text-gray-500" id="receipt-old-bal-row">
-                <span>Saldo anterior:</span>
-                <span id="receipt-old-balance">0,00 €</span>
+                <span>Saldo anterior:</span><span id="receipt-old-balance">0,00 €</span>
             </div>
             <div class="flex justify-between text-xs font-semibold text-gray-800 mt-1" id="receipt-new-bal-row">
-                <span>Saldo resultante:</span>
-                <span id="receipt-new-balance">0,00 €</span>
+                <span>Saldo resultante:</span><span id="receipt-new-balance">0,00 €</span>
             </div>
-            
-            <div class="text-center mt-6 text-[11px] text-gray-400">
-                <p>*** GRACIAS POR SU VISITA ***</p>
-            </div>
+            <div class="text-center mt-6 text-[11px] text-gray-400"><p>*** GRACIAS POR SU VISITA ***</p></div>
         </div>
-
-        <button onclick="closeReceipt()" class="mt-6 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-8 rounded-full shadow-lg active:scale-95 transition-transform text-base w-full max-w-sm">
-            Cerrar Recibo
-        </button>
+        <button onclick="closeReceipt()" class="mt-6 bg-red-600 text-white font-bold py-3.5 px-8 rounded-full active:scale-95 w-full max-w-sm">Cerrar Recibo</button>
     </div>
 
     <script>
-        // --- BASE DE DATOS Y ESTADO ---
-        let balance = 0;
-        let history = {};
-        let allTickets = [];
-        let currentTicket = []; 
-        let ticketTotal = 0;
-        let socioName = "";
-        let socioType = "couple";
-        let tempResetType = "couple";
-        let favoriteNames = [];
-        let receiptReturnScreen = 'screen-dashboard';
+        let balance = 0; let history = {}; let allTickets = []; let currentTicket = []; 
+        let ticketTotal = 0; let socioName = ""; let socioType = "couple"; let tempResetType = "couple";
+        let favoriteNames = []; let receiptReturnScreen = 'screen-dashboard';
+        let tempProdName = ""; let tempProdPrice = 0; let tempProdIcon = "🍽️";
 
-        let tempProdName = "";
-        let tempProdPrice = 0;
-
-        // --- PROGRAMACIÓN DE ACTUACIONES (FERIA 2026) ---
         const SCHEDULE_DATA = [
-            {
-                dayTitle: "MARTES PRE-FERIA",
-                events: [
-                    { time: "22:00h", title: "Picoteo Socios", detail: "Apertura oficial caseta", startISO: "2026-09-01T22:00:00" },
-                    { time: "00:00h", title: "Grupo TATEMAE", detail: "Música en directo", startISO: "2026-09-02T00:00:00" }
-                ]
-            },
-            {
-                dayTitle: "MIÉRCOLES",
-                events: [
-                    { time: "22:00h", title: "Cena Pescaíto", detail: "Tradicional cena de socios", startISO: "2026-09-02T22:00:00" },
-                    { time: "01:00h", title: "Grupo DE LUNARES", detail: "Concierto flamenco / pop", startISO: "2026-09-03T01:00:00" },
-                    { time: "A continuación", title: "DJ ÁLVARO ESCAMILLA", detail: "Sesión DJ hasta el cierre", startISO: "2026-09-03T03:00:00" }
-                ]
-            },
-            {
-                dayTitle: "JUEVES NOCHE",
-                events: [
-                    { time: "23:00h", title: "DJ ÁLVARO ESCAMILLA", detail: "Noche de fiesta y ambientazo", startISO: "2026-09-03T23:00:00" }
-                ]
-            },
-            {
-                dayTitle: "VIERNES",
-                events: [
-                    { time: "17:30h", title: "Grupo ALPECE", detail: "Tarde de concierto", startISO: "2026-09-04T17:30:00" },
-                    { time: "01:00h", title: "Grupo CASAVIEJA", detail: "Directo noche de viernes", startISO: "2026-09-05T01:00:00" },
-                    { time: "A continuación", title: "DJ ÁLVARO ESCAMILLA", detail: "Sesión DJ de madrugada", startISO: "2026-09-05T03:00:00" }
-                ]
-            },
-            {
-                dayTitle: "SÁBADO",
-                events: [
-                    { time: "17:00h (Tarde)", title: "DJ ÁLVARO ESCAMILLA", detail: "Tardeo de feria", startISO: "2026-09-05T17:00:00" },
-                    { time: "01:00h", title: "Grupo TRASTEANDO 3.0", detail: "Gran concierto sábado noche", startISO: "2026-09-06T01:00:00" },
-                    { time: "03:00h", title: "DJ RUBÉN RODRÍGUEZ", detail: "Cierre por todo lo alto", startISO: "2026-09-06T03:00:00" }
-                ]
-            },
-            {
-                dayTitle: "DOMINGO",
-                events: [
-                    { time: "18:00h", title: "Grupo POP GRASA", detail: "Fin de fiesta y despedida", startISO: "2026-09-06T18:00:00" }
-                ]
-            }
+            { dayTitle: "MARTES PRE-FERIA", events: [ { time: "22:00h", title: "Picoteo Socios", detail: "Apertura oficial caseta", startISO: "2026-09-01T22:00:00" }, { time: "00:00h", title: "Grupo TATEMAE", detail: "Música en directo", startISO: "2026-09-02T00:00:00" } ] },
+            { dayTitle: "MIÉRCOLES", events: [ { time: "22:00h", title: "Cena Pescaíto", detail: "Tradicional cena", startISO: "2026-09-02T22:00:00" }, { time: "01:00h", title: "Grupo DE LUNARES", detail: "Flamenco / pop", startISO: "2026-09-03T01:00:00" }, { time: "A continuación", title: "DJ ÁLVARO ESCAMILLA", detail: "DJ hasta cierre", startISO: "2026-09-03T03:00:00" } ] },
+            { dayTitle: "JUEVES NOCHE", events: [ { time: "23:00h", title: "DJ ÁLVARO ESCAMILLA", detail: "Noche de fiesta", startISO: "2026-09-03T23:00:00" } ] },
+            { dayTitle: "VIERNES", events: [ { time: "17:30h", title: "Grupo ALPECE", detail: "Tarde de concierto", startISO: "2026-09-04T17:30:00" }, { time: "01:00h", title: "Grupo CASAVIEJA", detail: "Directo", startISO: "2026-09-05T01:00:00" }, { time: "A continuación", title: "DJ ÁLVARO ESCAMILLA", detail: "DJ", startISO: "2026-09-05T03:00:00" } ] },
+            { dayTitle: "SÁBADO", events: [ { time: "17:00h", title: "DJ ÁLVARO ESCAMILLA", detail: "Tardeo", startISO: "2026-09-05T17:00:00" }, { time: "01:00h", title: "Grupo TRASTEANDO 3.0", detail: "Concierto", startISO: "2026-09-06T01:00:00" }, { time: "03:00h", title: "DJ RUBÉN RODRÍGUEZ", detail: "Cierre", startISO: "2026-09-06T03:00:00" } ] },
+            { dayTitle: "DOMINGO", events: [ { time: "18:00h", title: "Grupo POP GRASA", detail: "Fin de fiesta", startISO: "2026-09-06T18:00:00" } ] }
         ];
 
         const DATA = {
             "Bebidas": [
-                {name: "Cerveza", price: 1.70},
-                {name: "Refrescos", price: 2.00},
-                {name: "Jarra rebujito", price: 10.00},
-                {name: "Agua mineral", price: 1.00},
-                {name: "Tinto de Verano", price: 2.00},
-                {name: "Vino manzanilla", price: 7.00},
-                {name: "Jarra tinto/cerveza", price: 9.00},
-                {name: "Combinados ancho", price: 6.00},
-                {name: "Combinados esp.", price: 7.00}
+                {name: "Cerveza", price: 1.70, icon: "🍺"}, {name: "Refrescos", price: 2.00, icon: "🥤"},
+                {name: "Jarra rebujito", price: 10.00, icon: "🏺"}, {name: "Agua mineral", price: 1.00, icon: "💧"},
+                {name: "Tinto de Verano", price: 2.00, icon: "🍷"}, {name: "Vino manzanilla", price: 7.00, icon: "🥂"},
+                {name: "Jarra tinto/cerveza", price: 9.00, icon: "🍻"}, {name: "Combinados ancho", price: 6.00, icon: "🥃"},
+                {name: "Combinados esp.", price: 7.00, icon: "🍹"}
             ],
             "Chacina": [
-                {name: "Jamón de bellota", price: 16.00},
-                {name: "Caña de lomo", price: 12.00},
-                {name: "Queso", price: 11.00},
-                {name: "Chacina variada", price: 15.00}
+                {name: "Jamón de bellota", price: 16.00, icon: "🥩"}, {name: "Caña de lomo", price: 12.00, icon: "🥓"},
+                {name: "Queso", price: 11.00, icon: "🧀"}, {name: "Chacina variada", price: 15.00, icon: "🍱"}
             ],
             "Marisco": [
-                {name: "Gambas blancas", price: 17.00},
-                {name: "Langostinos", price: 10.00},
-                {name: "Cazuela gambas", price: 12.00},
-                {name: "Mejillones", price: 10.00},
-                {name: "Almejas al carril", price: 14.00}
+                {name: "Gambas blancas", price: 17.00, icon: "🦐"}, {name: "Langostinos", price: 10.00, icon: "🍤"},
+                {name: "Cazuela gambas", price: 12.00, icon: "🥘"}, {name: "Mejillones", price: 10.00, icon: "🦪"},
+                {name: "Almejas al carril", price: 14.00, icon: "🐚"}
             ],
             "Pescados": [
-                {name: "Calamares", price: 11.00},
-                {name: "Adobo", price: 11.00},
-                {name: "Frito variado", price: 14.00},
-                {name: "Bacalao salmorejo", price: 12.00},
-                {name: "Boquerones", price: 11.00},
-                {name: "Patitas calamar", price: 11.00},
-                {name: "Pulpo a la brasa", price: 25.00}
+                {name: "Calamares", price: 11.00, icon: "🦑"}, {name: "Adobo", price: 11.00, icon: "🐟"},
+                {name: "Frito variado", price: 14.00, icon: "🧺"}, {name: "Bacalao salmorejo", price: 12.00, icon: "🍲"},
+                {name: "Boquerones", price: 11.00, icon: "🐠"}, {name: "Patitas calamar", price: 11.00, icon: "🐙"},
+                {name: "Pulpo a la brasa", price: 25.00, icon: "🔥"}
             ],
             "Varios": [
-                {name: "Tosta jamón", price: 12.00},
-                {name: "Tosta mantecaito", price: 12.00},
-                {name: "Tosta gamba", price: 12.00},
-                {name: "Tosta anchoa", price: 12.00},
-                {name: "Alcachofas", price: 12.00},
-                {name: "Pimientos", price: 7.00},
-                {name: "Patatas Foster", price: 11.00},
-                {name: "Patatas arrieras", price: 11.00},
-                {name: "Huevos jamón", price: 12.00},
-                {name: "Huevos ibéricos", price: 14.00},
-                {name: "Revuelto bacalao", price: 11.00},
-                {name: "Revuelto casa", price: 11.00},
-                {name: "Salmorejo", price: 6.00},
-                {name: "Croquetas rabo", price: 11.00},
-                {name: "Croquetas puchero", price: 11.00}
+                {name: "Tosta jamón", price: 12.00, icon: "🥖"}, {name: "Tosta mantecaito", price: 12.00, icon: "🥪"},
+                {name: "Tosta gamba", price: 12.00, icon: "🍤"}, {name: "Tosta anchoa", price: 12.00, icon: "🐟"},
+                {name: "Alcachofas", price: 12.00, icon: "🥬"}, {name: "Pimientos", price: 7.00, icon: "🌶️"},
+                {name: "Patatas Foster", price: 11.00, icon: "🍟"}, {name: "Patatas arrieras", price: 11.00, icon: "🥔"},
+                {name: "Huevos jamón", price: 12.00, icon: "🍳"}, {name: "Huevos ibéricos", price: 14.00, icon: "🥘"},
+                {name: "Revuelto bacalao", price: 11.00, icon: "🥚"}, {name: "Revuelto casa", price: 11.00, icon: "🍳"},
+                {name: "Salmorejo", price: 6.00, icon: "🥣"}, {name: "Croquetas rabo", price: 11.00, icon: "🧆"},
+                {name: "Croquetas puchero", price: 11.00, icon: "🧆"}
             ],
             "Carnes": [
-                {name: "Solomillo whisky", price: 12.00},
-                {name: "Presa ibérica", price: 14.00},
-                {name: "Montadito (ud)", price: 3.00},
-                {name: "Pechuga pollo", price: 11.00},
-                {name: "Pinchos (ud)", price: 3.00},
-                {name: "Carrillera", price: 11.00},
-                {name: "Parrillada", price: 25.00},
-                {name: "Hamburguesa", price: 8.00},
-                {name: "Sanjacobo", price: 11.00},
-                {name: "Flamenquín", price: 11.00},
-                {name: "Lagartito", price: 12.00},
-                {name: "Entrecot", price: 18.00},
-                {name: "Costillar", price: 12.00}
+                {name: "Solomillo whisky", price: 12.00, icon: "🥩"}, {name: "Presa ibérica", price: 14.00, icon: "🥩"},
+                {name: "Montadito (ud)", price: 3.00, icon: "🥪"}, {name: "Pechuga pollo", price: 11.00, icon: "🍗"},
+                {name: "Pinchos (ud)", price: 3.00, icon: "🍢"}, {name: "Carrillera", price: 11.00, icon: "🍖"},
+                {name: "Parrillada", price: 25.00, icon: "♨️"}, {name: "Hamburguesa", price: 8.00, icon: "🍔"},
+                {name: "Sanjacobo", price: 11.00, icon: "🧀"}, {name: "Flamenquín", price: 11.00, icon: "🥖"},
+                {name: "Lagartito", price: 12.00, icon: "🥓"}, {name: "Entrecot", price: 18.00, icon: "🥩"},
+                {name: "Costillar", price: 12.00, icon: "🍖"}
             ]
         };
 
-        // --- NAVEGACIÓN ---
         function showScreen(id) {
             document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule)').forEach(el => el.classList.add('hidden-screen'));
             document.getElementById(id).classList.remove('hidden-screen');
         }
 
-        // --- INICIALIZACIÓN ---
         window.onload = () => {
-            const isInitialized = localStorage.getItem('feria_init');
-            
-            if (!isInitialized) {
-                showScreen('screen-credits');
-            } else {
-                socioName = localStorage.getItem('feria_socio_name') || 'Rafael y Natalia';
-                socioType = localStorage.getItem('feria_socio_type') || 'couple';
-                loadData();
-                showScreen('screen-dashboard');
-            }
+            if (!localStorage.getItem('feria_init')) { showScreen('screen-credits'); } 
+            else { loadData(); showScreen('screen-dashboard'); }
             renderTpvMenu();
         };
 
-        function acceptCredits() {
-            showScreen('screen-login');
-        }
+        function acceptCredits() { showScreen('screen-login'); }
 
         function selectSocioType(type) {
             socioType = type;
-            const btnCouple = document.getElementById('btn-type-couple');
-            const btnSingle = document.getElementById('btn-type-single');
-            
-            if(type === 'couple') {
-                btnCouple.className = "p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs";
-                btnSingle.className = "p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-70";
-            } else {
-                btnSingle.className = "p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs";
-                btnCouple.className = "p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-70";
-            }
+            document.getElementById('btn-type-couple').className = type === 'couple' ? "p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 shadow-xs" : "p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 opacity-70";
+            document.getElementById('btn-type-single').className = type === 'single' ? "p-3 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 shadow-xs" : "p-3 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 opacity-70";
         }
 
         function completeRegistration() {
-            const nameInput = document.getElementById('login-name').value.trim();
-            socioName = nameInput || (socioType === 'couple' ? 'Rafael y Natalia' : 'Socio');
-            
-            const initialAmount = (socioType === 'couple') ? '360.00' : '180.00';
-            
-            localStorage.setItem('feria_init', 'true');
-            localStorage.setItem('feria_socio_name', socioName);
-            localStorage.setItem('feria_socio_type', socioType);
-            localStorage.setItem('feria_balance', initialAmount);
-            localStorage.setItem('feria_history', JSON.stringify({}));
-            localStorage.setItem('feria_all_tickets', JSON.stringify([]));
-            localStorage.setItem('feria_favorites', JSON.stringify([]));
-            localStorage.setItem('feria_open_tab', JSON.stringify([]));
-            
-            loadData();
-            showScreen('screen-dashboard');
+            socioName = document.getElementById('login-name').value.trim() || (socioType === 'couple' ? 'Rafael y Natalia' : 'Socio');
+            localStorage.setItem('feria_init', 'true'); localStorage.setItem('feria_socio_name', socioName);
+            localStorage.setItem('feria_socio_type', socioType); localStorage.setItem('feria_balance', socioType === 'couple' ? '360.00' : '180.00');
+            localStorage.setItem('feria_history', JSON.stringify({})); localStorage.setItem('feria_all_tickets', JSON.stringify([]));
+            localStorage.setItem('feria_favorites', JSON.stringify([])); localStorage.setItem('feria_open_tab', JSON.stringify([]));
+            loadData(); showScreen('screen-dashboard');
         }
 
         function loadData() {
-            balance = parseFloat(localStorage.getItem('feria_balance')) || 0;
-            history = JSON.parse(localStorage.getItem('feria_history')) || {};
-            favoriteNames = JSON.parse(localStorage.getItem('feria_favorites')) || []; 
-            allTickets = JSON.parse(localStorage.getItem('feria_all_tickets')) || [];
+            balance = parseFloat(localStorage.getItem('feria_balance')) || 0; history = JSON.parse(localStorage.getItem('feria_history')) || {};
+            favoriteNames = JSON.parse(localStorage.getItem('feria_favorites')) || []; allTickets = JSON.parse(localStorage.getItem('feria_all_tickets')) || [];
             currentTicket = JSON.parse(localStorage.getItem('feria_open_tab')) || [];
-            socioName = localStorage.getItem('feria_socio_name') || 'Rafael y Natalia';
-            socioType = localStorage.getItem('feria_socio_type') || 'couple';
+            socioName = localStorage.getItem('feria_socio_name') || 'Socio'; socioType = localStorage.getItem('feria_socio_type') || 'couple';
             
             document.getElementById('dash-name').innerText = socioName;
             document.getElementById('dash-balance').innerText = balance.toFixed(2).replace('.', ',') + ' €';
             
-            const tabCard = document.getElementById('dash-open-tab-card');
-            const btnPedidoText = document.getElementById('dash-btn-pedido-text');
-            
-            let openTabTotal = 0;
-            let openTabItemsCount = 0;
-            currentTicket.forEach(i => {
-                openTabTotal += (i.price * i.qty);
-                openTabItemsCount += i.qty;
-            });
-
+            let openTabTotal = 0; let openTabItemsCount = 0;
+            currentTicket.forEach(i => { openTabTotal += (i.price * i.qty); openTabItemsCount += i.qty; });
             if (currentTicket.length > 0) {
-                tabCard.classList.remove('hidden');
+                document.getElementById('dash-open-tab-card').classList.remove('hidden');
                 document.getElementById('dash-open-tab-total').innerText = openTabTotal.toFixed(2).replace('.', ',') + ' €';
                 document.getElementById('dash-open-tab-count').innerText = `${openTabItemsCount} consumición(es)`;
-                btnPedidoText.innerText = 'Seguir Pidiendo';
+                document.getElementById('dash-btn-pedido-text').innerText = 'Seguir Pidiendo';
             } else {
-                tabCard.classList.add('hidden');
-                btnPedidoText.innerText = 'Agregar Pedido';
+                document.getElementById('dash-open-tab-card').classList.add('hidden');
+                document.getElementById('dash-btn-pedido-text').innerText = 'Agregar Pedido';
             }
 
-            const histContainer = document.getElementById('dash-history');
-            histContainer.innerHTML = '';
-            
+            const histContainer = document.getElementById('dash-history'); histContainer.innerHTML = '';
             const days = Object.keys(history).sort((a,b) => new Date(b) - new Date(a));
-            if(days.length === 0) {
-                histContainer.innerHTML = '<p class="text-gray-400 text-sm italic py-2">No hay gastos registrados aún.</p>';
-            } else {
-                days.forEach(day => {
-                    const el = document.createElement('div');
-                    el.className = "bg-white p-4 rounded-xl shadow-sm flex justify-between items-center border border-gray-100";
-                    el.innerHTML = `<span class="font-semibold text-gray-700">${day}</span> <span class="font-bold text-red-600">-${history[day].toFixed(2).replace('.', ',')} €</span>`;
-                    histContainer.appendChild(el);
-                });
-            }
+            if(days.length === 0) histContainer.innerHTML = '<p class="text-gray-400 text-sm italic py-2">No hay gastos registrados aún.</p>';
+            else days.forEach(day => { histContainer.innerHTML += `<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center border border-gray-100"><span class="font-semibold text-gray-700">${day}</span> <span class="font-bold text-red-600">-${history[day].toFixed(2).replace('.', ',')} €</span></div>`; });
         }
 
-        // --- REINICIO Y CONFIGURACIÓN DINÁMICA ---
         function openResetModal() { 
-            tempResetType = socioType || 'couple';
-            document.getElementById('reset-input-name').value = socioName;
-            updateResetModalUI();
-            document.getElementById('modal-reset').classList.remove('hidden-screen'); 
+            tempResetType = socioType || 'couple'; document.getElementById('reset-input-name').value = socioName;
+            updateResetModalUI(); document.getElementById('modal-reset').classList.remove('hidden-screen'); 
         }
-
-        function setResetType(type) {
-            tempResetType = type;
-            updateResetModalUI();
-        }
-
+        function setResetType(type) { tempResetType = type; updateResetModalUI(); }
         function updateResetModalUI() {
-            const btnCouple = document.getElementById('reset-btn-couple');
-            const btnSingle = document.getElementById('reset-btn-single');
-            
-            if(tempResetType === 'couple') {
-                btnCouple.className = "p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs";
-                btnSingle.className = "p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60";
-            } else {
-                btnSingle.className = "p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs";
-                btnCouple.className = "p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60";
-            }
+            document.getElementById('reset-btn-couple').className = tempResetType === 'couple' ? "p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs" : "p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60";
+            document.getElementById('reset-btn-single').className = tempResetType === 'single' ? "p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs" : "p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60";
         }
-
         function closeResetModal() { document.getElementById('modal-reset').classList.add('hidden-screen'); }
-
         function executeReset() {
-            const inputName = document.getElementById('reset-input-name').value.trim();
-            const finalName = inputName || (tempResetType === 'couple' ? 'Rafael y Natalia' : 'Socio');
-            const initialAmount = (tempResetType === 'single') ? '180.00' : '360.00';
-            
-            localStorage.clear();
-            
-            localStorage.setItem('feria_init', 'true');
-            localStorage.setItem('feria_socio_name', finalName);
-            localStorage.setItem('feria_socio_type', tempResetType);
-            localStorage.setItem('feria_balance', initialAmount);
-            localStorage.setItem('feria_history', JSON.stringify({}));
-            localStorage.setItem('feria_all_tickets', JSON.stringify([]));
-            localStorage.setItem('feria_favorites', JSON.stringify([]));
-            localStorage.setItem('feria_open_tab', JSON.stringify([]));
-            
-            closeResetModal();
-            loadData();
-            renderTpvMenu();
-            showScreen('screen-dashboard');
+            const finalName = document.getElementById('reset-input-name').value.trim() || (tempResetType === 'couple' ? 'Rafael y Natalia' : 'Socio');
+            localStorage.clear(); localStorage.setItem('feria_init', 'true'); localStorage.setItem('feria_socio_name', finalName);
+            localStorage.setItem('feria_socio_type', tempResetType); localStorage.setItem('feria_balance', tempResetType === 'single' ? '180.00' : '360.00');
+            localStorage.setItem('feria_history', JSON.stringify({})); localStorage.setItem('feria_all_tickets', JSON.stringify([]));
+            localStorage.setItem('feria_favorites', JSON.stringify([])); localStorage.setItem('feria_open_tab', JSON.stringify([]));
+            closeResetModal(); loadData(); renderTpvMenu(); showScreen('screen-dashboard');
         }
 
-        // --- PROGRAMACIÓN Y ACTUACIONES ---
-        function openScheduleModal() {
-            renderScheduleEvents();
-            document.getElementById('modal-schedule').classList.remove('hidden-screen');
-        }
-
-        function closeScheduleModal() {
-            document.getElementById('modal-schedule').classList.add('hidden-screen');
-        }
-
+        function openScheduleModal() { renderScheduleEvents(); document.getElementById('modal-schedule').classList.remove('hidden-screen'); }
+        function closeScheduleModal() { document.getElementById('modal-schedule').classList.add('hidden-screen'); }
         function renderScheduleEvents() {
-            const container = document.getElementById('schedule-events-container');
-            container.innerHTML = '';
-            const now = new Date();
-
+            const container = document.getElementById('schedule-events-container'); container.innerHTML = ''; const now = new Date();
             SCHEDULE_DATA.forEach(day => {
-                let dayCard = document.createElement('div');
-                dayCard.className = "bg-gray-50 rounded-2xl p-3.5 border border-gray-200 shadow-2xs";
-                
-                let html = `<div class="font-extrabold text-red-700 text-xs uppercase tracking-wider mb-2.5 pb-1 border-b border-gray-200 flex items-center justify-between">
-                    <span>${day.dayTitle}</span>
-                    <i class="fas fa-music text-[10px] text-gray-400"></i>
-                </div><div class="space-y-2">`;
-
+                let html = `<div class="bg-gray-50 rounded-2xl p-3.5 border border-gray-200 shadow-2xs"><div class="font-extrabold text-red-700 text-xs uppercase tracking-wider mb-2.5 pb-1 border-b border-gray-200 flex items-center justify-between"><span>${day.dayTitle}</span><i class="fas fa-music text-[10px] text-gray-400"></i></div><div class="space-y-2">`;
                 day.events.forEach(ev => {
-                    const start = new Date(ev.startISO);
-                    const finishTime = new Date(start.getTime() + (3 * 60 * 60 * 1000));
-
-                    let badgeHtml = '';
-                    let isFinished = false;
-
-                    if (now > finishTime) {
-                        isFinished = true;
-                        badgeHtml = `<span class="text-[10px] font-bold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1">
-                            <i class="fas fa-check"></i> Actuación finalizada
-                        </span>`;
-                    } else if (now >= start && now <= finishTime) {
-                        badgeHtml = `<span class="text-[10px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-xs flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 bg-white rounded-full"></span> ¡EN DIRECTO AHORA!
-                        </span>`;
-                    } else {
-                        badgeHtml = `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">
-                            ⏳ Próximamente
-                        </span>`;
-                    }
-
-                    html += `
-                    <div class="flex justify-between items-start p-2 rounded-xl bg-white border border-gray-100 ${isFinished ? 'opacity-50 grayscale' : ''}">
-                        <div>
-                            <div class="flex items-center gap-1.5">
-                                <span class="text-xs font-mono font-bold text-red-600">${ev.time}</span>
-                                <span class="text-xs font-bold text-gray-800">${ev.title}</span>
-                            </div>
-                            <p class="text-[11px] text-gray-500 mt-0.5">${ev.detail}</p>
-                        </div>
-                        <div class="shrink-0 ml-2">
-                            ${badgeHtml}
-                        </div>
-                    </div>`;
+                    const finishTime = new Date(new Date(ev.startISO).getTime() + (3 * 60 * 60 * 1000));
+                    let badge = now > finishTime ? `<span class="text-[10px] font-bold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fas fa-check"></i> Finalizada</span>` : (now >= new Date(ev.startISO) && now <= finishTime ? `<span class="text-[10px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-xs flex items-center gap-1"><span class="w-1.5 h-1.5 bg-white rounded-full"></span> ¡EN DIRECTO!</span>` : `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">⏳ Próximamente</span>`);
+                    html += `<div class="flex justify-between items-start p-2 rounded-xl bg-white border border-gray-100 ${now > finishTime ? 'opacity-50 grayscale' : ''}"><div><div class="flex items-center gap-1.5"><span class="text-xs font-mono font-bold text-red-600">${ev.time}</span><span class="text-xs font-bold text-gray-800">${ev.title}</span></div><p class="text-[11px] text-gray-500 mt-0.5">${ev.detail}</p></div><div class="shrink-0 ml-2">${badge}</div></div>`;
                 });
-
-                html += `</div>`;
-                dayCard.innerHTML = html;
-                container.appendChild(dayCard);
+                container.innerHTML += html + `</div></div>`;
             });
         }
 
-        // --- RECARGA ---
-        function openRecharge() {
-            document.getElementById('recharge-amount').value = '';
-            document.getElementById('recharge-preview').innerText = '0,00 €';
-            showScreen('screen-recharge');
-        }
+        function openRecharge() { document.getElementById('recharge-amount').value = ''; document.getElementById('recharge-preview').innerText = '0,00 €'; showScreen('screen-recharge'); }
         function closeRecharge() { showScreen('screen-dashboard'); }
-
-        document.getElementById('recharge-amount').addEventListener('input', (e) => {
-            const val = parseFloat(e.target.value) || 0;
-            const total = val * 1.20; 
-            document.getElementById('recharge-preview').innerText = total.toFixed(2).replace('.', ',') + ' €';
-        });
-
+        document.getElementById('recharge-amount').addEventListener('input', (e) => { document.getElementById('recharge-preview').innerText = ((parseFloat(e.target.value) || 0) * 1.20).toFixed(2).replace('.', ',') + ' €'; });
         function confirmRecharge() {
             const val = parseFloat(document.getElementById('recharge-amount').value);
-            if(val > 0) {
-                const totalToAdd = val * 1.20;
-                balance += totalToAdd;
-                localStorage.setItem('feria_balance', balance.toString());
-                loadData();
-                showScreen('screen-dashboard');
-            }
+            if(val > 0) { balance += val * 1.20; localStorage.setItem('feria_balance', balance.toString()); loadData(); showScreen('screen-dashboard'); }
         }
 
-        // --- TPV (PUNTO DE VENTA / CUENTA ABIERTA) ---
         function renderTpvMenu() {
-            const catContainer = document.getElementById('tpv-categories');
-            const prodContainer = document.getElementById('tpv-products');
-            
             let catHTML = `<button onclick="showCategory('Favs')" class="cat-btn px-4 py-2 rounded-full whitespace-nowrap font-semibold bg-red-600 text-white" id="cat-btn-Favs">⭐ Favs</button>`;
-            
-            Object.keys(DATA).forEach(cat => {
-                catHTML += `<button onclick="showCategory('${cat}')" class="cat-btn px-4 py-2 rounded-full whitespace-nowrap font-semibold bg-gray-200 text-gray-700" id="cat-btn-${cat.replace(/\s+/g, '')}">${cat}</button>`;
-            });
-            catContainer.innerHTML = catHTML;
+            Object.keys(DATA).forEach(cat => { catHTML += `<button onclick="showCategory('${cat}')" class="cat-btn px-4 py-2 rounded-full whitespace-nowrap font-semibold bg-gray-200 text-gray-700" id="cat-btn-${cat.replace(/\s+/g, '')}">${cat}</button>`; });
+            document.getElementById('tpv-categories').innerHTML = catHTML;
 
             let prodHTML = `<div id="cat-Favs" class="cat-group grid grid-cols-2 gap-2">`;
-            if (favoriteNames.length === 0) {
-                prodHTML += `<div class="col-span-2 text-center text-gray-400 py-10 italic text-sm">Tus productos pedidos irán apareciendo aquí automáticamente.</div>`;
-            } else {
-                favoriteNames.forEach(favName => {
-                    let prodObj = null;
-                    Object.values(DATA).forEach(catArray => {
-                        const found = catArray.find(p => p.name === favName);
-                        if(found) prodObj = found;
-                    });
-                    if(prodObj) prodHTML += createProductBtn(prodObj);
-                });
-            }
+            if (favoriteNames.length === 0) prodHTML += `<div class="col-span-2 text-center text-gray-400 py-10 italic text-sm">Tus productos irán apareciendo aquí.</div>`;
+            else favoriteNames.forEach(f => { let p = null; Object.values(DATA).forEach(c => { let fd = c.find(x => x.name === f); if(fd) p = fd; }); if(p) prodHTML += createProductBtn(p); });
             prodHTML += `</div>`;
 
             Object.keys(DATA).forEach(cat => {
                 prodHTML += `<div id="cat-${cat.replace(/\s+/g, '')}" class="cat-group grid grid-cols-2 gap-2 hidden">`;
-                DATA[cat].forEach(prod => {
-                    prodHTML += createProductBtn(prod);
-                });
+                DATA[cat].forEach(p => { prodHTML += createProductBtn(p); });
                 prodHTML += `</div>`;
             });
-
-            prodHTML += `<div id="cat-SearchResults" class="cat-group grid grid-cols-2 gap-2 hidden"></div>`;
-            prodContainer.innerHTML = prodHTML;
+            document.getElementById('tpv-products').innerHTML = prodHTML + `<div id="cat-SearchResults" class="cat-group grid grid-cols-2 gap-2 hidden"></div>`;
         }
 
         function createProductBtn(prod) {
+            const icon = prod.icon || '🍽️';
             return `
-            <button onclick="openQtyModal('${prod.name}', ${prod.price})" class="bg-white border border-gray-200 p-3 rounded-2xl shadow-sm text-left active:bg-gray-100 flex flex-col justify-between h-24 transition-all">
-                <span class="font-semibold text-gray-800 text-sm leading-tight">${prod.name}</span>
-                <span class="text-red-600 font-bold">${prod.price.toFixed(2).replace('.', ',')} €</span>
+            <button onclick="openQtyModal('${prod.name}', ${prod.price}, '${icon}')" class="product-card p-3 text-left flex flex-col justify-between h-28 relative overflow-hidden group">
+                <div class="text-3xl mb-1 transform group-active:scale-110 transition-transform">${icon}</div>
+                <div class="flex flex-col relative z-10">
+                    <span class="font-bold text-gray-800 text-[13px] leading-tight line-clamp-2">${prod.name}</span>
+                    <span class="text-red-600 font-extrabold text-sm mt-0.5">${prod.price.toFixed(2).replace('.', ',')} €</span>
+                </div>
+                <div class="absolute -bottom-4 -right-2 text-6xl opacity-[0.04] rotate-12 pointer-events-none">${icon}</div>
             </button>`;
         }
 
         function showCategory(catId) {
-            clearSearch();
-            document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
+            clearSearch(); document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
             document.getElementById(`cat-${catId.replace(/\s+/g, '')}`).classList.remove('hidden');
-            
-            document.querySelectorAll('.cat-btn').forEach(el => {
-                el.classList.remove('bg-red-600', 'text-white');
-                el.classList.add('bg-gray-200', 'text-gray-700');
-            });
+            document.querySelectorAll('.cat-btn').forEach(el => { el.classList.remove('bg-red-600', 'text-white'); el.classList.add('bg-gray-200', 'text-gray-700'); });
             const activeBtn = document.getElementById(`cat-btn-${catId.replace(/\s+/g, '')}`);
-            if(activeBtn) {
-                activeBtn.classList.remove('bg-gray-200', 'text-gray-700');
-                activeBtn.classList.add('bg-red-600', 'text-white');
-            }
+            if(activeBtn) { activeBtn.classList.remove('bg-gray-200', 'text-gray-700'); activeBtn.classList.add('bg-red-600', 'text-white'); }
         }
 
-        // --- BUSCADOR ---
         function handleSearch(term) {
-            const query = term.trim().toLowerCase();
-            const btnClear = document.getElementById('btn-clear-search');
-            const searchContainer = document.getElementById('cat-SearchResults');
-
+            const query = term.trim().toLowerCase(); const container = document.getElementById('cat-SearchResults');
             if (query.length > 0) {
-                btnClear.classList.remove('hidden');
-                btnClear.classList.add('flex');
-                
-                let matches = [];
-                Object.values(DATA).forEach(list => {
-                    list.forEach(p => {
-                        if (p.name.toLowerCase().includes(query)) matches.push(p);
-                    });
-                });
-
-                document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
-                searchContainer.classList.remove('hidden');
-
-                if (matches.length === 0) {
-                    searchContainer.innerHTML = `<div class="col-span-2 text-center text-gray-400 py-10 italic text-sm">No hay productos que coincidan con "${term}".</div>`;
-                } else {
-                    let html = '';
-                    matches.forEach(p => { html += createProductBtn(p); });
-                    searchContainer.innerHTML = html;
-                }
-            } else {
-                clearSearch();
-            }
+                document.getElementById('btn-clear-search').classList.remove('hidden'); document.getElementById('btn-clear-search').classList.add('flex');
+                let matches = []; Object.values(DATA).forEach(list => { list.forEach(p => { if (p.name.toLowerCase().includes(query)) matches.push(p); }); });
+                document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden')); container.classList.remove('hidden');
+                container.innerHTML = matches.length === 0 ? `<div class="col-span-2 text-center text-gray-400 py-10 italic text-sm">No hay resultados.</div>` : matches.map(p => createProductBtn(p)).join('');
+            } else { clearSearch(); }
         }
-
         function clearSearch() {
-            document.getElementById('tpv-search').value = '';
-            const btnClear = document.getElementById('btn-clear-search');
-            btnClear.classList.add('hidden');
-            btnClear.classList.remove('flex');
-            
-            const searchContainer = document.getElementById('cat-SearchResults');
-            searchContainer.classList.add('hidden');
-            searchContainer.innerHTML = '';
-            
-            const activeCatBtn = document.querySelector('.cat-btn.bg-red-600');
-            if (activeCatBtn) {
-                const catId = activeCatBtn.id.replace('cat-btn-', '');
-                const targetCat = document.getElementById(`cat-${catId}`);
-                if(targetCat) targetCat.classList.remove('hidden');
-            }
+            document.getElementById('tpv-search').value = ''; document.getElementById('btn-clear-search').classList.add('hidden'); document.getElementById('btn-clear-search').classList.remove('flex');
+            document.getElementById('cat-SearchResults').classList.add('hidden');
+            const activeCatBtn = document.querySelector('.cat-btn.bg-red-600'); if (activeCatBtn) { document.getElementById(`cat-${activeCatBtn.id.replace('cat-btn-', '')}`).classList.remove('hidden'); }
         }
 
-        // --- IMPORTE LIBRE / EXTRA ---
-        function openCustomModal() {
-            document.getElementById('custom-name').value = '';
-            document.getElementById('custom-price').value = '';
-            document.getElementById('modal-custom').classList.remove('hidden-screen');
-        }
-
+        function openCustomModal() { document.getElementById('custom-name').value = ''; document.getElementById('custom-price').value = ''; document.getElementById('modal-custom').classList.remove('hidden-screen'); }
         function closeCustomModal() { document.getElementById('modal-custom').classList.add('hidden-screen'); }
         function fillCustomPreset(name) { document.getElementById('custom-name').value = name; }
-
+        
         function confirmCustomItem() {
-            const name = document.getElementById('custom-name').value.trim() || 'Extra / Varios';
-            const price = parseFloat(document.getElementById('custom-price').value);
-
-            if (!price || price <= 0) {
-                alert("Introduce un importe válido");
-                return;
-            }
-
-            currentTicket.push({name: name, price: price, qty: 1});
-            saveOpenTab();
-            updateTicketUI();
-            closeCustomModal();
-
-            if (navigator.vibrate) navigator.vibrate(50);
+            const name = document.getElementById('custom-name').value.trim() || 'Extra / Varios'; const price = parseFloat(document.getElementById('custom-price').value);
+            if (!price || price <= 0) return alert("Introduce un importe válido");
+            let cIcon = "✨"; if(name.toLowerCase().includes("churro")) cIcon = "🥖"; if(name.toLowerCase().includes("tabaco")) cIcon = "🚬"; if(name.toLowerCase().includes("propina")) cIcon = "💰";
+            
+            // LOS ITEMS CUSTOM TAMBIÉN SE MARCAN COMO NUEVOS
+            currentTicket.push({name: name.replace(/🥖|🚬|💰/, '').trim(), price: price, qty: 1, icon: cIcon, isNew: true});
+            updateTicketUI(); closeCustomModal(); if (navigator.vibrate) navigator.vibrate(50);
         }
 
-        function openTpv() {
-            currentTicket = JSON.parse(localStorage.getItem('feria_open_tab')) || [];
-            clearSearch();
-            updateTicketUI();
-            showScreen('screen-tpv');
+        function openTpv() { 
+            currentTicket = JSON.parse(localStorage.getItem('feria_open_tab')) || []; 
+            // Asegurar que al entrar, todo lo viejo NO es "NUEVO"
+            currentTicket.forEach(item => item.isNew = false);
+            clearSearch(); updateTicketUI(); showScreen('screen-tpv'); 
         }
 
-        function closeTpv() {
-            saveOpenTab();
-            loadData();
-            showScreen('screen-dashboard');
+        function consolidateTicket(ticket) {
+            let consolidated = [];
+            ticket.forEach(item => {
+                let existing = consolidated.find(p => p.name === item.name && p.price === item.price);
+                if (existing) { existing.qty += item.qty; } 
+                else { consolidated.push({...item, isNew: false}); }
+            });
+            return consolidated;
         }
 
-        function saveOpenTab() {
-            localStorage.setItem('feria_open_tab', JSON.stringify(currentTicket));
+        function closeTpv() { 
+            currentTicket = consolidateTicket(currentTicket); // Limpia las etiquetas de NUEVO
+            saveOpenTab(); loadData(); showScreen('screen-dashboard'); 
         }
+        function saveOpenTab() { localStorage.setItem('feria_open_tab', JSON.stringify(currentTicket)); }
 
-        function openQtyModal(name, price) {
-            tempProdName = name;
-            tempProdPrice = price;
-            document.getElementById('modal-qty-name').innerText = name;
+        function openQtyModal(name, price, icon) {
+            tempProdName = name; tempProdPrice = price; tempProdIcon = icon;
+            document.getElementById('modal-qty-name').innerHTML = `<span class="text-4xl block mb-2">${icon}</span>${name}`;
             document.getElementById('modal-qty').classList.remove('hidden-screen');
         }
         function closeQtyModal() { document.getElementById('modal-qty').classList.add('hidden-screen'); }
-
+        
         function confirmQty(qty) {
-            let existingProd = currentTicket.find(p => p.name === tempProdName);
-            if (existingProd) {
-                existingProd.qty += qty;
-            } else {
-                currentTicket.push({name: tempProdName, price: tempProdPrice, qty: qty});
-            }
+            // AL AÑADIR, COMPROBAMOS SI YA HAY UNO "NUEVO" EN ESTA TANDA
+            let existing = currentTicket.find(p => p.name === tempProdName && p.isNew === true);
+            if (existing) existing.qty += qty; 
+            else currentTicket.push({name: tempProdName, price: tempProdPrice, qty: qty, icon: tempProdIcon, isNew: true});
             
-            saveOpenTab();
-            updateTicketUI();
-            closeQtyModal();
-            if (navigator.vibrate) navigator.vibrate(50);
+            updateTicketUI(); closeQtyModal(); if (navigator.vibrate) navigator.vibrate(50);
         }
-
-        function removeLineItem(index) {
-            currentTicket.splice(index, 1);
-            saveOpenTab();
-            updateTicketUI();
-        }
-
-        function clearCurrentTicket() {
-            if (confirm("¿Quieres vaciar todos los productos de esta cuenta en curso?")) {
-                currentTicket = [];
-                saveOpenTab();
-                updateTicketUI();
-            }
-        }
+        
+        function removeLineItem(index) { currentTicket.splice(index, 1); updateTicketUI(); }
+        function clearCurrentTicket() { if (confirm("¿Vaciar mesa?")) { currentTicket = []; updateTicketUI(); } }
 
         function updateTicketUI() {
-            ticketTotal = 0;
-            currentTicket.forEach(i => { ticketTotal += (i.price * i.qty); });
-
+            ticketTotal = 0; currentTicket.forEach(i => { ticketTotal += (i.price * i.qty); });
             document.getElementById('tpv-total').innerText = ticketTotal.toFixed(2).replace('.', ',') + ' €';
-            const remaining = balance - ticketTotal;
-            const remainingEl = document.getElementById('tpv-remaining');
-            remainingEl.innerText = remaining.toFixed(2).replace('.', ',') + ' €';
-            
-            if (remaining < 0) {
-                remainingEl.classList.remove('text-gray-700');
-                remainingEl.classList.add('text-red-600', 'font-bold');
-            } else {
-                remainingEl.classList.add('text-gray-700');
-                remainingEl.classList.remove('text-red-600', 'font-bold');
-            }
+            const remaining = balance - ticketTotal; document.getElementById('tpv-remaining').innerText = remaining.toFixed(2).replace('.', ',') + ' €';
+            document.getElementById('tpv-remaining').className = remaining < 0 ? 'text-sm font-bold text-red-600' : 'text-sm font-bold text-gray-700';
 
-            const btnConfirm = document.getElementById('btn-confirm-ticket');
-            const btnEmpty = document.getElementById('btn-empty-ticket');
-            const listEl = document.getElementById('tpv-current-list');
-
+            const btnConfirm = document.getElementById('btn-confirm-ticket'); const btnEmpty = document.getElementById('btn-empty-ticket'); const listEl = document.getElementById('tpv-current-list');
             if (currentTicket.length === 0) {
-                btnConfirm.disabled = true;
-                btnEmpty.classList.add('hidden');
-                listEl.innerHTML = '<p class="text-center text-gray-400 text-sm py-4 italic">No hay productos en la mesa aún</p>';
+                btnConfirm.disabled = true; btnEmpty.classList.add('hidden'); listEl.innerHTML = '<p class="text-center text-gray-400 text-sm py-4 italic">No hay productos en la mesa aún</p>';
             } else {
-                btnConfirm.disabled = false;
-                btnEmpty.classList.remove('hidden');
-                let html = '';
-                currentTicket.forEach((item, index) => {
-                    let totalLine = item.price * item.qty;
-                    html += `
-                    <div class="flex justify-between items-center py-2 border-b border-gray-200 last:border-0">
-                        <div class="flex flex-col">
-                            <span class="font-bold text-gray-800 text-sm">${item.qty}x ${item.name}</span>
+                btnConfirm.disabled = false; btnEmpty.classList.remove('hidden');
+                
+                // RENDERIZAR LA LISTA (CON ETIQUETA "NUEVO" SI CORRESPONDE)
+                listEl.innerHTML = currentTicket.map((item, idx) => {
+                    const isNewClass = item.isNew ? 'bg-green-50 border-l-4 border-green-500 rounded-r-md' : 'border-b border-gray-200';
+                    const newBadge = item.isNew ? '<span class="text-[9px] bg-green-500 text-white font-bold px-1.5 py-0.5 rounded shadow-xs ml-2 animate-pulse">✨ NUEVO</span>' : '';
+                    
+                    return `
+                    <div class="flex justify-between items-center py-2 px-2.5 mb-1 last:mb-0 ${isNewClass}">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl">${item.icon || '🍽️'}</span>
+                            <span class="font-bold text-gray-800 text-sm flex items-center">${item.qty}x ${item.name} ${newBadge}</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="font-bold text-gray-900">${totalLine.toFixed(2).replace('.', ',')} €</span>
-                            <button onclick="removeLineItem(${index})" class="text-red-500 bg-red-100 w-8 h-8 rounded-full flex items-center justify-center active:bg-red-200">
-                                <i class="fas fa-trash-alt text-xs"></i>
-                            </button>
+                            <span class="font-bold text-gray-900">${(item.price * item.qty).toFixed(2).replace('.', ',')} €</span>
+                            <button onclick="removeLineItem(${idx})" class="text-red-500 bg-red-100 hover:bg-red-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fas fa-trash-alt text-xs"></i></button>
                         </div>
                     </div>`;
-                });
-                listEl.innerHTML = html;
+                }).join('');
                 listEl.scrollTop = listEl.scrollHeight;
             }
         }
 
         function confirmTicket() {
-            if (ticketTotal > balance) {
-                alert("No tienes saldo suficiente. ¡Recarga tickets antes de pagar!");
-                return;
-            }
+            if (ticketTotal > balance) return alert("No tienes saldo suficiente. ¡Recarga tickets antes de pagar!");
             
-            const oldBalance = balance;
-            balance -= ticketTotal;
-            localStorage.setItem('feria_balance', balance.toString());
+            // CONSOLIDAMOS EL TICKET ANTES DE PAGAR PARA QUE EL RECIBO QUEDE LIMPIO
+            currentTicket = consolidateTicket(currentTicket);
             
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('es-ES');
-            const timeStr = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
-            const ticketId = Math.floor(Math.random() * 90000) + 10000;
-            
-            if(!history[dateStr]) history[dateStr] = 0;
-            history[dateStr] += ticketTotal;
-            localStorage.setItem('feria_history', JSON.stringify(history));
+            const oldBalance = balance; balance -= ticketTotal; localStorage.setItem('feria_balance', balance.toString());
+            const now = new Date(); const dateStr = now.toLocaleDateString('es-ES'); const timeStr = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
+            if(!history[dateStr]) history[dateStr] = 0; history[dateStr] += ticketTotal; localStorage.setItem('feria_history', JSON.stringify(history));
 
-            const finalTicket = {
-                id: ticketId,
-                date: dateStr,
-                time: timeStr,
-                items: [...currentTicket],
-                total: ticketTotal,
-                oldBal: oldBalance,
-                newBal: balance,
-                socio: socioName
-            };
-            allTickets.unshift(finalTicket);
-            localStorage.setItem('feria_all_tickets', JSON.stringify(allTickets));
+            const finalTicket = { id: Math.floor(Math.random() * 90000) + 10000, date: dateStr, time: timeStr, items: [...currentTicket], total: ticketTotal, oldBal: oldBalance, newBal: balance, socio: socioName };
+            allTickets.unshift(finalTicket); localStorage.setItem('feria_all_tickets', JSON.stringify(allTickets));
             
-            let updatedFavs = false;
-            currentTicket.forEach(item => {
-                if (!favoriteNames.includes(item.name)) {
-                    favoriteNames.push(item.name);
-                    updatedFavs = true;
-                }
-            });
-            if (updatedFavs) {
-                localStorage.setItem('feria_favorites', JSON.stringify(favoriteNames));
-                renderTpvMenu(); 
-            }
+            let updatedFavs = false; currentTicket.forEach(item => { if (!favoriteNames.includes(item.name)) { favoriteNames.push(item.name); updatedFavs = true; } });
+            if (updatedFavs) { localStorage.setItem('feria_favorites', JSON.stringify(favoriteNames)); renderTpvMenu(); }
 
-            currentTicket = [];
-            localStorage.setItem('feria_open_tab', JSON.stringify([]));
-
-            receiptReturnScreen = 'screen-dashboard';
-            showReceipt(finalTicket);
+            currentTicket = []; localStorage.setItem('feria_open_tab', JSON.stringify([]));
+            receiptReturnScreen = 'screen-dashboard'; showReceipt(finalTicket);
         }
 
-        // --- VISOR DE RECIBO ---
         function showReceipt(ticket) {
-            document.getElementById('receipt-socio').innerText = ticket.socio || socioName || 'Rafael y Natalia';
-            document.getElementById('receipt-datetime').innerText = `${ticket.date} - ${ticket.time}`;
-            document.getElementById('receipt-id').innerText = ticket.id;
-            
-            let itemsHtml = '';
-            ticket.items.forEach(item => {
-                let lineTotal = item.qty * item.price;
-                itemsHtml += `
-                <div class="flex justify-between">
-                    <span class="truncate pr-2">${item.qty}x ${item.name}</span>
-                    <span class="whitespace-nowrap font-bold">${lineTotal.toFixed(2).replace('.', ',')} €</span>
-                </div>`;
-            });
-            document.getElementById('receipt-items').innerHTML = itemsHtml;
+            document.getElementById('receipt-socio').innerText = ticket.socio || socioName;
+            document.getElementById('receipt-datetime').innerText = `${ticket.date} - ${ticket.time}`; document.getElementById('receipt-id').innerText = ticket.id;
+            document.getElementById('receipt-items').innerHTML = ticket.items.map(i => `<div class="flex justify-between items-center py-0.5"><span class="truncate pr-2">${i.qty}x ${i.icon || ''} ${i.name}</span><span class="whitespace-nowrap font-bold">${(i.qty * i.price).toFixed(2).replace('.', ',')} €</span></div>`).join('');
             document.getElementById('receipt-total').innerText = ticket.total.toFixed(2).replace('.', ',') + ' €';
-            
             if (ticket.oldBal !== undefined) {
-                document.getElementById('receipt-old-bal-row').classList.remove('hidden');
-                document.getElementById('receipt-new-bal-row').classList.remove('hidden');
-                document.getElementById('receipt-old-balance').innerText = ticket.oldBal.toFixed(2).replace('.', ',') + ' €';
-                document.getElementById('receipt-new-balance').innerText = ticket.newBal.toFixed(2).replace('.', ',') + ' €';
-            } else {
-                document.getElementById('receipt-old-bal-row').classList.add('hidden');
-                document.getElementById('receipt-new-bal-row').classList.add('hidden');
-            }
-            
+                document.getElementById('receipt-old-bal-row').classList.remove('hidden'); document.getElementById('receipt-new-bal-row').classList.remove('hidden');
+                document.getElementById('receipt-old-balance').innerText = ticket.oldBal.toFixed(2).replace('.', ',') + ' €'; document.getElementById('receipt-new-balance').innerText = ticket.newBal.toFixed(2).replace('.', ',') + ' €';
+            } else { document.getElementById('receipt-old-bal-row').classList.add('hidden'); document.getElementById('receipt-new-bal-row').classList.add('hidden'); }
             document.getElementById('screen-receipt').classList.remove('hidden-screen');
         }
+        function closeReceipt() { document.getElementById('screen-receipt').classList.add('hidden-screen'); loadData(); showScreen(receiptReturnScreen); }
 
-        function closeReceipt() {
-            document.getElementById('screen-receipt').classList.add('hidden-screen');
-            loadData();
-            showScreen(receiptReturnScreen);
-        }
-
-        // --- HISTORIAL CON BOTÓN CLARO PARA ABRIR ---
         function openHistory() {
-            const listEl = document.getElementById('full-ticket-list');
-            listEl.innerHTML = '';
-
-            if (allTickets.length === 0) {
-                listEl.innerHTML = '<p class="text-center text-gray-400 mt-10 italic">Aún no hay tickets guardados.</p>';
-            } else {
-                allTickets.forEach((ticket, idx) => {
-                    let itemsPreview = ticket.items.map(i => `${i.qty}x ${i.name}`).join(', ');
-                    
-                    let html = `
-                    <div onclick="viewHistoryTicket(${idx})" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 active:bg-gray-100 active:scale-[0.99] transition-all cursor-pointer hover:border-red-400">
-                        <div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2">
-                            <span class="text-xs font-bold text-gray-600 flex items-center gap-1.5"><i class="far fa-clock text-red-500"></i> ${ticket.date} - ${ticket.time}</span>
-                            <span class="text-[11px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-bold">#${ticket.id}</span>
-                        </div>
-                        <p class="text-sm text-gray-700 mb-3 truncate font-medium">${itemsPreview}</p>
-                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                            <span class="text-xs font-bold text-red-700 bg-red-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-2xs">
-                                <i class="fas fa-receipt"></i> Ver Ticket
-                            </span>
-                            <span class="font-extrabold text-red-600 text-lg">-${ticket.total.toFixed(2).replace('.', ',')} €</span>
-                        </div>
-                    </div>`;
-                    listEl.innerHTML += html;
-                });
-            }
-            showScreen('screen-history-list');
+            const listEl = document.getElementById('full-ticket-list'); listEl.innerHTML = '';
+            if (allTickets.length === 0) listEl.innerHTML = '<p class="text-center text-gray-400 mt-10 italic">Aún no hay tickets guardados.</p>';
+            else allTickets.forEach((ticket, idx) => {
+                let itemsPreview = ticket.items.map(i => `${i.qty}x ${i.icon||''} ${i.name}`).join(', ');
+                listEl.innerHTML += `<div onclick="viewHistoryTicket(${idx})" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 active:bg-gray-100 active:scale-[0.99] transition-all cursor-pointer hover:border-red-400"><div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2"><span class="text-xs font-bold text-gray-600 flex items-center gap-1.5"><i class="far fa-clock text-red-500"></i> ${ticket.date} - ${ticket.time}</span><span class="text-[11px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-bold">#${ticket.id}</span></div><p class="text-sm text-gray-700 mb-3 truncate font-medium">${itemsPreview}</p><div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border border-gray-100"><span class="text-xs font-bold text-red-700 bg-red-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-2xs"><i class="fas fa-receipt"></i> Ver Ticket</span><span class="font-extrabold text-red-600 text-lg">-${ticket.total.toFixed(2).replace('.', ',')} €</span></div></div>`;
+            }); showScreen('screen-history-list');
         }
-
-        function viewHistoryTicket(idx) {
-            const ticket = allTickets[idx];
-            receiptReturnScreen = 'screen-history-list';
-            showReceipt(ticket);
-        }
+        function viewHistoryTicket(idx) { receiptReturnScreen = 'screen-history-list'; showReceipt(allTickets[idx]); }
     </script>
 </body>
 </html>
