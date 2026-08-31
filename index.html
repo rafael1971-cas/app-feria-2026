@@ -73,6 +73,48 @@
         </div>
     </div>
 
+    <!-- MODAL: IMPORTE LIBRE / EXTRA -->
+    <div id="modal-custom" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 text-lg">Añadir Extra / Libre</h3>
+                    <p class="text-xs text-gray-500">Para churros, tabaco o gastos especiales</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 mb-5">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Concepto / Nombre</label>
+                    <input type="text" id="custom-name" placeholder="Ej. Churros, Tabaco, Extra..." class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-base font-semibold focus:outline-none focus:border-purple-500 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Importe (€)</label>
+                    <input type="number" id="custom-price" placeholder="0.00" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-2xl font-bold text-purple-700 focus:outline-none focus:border-purple-500 transition-colors" inputmode="decimal">
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5 mb-6">
+                <button onclick="fillCustomPreset('Churros')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">Churros</button>
+                <button onclick="fillCustomPreset('Tabaco')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">Tabaco</button>
+                <button onclick="fillCustomPreset('Ronda especial')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">Ronda especial</button>
+                <button onclick="fillCustomPreset('Propina')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">Propina</button>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <button onclick="confirmCustomItem()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-base">
+                    Añadir al Ticket
+                </button>
+                <button onclick="closeCustomModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl text-sm">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- PANTALLA 0: CRÉDITOS (SOLO PRIMER USO) -->
     <div id="screen-credits" class="h-full w-full bg-gray-900 text-white flex flex-col items-center justify-center p-6 text-center z-40 absolute hidden-screen">
         <h1 class="text-3xl font-bold text-red-500 mb-8 tracking-wider">FERIA 2026</h1>
@@ -145,9 +187,12 @@
 
     <!-- PANTALLA 2.5: HISTORIAL COMPLETO DE TICKETS -->
     <div id="screen-history-list" class="h-full w-full bg-gray-100 flex flex-col z-30 absolute hidden-screen">
-        <div class="bg-white p-4 shadow-sm flex items-center z-10 shrink-0">
-            <button onclick="showScreen('screen-dashboard')" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
-            <span class="font-bold text-lg text-gray-800 ml-4">Todos mis Tickets</span>
+        <div class="bg-white p-4 shadow-sm flex items-center justify-between z-10 shrink-0">
+            <div class="flex items-center">
+                <button onclick="showScreen('screen-dashboard')" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
+                <span class="font-bold text-lg text-gray-800 ml-4">Todos mis Tickets</span>
+            </div>
+            <span class="text-xs font-medium text-gray-500">Toca para abrir</span>
         </div>
         <div class="flex-1 overflow-y-auto p-4 space-y-4" id="full-ticket-list">
             <!-- Se llena con JS -->
@@ -177,22 +222,38 @@
 
     <!-- PANTALLA 4: TPV -->
     <div id="screen-tpv" class="h-full w-full bg-gray-50 flex flex-col z-30 absolute hidden-screen">
-        <div class="bg-white p-4 shadow-sm flex justify-between items-center z-10 shrink-0">
+        <div class="bg-white p-3.5 shadow-sm flex justify-between items-center z-10 shrink-0 border-b">
             <button onclick="closeTpv()" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
             <span class="font-bold text-lg text-gray-800">Agregar Pedido</span>
-            <div class="w-8"></div>
+            <button onclick="openCustomModal()" class="bg-purple-100 text-purple-700 font-bold text-xs px-3 py-1.5 rounded-full active:bg-purple-200 flex items-center gap-1.5 transition-colors">
+                <i class="fas fa-plus"></i> Extra
+            </button>
         </div>
 
+        <!-- BARRA DE BÚSQUEDA RÁPIDA -->
+        <div class="bg-white px-3 py-2 border-b shrink-0">
+            <div class="relative">
+                <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+                <input type="text" id="tpv-search" oninput="handleSearch(this.value)" placeholder="Buscar plato o bebida..." class="w-full bg-gray-100 rounded-xl py-2 pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
+                <button onclick="clearSearch()" id="btn-clear-search" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 hidden text-xs bg-gray-200 w-5 h-5 rounded-full items-center justify-center">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Categorías -->
         <div class="flex overflow-x-auto bg-white border-b py-2 px-2 gap-2 hide-scrollbar shrink-0 shadow-sm z-10" id="tpv-categories">
             <!-- Se llena con JS -->
         </div>
 
+        <!-- Productos -->
         <div class="flex-1 overflow-y-auto p-2" id="tpv-products">
             <!-- Se llena con JS -->
         </div>
 
+        <!-- Barra inferior Ticket -->
         <div class="shrink-0 bg-white shadow-[0_-5px_15px_rgba(0,0,0,0.05)] border-t z-20 flex flex-col">
-            <div id="tpv-current-list" class="max-h-40 overflow-y-auto px-4 py-2 bg-slate-50 border-b">
+            <div id="tpv-current-list" class="max-h-36 overflow-y-auto px-4 py-2 bg-slate-50 border-b">
                 <!-- Se llena con JS -->
             </div>
 
@@ -214,14 +275,18 @@
         </div>
     </div>
 
-    <!-- PANTALLA 5: EL RECIBO DE LA MÁQUINA -->
+    <!-- PANTALLA 5: EL RECIBO DE LA MÁQUINA (MODAL VISOR) -->
     <div id="screen-receipt" class="h-full w-full bg-gray-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 z-50 absolute hidden-screen">
         <div class="ticket-bg w-full max-w-sm rounded-lg shadow-2xl p-6 font-mono text-sm text-gray-800">
+            <!-- CABECERA PERSONALIZADA CON CASETA, FERIA Y SOCIO -->
             <div class="text-center mb-3">
-                <h2 class="text-2xl font-black tracking-wider">LA PREMIERR</h2>
-                <p class="text-[11px] uppercase text-gray-500 mt-0.5">Feria Tocina-Rosales 2026</p>
+                <h2 class="text-xl font-black tracking-wider uppercase text-gray-900">Caseta "La Premierr"</h2>
+                <p class="text-[11px] uppercase font-bold text-red-600 mt-0.5">Feria 2026 Tocina - Los Rosales</p>
+                <div class="mt-2 text-xs bg-gray-100 py-1 px-3 rounded-full inline-block font-bold text-gray-700 border border-gray-200">
+                    Socio: <span id="receipt-socio">Rafael y Natalia</span>
+                </div>
                 <p class="text-[11px] mt-2 text-gray-600" id="receipt-datetime">...</p>
-                <p class="text-[11px] text-gray-600">Ticket #<span id="receipt-id"></span></p>
+                <p class="text-[11px] text-gray-500">Ticket #<span id="receipt-id"></span></p>
             </div>
             
             <div class="border-t-2 border-dashed border-gray-300 my-3"></div>
@@ -236,12 +301,12 @@
                 <span>TOTAL:</span>
                 <span id="receipt-total">0,00 €</span>
             </div>
-            <div class="flex justify-between text-xs text-gray-500">
+            <div class="flex justify-between text-xs text-gray-500" id="receipt-old-bal-row">
                 <span>Saldo anterior:</span>
                 <span id="receipt-old-balance">0,00 €</span>
             </div>
-            <div class="flex justify-between text-xs font-semibold text-gray-800 mt-1">
-                <span>Saldo actual:</span>
+            <div class="flex justify-between text-xs font-semibold text-gray-800 mt-1" id="receipt-new-bal-row">
+                <span>Saldo resultante:</span>
                 <span id="receipt-new-balance">0,00 €</span>
             </div>
             
@@ -251,7 +316,7 @@
         </div>
 
         <button onclick="closeReceipt()" class="mt-6 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-8 rounded-full shadow-lg active:scale-95 transition-transform text-base w-full max-w-sm">
-            Guardar y Cerrar
+            Cerrar Recibo
         </button>
     </div>
 
@@ -264,6 +329,7 @@
         let ticketTotal = 0;
         let socioName = "";
         let favoriteNames = [];
+        let receiptReturnScreen = 'screen-dashboard';
 
         let tempProdName = "";
         let tempProdPrice = 0;
@@ -338,7 +404,7 @@
 
         // --- NAVEGACIÓN ---
         function showScreen(id) {
-            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset)').forEach(el => el.classList.add('hidden-screen'));
+            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom)').forEach(el => el.classList.add('hidden-screen'));
             document.getElementById(id).classList.remove('hidden-screen');
         }
 
@@ -402,19 +468,13 @@
         }
 
         // --- REINICIO INTELIGENTE ---
-        function openResetModal() {
-            document.getElementById('modal-reset').classList.remove('hidden-screen');
-        }
-
-        function closeResetModal() {
-            document.getElementById('modal-reset').classList.add('hidden-screen');
-        }
+        function openResetModal() { document.getElementById('modal-reset').classList.remove('hidden-screen'); }
+        function closeResetModal() { document.getElementById('modal-reset').classList.add('hidden-screen'); }
 
         function executeReset() {
             const savedName = localStorage.getItem('feria_socio_name') || socioName || 'Rafael y Natalia';
             localStorage.clear();
             
-            // Reestablecer conservando al socio y evitando pantallas iniciales
             localStorage.setItem('feria_init', 'true');
             localStorage.setItem('feria_socio_name', savedName);
             localStorage.setItem('feria_balance', '360.00');
@@ -487,18 +547,21 @@
                 });
                 prodHTML += `</div>`;
             });
+
+            prodHTML += `<div id="cat-SearchResults" class="cat-group grid grid-cols-2 gap-2 hidden"></div>`;
             prodContainer.innerHTML = prodHTML;
         }
 
         function createProductBtn(prod) {
             return `
-            <button onclick="openQtyModal('${prod.name}', ${prod.price})" class="bg-white border border-gray-200 p-3 rounded-2xl shadow-sm text-left active:bg-gray-100 flex flex-col justify-between h-24">
+            <button onclick="openQtyModal('${prod.name}', ${prod.price})" class="bg-white border border-gray-200 p-3 rounded-2xl shadow-sm text-left active:bg-gray-100 flex flex-col justify-between h-24 transition-all">
                 <span class="font-semibold text-gray-800 text-sm leading-tight">${prod.name}</span>
                 <span class="text-red-600 font-bold">${prod.price.toFixed(2).replace('.', ',')} €</span>
             </button>`;
         }
 
         function showCategory(catId) {
+            clearSearch();
             document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
             document.getElementById(`cat-${catId.replace(/\s+/g, '')}`).classList.remove('hidden');
             
@@ -507,13 +570,98 @@
                 el.classList.add('bg-gray-200', 'text-gray-700');
             });
             const activeBtn = document.getElementById(`cat-btn-${catId.replace(/\s+/g, '')}`);
-            activeBtn.classList.remove('bg-gray-200', 'text-gray-700');
-            activeBtn.classList.add('bg-red-600', 'text-white');
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                activeBtn.classList.add('bg-red-600', 'text-white');
+            }
+        }
+
+        // --- BUSCADOR ---
+        function handleSearch(term) {
+            const query = term.trim().toLowerCase();
+            const btnClear = document.getElementById('btn-clear-search');
+            const searchContainer = document.getElementById('cat-SearchResults');
+
+            if (query.length > 0) {
+                btnClear.classList.remove('hidden');
+                btnClear.classList.add('flex');
+                
+                let matches = [];
+                Object.values(DATA).forEach(list => {
+                    list.forEach(p => {
+                        if (p.name.toLowerCase().includes(query)) matches.push(p);
+                    });
+                });
+
+                document.querySelectorAll('.cat-group').forEach(el => el.classList.add('hidden'));
+                searchContainer.classList.remove('hidden');
+
+                if (matches.length === 0) {
+                    searchContainer.innerHTML = `<div class="col-span-2 text-center text-gray-400 py-10 italic text-sm">No hay productos que coincidan con "${term}".</div>`;
+                } else {
+                    let html = '';
+                    matches.forEach(p => { html += createProductBtn(p); });
+                    searchContainer.innerHTML = html;
+                }
+            } else {
+                clearSearch();
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('tpv-search').value = '';
+            const btnClear = document.getElementById('btn-clear-search');
+            btnClear.classList.add('hidden');
+            btnClear.classList.remove('flex');
+            
+            const searchContainer = document.getElementById('cat-SearchResults');
+            searchContainer.classList.add('hidden');
+            searchContainer.innerHTML = '';
+            
+            const activeCatBtn = document.querySelector('.cat-btn.bg-red-600');
+            if (activeCatBtn) {
+                const catId = activeCatBtn.id.replace('cat-btn-', '');
+                const targetCat = document.getElementById(`cat-${catId}`);
+                if(targetCat) targetCat.classList.remove('hidden');
+            }
+        }
+
+        // --- IMPORTE LIBRE / EXTRA ---
+        function openCustomModal() {
+            document.getElementById('custom-name').value = '';
+            document.getElementById('custom-price').value = '';
+            document.getElementById('modal-custom').classList.remove('hidden-screen');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('modal-custom').classList.add('hidden-screen');
+        }
+
+        function fillCustomPreset(name) {
+            document.getElementById('custom-name').value = name;
+        }
+
+        function confirmCustomItem() {
+            const name = document.getElementById('custom-name').value.trim() || 'Extra / Varios';
+            const price = parseFloat(document.getElementById('custom-price').value);
+
+            if (!price || price <= 0) {
+                alert("Introduce un importe válido");
+                return;
+            }
+
+            currentTicket.push({name: name, price: price, qty: 1});
+            ticketTotal += price;
+            updateTicketUI();
+            closeCustomModal();
+
+            if (navigator.vibrate) navigator.vibrate(50);
         }
 
         function openTpv() {
             currentTicket = [];
             ticketTotal = 0;
+            clearSearch();
             updateTicketUI();
             showScreen('screen-tpv');
         }
@@ -615,7 +763,10 @@
                 date: dateStr,
                 time: timeStr,
                 items: [...currentTicket],
-                total: ticketTotal
+                total: ticketTotal,
+                oldBal: oldBalance,
+                newBal: balance,
+                socio: socioName
             };
             allTickets.unshift(finalTicket);
             localStorage.setItem('feria_all_tickets', JSON.stringify(allTickets));
@@ -632,10 +783,13 @@
                 renderTpvMenu(); 
             }
 
-            showReceipt(finalTicket, oldBalance, balance);
+            receiptReturnScreen = 'screen-dashboard';
+            showReceipt(finalTicket);
         }
 
-        function showReceipt(ticket, oldBal, newBal) {
+        // --- VISOR DE RECIBO DE LA MÁQUINA ---
+        function showReceipt(ticket) {
+            document.getElementById('receipt-socio').innerText = ticket.socio || socioName || 'Rafael y Natalia';
             document.getElementById('receipt-datetime').innerText = `${ticket.date} - ${ticket.time}`;
             document.getElementById('receipt-id').innerText = ticket.id;
             
@@ -649,10 +803,17 @@
                 </div>`;
             });
             document.getElementById('receipt-items').innerHTML = itemsHtml;
-            
             document.getElementById('receipt-total').innerText = ticket.total.toFixed(2).replace('.', ',') + ' €';
-            document.getElementById('receipt-old-balance').innerText = oldBal.toFixed(2).replace('.', ',') + ' €';
-            document.getElementById('receipt-new-balance').innerText = newBal.toFixed(2).replace('.', ',') + ' €';
+            
+            if (ticket.oldBal !== undefined) {
+                document.getElementById('receipt-old-bal-row').classList.remove('hidden');
+                document.getElementById('receipt-new-bal-row').classList.remove('hidden');
+                document.getElementById('receipt-old-balance').innerText = ticket.oldBal.toFixed(2).replace('.', ',') + ' €';
+                document.getElementById('receipt-new-balance').innerText = ticket.newBal.toFixed(2).replace('.', ',') + ' €';
+            } else {
+                document.getElementById('receipt-old-bal-row').classList.add('hidden');
+                document.getElementById('receipt-new-bal-row').classList.add('hidden');
+            }
             
             document.getElementById('screen-receipt').classList.remove('hidden-screen');
         }
@@ -660,9 +821,10 @@
         function closeReceipt() {
             document.getElementById('screen-receipt').classList.add('hidden-screen');
             loadData();
-            showScreen('screen-dashboard');
+            showScreen(receiptReturnScreen);
         }
 
+        // --- HISTORIAL CON BOTÓN CLARO PARA ABRIR ---
         function openHistory() {
             const listEl = document.getElementById('full-ticket-list');
             listEl.innerHTML = '';
@@ -670,18 +832,20 @@
             if (allTickets.length === 0) {
                 listEl.innerHTML = '<p class="text-center text-gray-400 mt-10 italic">Aún no hay tickets guardados.</p>';
             } else {
-                allTickets.forEach(ticket => {
+                allTickets.forEach((ticket, idx) => {
                     let itemsPreview = ticket.items.map(i => `${i.qty}x ${i.name}`).join(', ');
                     
                     let html = `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200">
-                        <div class="flex justify-between items-center border-b pb-2 mb-2">
-                            <span class="text-xs font-bold text-gray-600">${ticket.date} a las ${ticket.time}</span>
-                            <span class="text-[11px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-500">#${ticket.id}</span>
+                    <div onclick="viewHistoryTicket(${idx})" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 active:bg-gray-100 active:scale-[0.99] transition-all cursor-pointer hover:border-red-400">
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2">
+                            <span class="text-xs font-bold text-gray-600 flex items-center gap-1.5"><i class="far fa-clock text-red-500"></i> ${ticket.date} - ${ticket.time}</span>
+                            <span class="text-[11px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-bold">#${ticket.id}</span>
                         </div>
                         <p class="text-sm text-gray-700 mb-3 truncate font-medium">${itemsPreview}</p>
-                        <div class="flex justify-between items-end">
-                            <span class="text-xs text-green-600 font-semibold"><i class="fas fa-check-circle"></i> Verificado</span>
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                            <span class="text-xs font-bold text-red-700 bg-red-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-2xs">
+                                <i class="fas fa-receipt"></i> Ver Ticket
+                            </span>
                             <span class="font-extrabold text-red-600 text-lg">-${ticket.total.toFixed(2).replace('.', ',')} €</span>
                         </div>
                     </div>`;
@@ -689,6 +853,12 @@
                 });
             }
             showScreen('screen-history-list');
+        }
+
+        function viewHistoryTicket(idx) {
+            const ticket = allTickets[idx];
+            receiptReturnScreen = 'screen-history-list';
+            showReceipt(ticket);
         }
     </script>
 </body>
