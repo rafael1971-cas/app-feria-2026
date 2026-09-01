@@ -65,6 +65,20 @@
         </div>
     </div>
 
+    <!-- MODAL RESUMEN VACÍO (CUANDO NO HAY TICKETS AÚN) -->
+    <div id="modal-empty-summary" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
+            <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">
+                🍻
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">¡El vaso está vacío!</h3>
+            <p class="text-sm text-gray-500 mb-6">Aún no hay gastos registrados. Tómate algo primero en la barra para empezar a sumar puntos en el Chupómetro.</p>
+            <button onclick="closeEmptySummaryModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">
+                Ir a pedir algo
+            </button>
+        </div>
+    </div>
+
     <!-- MODAL DE CONFIGURACIÓN Y REINICIO -->
     <div id="modal-reset" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl border border-gray-100">
@@ -564,7 +578,7 @@
         };
 
         function showScreen(id) {
-            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule):not(#modal-privacy):not(#modal-summary)').forEach(el => el.classList.add('hidden-screen'));
+            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule):not(#modal-privacy):not(#modal-summary):not(#modal-empty-summary)').forEach(el => el.classList.add('hidden-screen'));
             document.getElementById(id).classList.remove('hidden-screen');
         }
 
@@ -618,9 +632,10 @@
             else days.forEach(day => { histContainer.innerHTML += `<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center border border-gray-100"><span class="font-semibold text-gray-700">${day}</span> <span class="font-bold text-red-600">-${history[day].toFixed(2).replace('.', ',')} €</span></div>`; });
         }
 
-        // FUNCIONES MODAL PRIVACIDAD
+        // FUNCIONES MODALES PRIVACIDAD Y RESUMEN VACÍO
         function openPrivacyModal() { document.getElementById('modal-privacy').classList.remove('hidden-screen'); }
         function closePrivacyModal() { document.getElementById('modal-privacy').classList.add('hidden-screen'); }
+        function closeEmptySummaryModal() { document.getElementById('modal-empty-summary').classList.add('hidden-screen'); }
 
         function openResetModal() { 
             tempResetType = socioType || 'couple'; document.getElementById('reset-input-name').value = socioName;
@@ -670,13 +685,13 @@
         // --- SISTEMA: RESUMEN FIN DE FERIA Y TROFEOS CHUPÓMETRO ---
         function showFairSummary() {
             if (allTickets.length === 0) {
-                alert("¡Aún no hay gastos registrados! Tómate algo primero en la caseta. 🍻");
+                document.getElementById('modal-empty-summary').classList.remove('hidden-screen');
                 return;
             }
             
             let totalSpent = 0; let totalItems = 0; let itemCounts = {}; let daySpent = {};
             const bebidasNames = DATA["Bebidas"].map(b => b.name);
-            let drinkPoints = 0; // Puntos para el trofeo
+            let drinkPoints = 0; 
             
             allTickets.forEach(t => {
                 totalSpent += t.total;
@@ -688,7 +703,6 @@
                     itemCounts[i.name].qty += i.qty;
                     totalItems += i.qty;
 
-                    // LÓGICA DE TROFEOS: Si es bebida, suma puntos. Las jarras valen x5.
                     if (bebidasNames.includes(i.name)) {
                         let pts = i.name.toLowerCase().includes("jarra") ? 5 : 1;
                         drinkPoints += (i.qty * pts);
@@ -696,7 +710,6 @@
                 });
             });
 
-            // Matemáticas de Trofeos
             let tName = ""; let tMsg = ""; let tColor = ""; let tPct = 0;
             if (drinkPoints < 10) {
                 tName = "👶 CALENTANDO"; tMsg = `Te faltan ${10 - drinkPoints} tragos para el 🥉 BRONCE`; 
@@ -716,10 +729,8 @@
             trNameEl.className = `text-xl font-black mb-1.5 drop-shadow-md ${tColor}`;
             trNameEl.innerText = tName;
             document.getElementById('summary-trophy-msg').innerText = tMsg;
-            // Pequeño timeout para que la barra haga la animación al abrir
             setTimeout(() => { document.getElementById('summary-trophy-bar').style.width = tPct + '%'; }, 100);
 
-            // Calcular producto y día top
             let topItem = {name: '-', qty: 0, icon: ''};
             Object.keys(itemCounts).forEach(k => {
                 if(itemCounts[k].qty > topItem.qty) topItem = {name: k, qty: itemCounts[k].qty, icon: itemCounts[k].icon};
@@ -742,7 +753,7 @@
 
         function closeFairSummary() { 
             document.getElementById('modal-summary').classList.add('hidden-screen'); 
-            document.getElementById('summary-trophy-bar').style.width = '0%'; // reset anim
+            document.getElementById('summary-trophy-bar').style.width = '0%'; 
         }
 
         function openRecharge() { document.getElementById('recharge-amount').value = ''; document.getElementById('recharge-preview').innerText = '0,00 €'; showScreen('screen-recharge'); }
