@@ -80,6 +80,25 @@
         </div>
     </div>
 
+    <!-- MODAL CUADRE DE SALDO REAL (CARTERA) -->
+    <div id="modal-reconcile" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border-t-4 border-amber-500 text-center">
+            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner"><i class="fas fa-wallet"></i></div>
+            <h3 class="text-lg font-black text-gray-900 mb-1">Cuadre de Saldo Real</h3>
+            <p class="text-xs text-gray-500 mb-4">Si las cuentas de la app no coinciden con los tickets físicos de tu cartera, introduce aquí el dinero real que te queda:</p>
+            
+            <div class="relative mb-5 text-left">
+                <span class="absolute left-4 top-3 text-xl text-gray-400 font-bold">€</span>
+                <input type="number" id="reconcile-amount" placeholder="0.00" class="w-full bg-gray-50 border-2 border-gray-200 rounded-2xl py-3 pl-10 pr-4 text-2xl font-bold focus:outline-none focus:border-amber-500" inputmode="decimal">
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="closeReconcileModal()" class="flex-1 bg-gray-100 text-gray-700 font-bold py-3 rounded-xl text-sm">Cancelar</button>
+                <button onclick="confirmReconcile()" class="flex-1 bg-amber-500 text-white font-bold py-3 rounded-xl shadow-md active:scale-95 text-sm">Guardar Saldo</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DE RONDAS PENDIENTES (ANTI-DOPAJE) -->
     <div id="modal-pending" class="absolute inset-0 bg-black/80 backdrop-blur-sm z-[60] hidden-screen flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border-t-4 border-red-600">
@@ -87,7 +106,7 @@
                 <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner"><i class="fas fa-beer"></i></div>
                 <h3 class="text-lg font-black text-gray-900 mb-1">Reparto del Chupómetro</h3>
                 <p class="text-xs text-gray-500">¿Quién se ha bebido esto?</p>
-                <div id="pending-ticket-info" class="mt-2 inline-block bg-gray-100 px-3 py-1 rounded-full text-xs font-bold text-gray-700 font-mono">...</div>
+                <div id="pending-ticket-info" class="mt-2 inline-block bg-gray-100 px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 font-mono">...</div>
             </div>
 
             <!-- UI PARA SOLTEROS -->
@@ -206,9 +225,14 @@
                     <h1 class="text-4xl font-extrabold tracking-tight mt-0.5" id="dash-balance">360,00 €</h1>
                 </div>
                 <div class="flex flex-col items-end gap-2.5 shrink-0 pt-1">
-                    <button onclick="openResetModal()" class="text-red-200 bg-red-800/80 px-2.5 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1.5 border border-red-600/50">
-                        <i class="fas fa-redo-alt"></i> Reiniciar
-                    </button>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="openReconcileModal()" class="text-amber-200 bg-amber-900/80 px-2.5 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1.5 border border-amber-600/50">
+                            <i class="fas fa-balance-scale"></i> Cuadrar
+                        </button>
+                        <button onclick="openResetModal()" class="text-red-200 bg-red-800/80 px-2.5 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1.5 border border-red-600/50">
+                            <i class="fas fa-redo-alt"></i> Reiniciar
+                        </button>
+                    </div>
                     <button onclick="openScheduleModal()" class="neon-btn text-[11px] font-black px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 shadow-lg active:scale-95 whitespace-nowrap">
                         <span class="neon-dot"></span> ACTUACIONES
                     </button>
@@ -453,7 +477,7 @@
                         <span class="text-2xl font-black text-white flex items-center gap-1.5"><i class="fas fa-glass-cheers text-sm text-purple-400"></i> <span id="summary-items">0</span></span>
                     </div>
                     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex flex-col items-center">
-                        <span id="summary-items-label" class="text-[10px] text-purple-200 uppercase font-bold mb-1 text-center leading-tight h-6">Día más fiestero</span>
+                        <span class="text-[10px] text-purple-200 uppercase font-bold mb-1 text-center leading-tight h-6">Día más fiestero</span>
                         <span class="text-sm font-black text-white mt-1 leading-tight flex items-center gap-1.5"><i class="fas fa-calendar-star text-purple-400"></i> <span id="summary-top-day">-</span></span>
                     </div>
                 </div>
@@ -545,7 +569,7 @@
             <div class="mb-5 text-left">
                 <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1.5 ml-1">Modalidad de Cuota</label>
                 <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="setResetType('couple')" id="reset-btn-couple" class="p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all"><span>👫 Matrimonio</span><span class="text-sm font-extrabold text-red-600">360,00 €</span></button>
+                    <button type="button" onclick="setResetType('couple')" id="reset-btn-couple" class="p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs"><span>👫 Matrimonio</span><span class="text-sm font-extrabold text-red-600">360,00 €</span></button>
                     <button type="button" onclick="setResetType('single')" id="reset-btn-single" class="p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60"><span>👤 Soltero(a)</span><span class="text-sm font-extrabold text-gray-800">180,00 €</span></button>
                 </div>
             </div>
@@ -632,7 +656,7 @@
         const BEBIDAS_NAMES = DATA["Bebidas"].map(b => b.name);
 
         function showScreen(id) {
-            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule):not(#modal-privacy):not(#modal-empty-summary):not(#modal-alert):not(#modal-confirm):not(#modal-pending)').forEach(el => el.classList.add('hidden-screen'));
+            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule):not(#modal-privacy):not(#modal-empty-summary):not(#modal-alert):not(#modal-confirm):not(#modal-pending):not(#modal-reconcile)').forEach(el => el.classList.add('hidden-screen'));
             document.getElementById(id).classList.remove('hidden-screen');
         }
 
@@ -715,7 +739,8 @@
             let t = allTickets[currentPendingIdx];
             tempP1 = 0; tempP2 = 0;
             
-            document.getElementById('pending-ticket-info').innerText = `Ronda ${t.time} - ${t.totalDrinkPoints} Pts`;
+            let drinkSummary = t.items.filter(i => BEBIDAS_NAMES.includes(i.name)).map(i => `${i.qty}x ${i.name}`).join(', ');
+            document.getElementById('pending-ticket-info').innerHTML = `Ronda ${t.time} - ${t.totalDrinkPoints} Pts<br><span class="text-[11px] font-normal text-gray-500">Bebidas en este ticket: ${drinkSummary || 'Ninguna'}</span>`;
             
             if (socioType === 'single') {
                 document.getElementById('pending-couple-ui').classList.add('hidden');
@@ -762,6 +787,25 @@
             allTickets[currentPendingIdx].pointsDist = { p1: tempP1, p2: tempP2, done: true };
             localStorage.setItem('feria_all_tickets', JSON.stringify(allTickets));
             openPendingRounds(); 
+        }
+
+        // CUADRE DE SALDO REAL (CARTERA)
+        function openReconcileModal() {
+            document.getElementById('reconcile-amount').value = balance.toFixed(2);
+            document.getElementById('modal-reconcile').classList.remove('hidden-screen');
+        }
+        function closeReconcileModal() {
+            document.getElementById('modal-reconcile').classList.add('hidden-screen');
+        }
+        function confirmReconcile() {
+            const val = parseFloat(document.getElementById('reconcile-amount').value);
+            if (isNaN(val) || val < 0) return showCustomAlert("Introduce un importe válido.");
+            showCustomConfirm(`¿Seguro que deseas fijar tu saldo en ${val.toFixed(2).replace('.', ',')} €? Esto sobrescribirá el cálculo actual de la app.`, () => {
+                balance = val;
+                localStorage.setItem('feria_balance', balance.toString());
+                loadData();
+                closeReconcileModal();
+            });
         }
 
         function openPrivacyModal() { document.getElementById('modal-privacy').classList.remove('hidden-screen'); }
@@ -815,7 +859,7 @@
             let pendingUnresolved = allTickets.filter(t => t.totalDrinkPoints > 0 && !t.pointsDist.done);
             if(pendingUnresolved.length > 0) return showCustomAlert("Tienes rondas pendientes de repartir en el buzón. Repártelas primero para ver tu puntuación real en el Chupómetro.");
 
-            let totalDrinkSpent = 0; let totalDrinkItems = 0; 
+            let totalDrinkSpent = 0; let totalUserDrinks = 0; 
             let foodCounts = {}; let daySpent = {};
             let p1Pts = 0; let p2Pts = 0; let singlePts = 0;
             
@@ -826,7 +870,6 @@
                 t.items.forEach(i => {
                     if (BEBIDAS_NAMES.includes(i.name)) {
                         totalDrinkSpent += (i.price * i.qty);
-                        totalDrinkItems += i.qty;
                     } else {
                         if(!foodCounts[i.name]) foodCounts[i.name] = {qty: 0, icon: i.icon};
                         foodCounts[i.name].qty += i.qty;
@@ -834,14 +877,20 @@
                 });
 
                 if (t.pointsDist && t.pointsDist.done) {
-                    if (socioType === 'single') singlePts += t.pointsDist.p1;
-                    else { p1Pts += t.pointsDist.p1; p2Pts += t.pointsDist.p2; }
+                    if (socioType === 'single') {
+                        singlePts += t.pointsDist.p1;
+                        totalUserDrinks += t.pointsDist.p1;
+                    } else { 
+                        p1Pts += t.pointsDist.p1; 
+                        p2Pts += t.pointsDist.p2; 
+                        totalUserDrinks += (t.pointsDist.p1 + t.pointsDist.p2);
+                    }
                 }
             });
 
             document.getElementById('summary-total-label').innerText = socioType === 'couple' ? "Gastos Felicidad Pareja (Bebidas)" : "Inversión Felicidad (Bebidas)";
             document.getElementById('summary-total').innerText = totalDrinkSpent.toFixed(2).replace('.', ',') + ' €';
-            document.getElementById('summary-items').innerText = totalDrinkItems;
+            document.getElementById('summary-items').innerText = totalUserDrinks;
             
             let topDay = {date: '-', spent: 0};
             Object.keys(daySpent).forEach(d => { if(daySpent[d] > topDay.spent) topDay = {date: d, spent: daySpent[d]}; });
