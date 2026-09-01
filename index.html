@@ -106,13 +106,59 @@
         </div>
     </div>
 
+    <!-- MODAL RESUMEN FIN DE FERIA (CON SISTEMA DE TROFEOS 🍻) -->
+    <div id="modal-summary" class="absolute inset-0 bg-black/85 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-gradient-to-br from-indigo-900 via-purple-900 to-gray-900 rounded-3xl p-6 w-full max-w-sm text-center shadow-[0_0_40px_rgba(139,92,246,0.4)] border border-purple-500/30 overflow-hidden relative">
+            <div class="absolute -top-10 -right-10 text-8xl opacity-10 rotate-12">🎡</div>
+            <div class="absolute -bottom-10 -left-10 text-8xl opacity-10 -rotate-12">💃</div>
+
+            <h3 class="text-xs font-bold text-purple-300 uppercase tracking-widest mb-1 relative z-10">Resumen Oficial</h3>
+            <h2 class="text-2xl font-black text-white mb-5 relative z-10">Tu Feria 2026 🏆</h2>
+            
+            <div class="space-y-3 relative z-10">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col items-center">
+                    <span class="text-xs text-purple-200 font-medium uppercase mb-1">Inversión en Felicidad</span>
+                    <span class="text-4xl font-black text-yellow-400" id="summary-total">0,00 €</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex flex-col items-center">
+                        <span class="text-[10px] text-purple-200 uppercase font-bold mb-1">Raciones/Bebidas</span>
+                        <span class="text-2xl font-black text-white flex items-center gap-1.5"><i class="fas fa-utensils text-sm text-purple-400"></i> <span id="summary-items">0</span></span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex flex-col items-center">
+                        <span class="text-[10px] text-purple-200 uppercase font-bold mb-1">Día más fiestero</span>
+                        <span class="text-sm font-black text-white mt-1 leading-tight flex items-center gap-1.5"><i class="fas fa-calendar-star text-purple-400"></i> <span id="summary-top-day">-</span></span>
+                    </div>
+                </div>
+
+                <!-- EL CHUPÓMETRO (SISTEMA DE TROFEOS) -->
+                <div class="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-cyan-500/30 rounded-2xl p-3.5 flex flex-col items-center mt-2 relative overflow-hidden">
+                    <span class="text-[10px] text-cyan-200 font-bold uppercase mb-1"><i class="fas fa-medal"></i> Nivel de Feriante (Bebidas)</span>
+                    <div id="summary-trophy-name" class="text-xl font-black mb-1.5 drop-shadow-md text-white">...</div>
+                    <div class="w-full bg-black/40 rounded-full h-2 mb-1.5 overflow-hidden shadow-inner">
+                        <div id="summary-trophy-bar" class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                    <span id="summary-trophy-msg" class="text-[10.5px] text-cyan-100 font-medium tracking-wide">...</span>
+                </div>
+
+                <div class="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 rounded-2xl p-3.5 flex flex-col items-center mt-2">
+                    <span class="text-xs text-yellow-200 font-bold uppercase mb-2"><i class="fas fa-crown"></i> Tu Producto Estrella</span>
+                    <div id="summary-top-item" class="text-lg font-bold text-white leading-tight"></div>
+                </div>
+            </div>
+
+            <button onclick="closeFairSummary()" class="mt-6 w-full bg-white text-purple-900 font-black py-3.5 rounded-xl shadow-lg active:scale-95 transition-all text-base relative z-10">
+                ¡Olé mi Feria! Cerrar
+            </button>
+        </div>
+    </div>
+
     <!-- MODAL CANTIDAD (TPV) -->
     <div id="modal-qty" class="absolute inset-0 bg-black/70 backdrop-blur-xs z-50 hidden-screen flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
             <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">¿Cuántas unidades?</h3>
-            <div id="modal-qty-name" class="text-xl font-bold text-gray-800 mb-6 flex flex-col items-center justify-center gap-2">
-                <!-- Se llena con JS -->
-            </div>
+            <div id="modal-qty-name" class="text-xl font-bold text-gray-800 mb-6 flex flex-col items-center justify-center gap-2"></div>
             
             <div class="grid grid-cols-3 gap-3 mb-6">
                 <button onclick="confirmQty(1)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">1</button>
@@ -137,9 +183,7 @@
     <div id="modal-custom" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg">
-                    <i class="fas fa-plus"></i>
-                </div>
+                <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg"><i class="fas fa-plus"></i></div>
                 <div>
                     <h3 class="font-bold text-gray-900 text-lg">Añadir Extra / Libre</h3>
                     <p class="text-xs text-gray-500">Para churros, tabaco o imprevistos</p>
@@ -164,12 +208,8 @@
             </div>
 
             <div class="flex flex-col gap-2">
-                <button onclick="confirmCustomItem()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-base">
-                    Añadir a la Cuenta
-                </button>
-                <button onclick="closeCustomModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl text-sm">
-                    Cancelar
-                </button>
+                <button onclick="confirmCustomItem()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-base">Añadir a la Cuenta</button>
+                <button onclick="closeCustomModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl text-sm">Cancelar</button>
             </div>
         </div>
     </div>
@@ -222,15 +262,13 @@
             </div>
         </div>
 
-        <!-- PIE DE PÁGINA PROFESIONAL -->
         <div class="mt-8 mb-2 text-center px-4 opacity-70 shrink-0">
             <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-0.5">Diseño, Desarrollo y Programación:</p>
             <p class="text-[11px] font-black text-gray-700">RAFAEL CASTAÑEDA RODRIGUEZ</p>
             <p class="text-[10px] text-gray-500 mt-1 italic">Con todo el Amor ❤️ para los compañeros de La Premierr</p>
             <div class="mt-3 flex items-center justify-center gap-3 text-[9px] text-gray-400 font-medium">
                 <button onclick="openPrivacyModal()" class="underline">Privacidad y Cookies</button>
-                <span>•</span>
-                <span>Versión 1.2.0</span>
+                <span>•</span><span>Versión 1.2.0</span>
             </div>
         </div>
     </div>
@@ -293,15 +331,19 @@
             </div>
             <div id="dash-history" class="space-y-3"></div>
 
-            <!-- PIE DE PÁGINA PROFESIONAL -->
+            <div class="mt-5">
+                <button onclick="showFairSummary()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-extrabold py-3.5 rounded-xl shadow-lg active:scale-95 transition-transform text-sm flex items-center justify-center gap-2">
+                    <i class="fas fa-trophy text-yellow-300 text-lg"></i> VER MI RESUMEN DE FERIA
+                </button>
+            </div>
+
             <div class="mt-10 mb-4 text-center px-4 opacity-70">
                 <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-0.5">Diseño, Desarrollo y Programación:</p>
                 <p class="text-[11px] font-black text-gray-700">RAFAEL CASTAÑEDA RODRIGUEZ</p>
                 <p class="text-[10px] text-gray-500 mt-1 italic">Con todo el Amor ❤️ para los compañeros de La Premierr</p>
                 <div class="mt-3 flex items-center justify-center gap-3 text-[9px] text-gray-400 font-medium">
                     <button onclick="openPrivacyModal()" class="underline">Privacidad y Cookies</button>
-                    <span>•</span>
-                    <span>Versión 1.2.0</span>
+                    <span>•</span><span>Versión 1.2.0</span>
                 </div>
             </div>
         </div>
@@ -368,21 +410,19 @@
 
             <button onclick="confirmRecharge()" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl mt-auto text-lg active:scale-95">Confirmar Recarga</button>
             
-            <!-- PIE DE PÁGINA PROFESIONAL -->
             <div class="mt-10 text-center px-4 opacity-70 shrink-0 pb-4">
                 <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-0.5">Diseño, Desarrollo y Programación:</p>
                 <p class="text-[11px] font-black text-gray-700">RAFAEL CASTAÑEDA RODRIGUEZ</p>
                 <p class="text-[10px] text-gray-500 mt-1 italic">Con todo el Amor ❤️ para los compañeros de La Premierr</p>
                 <div class="mt-3 flex items-center justify-center gap-3 text-[9px] text-gray-400 font-medium">
                     <button onclick="openPrivacyModal()" class="underline">Privacidad y Cookies</button>
-                    <span>•</span>
-                    <span>Versión 1.2.0</span>
+                    <span>•</span><span>Versión 1.2.0</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PANTALLA 4: TPV (CON "✨ NUEVO") -->
+    <!-- PANTALLA 4: TPV -->
     <div id="screen-tpv" class="h-full w-full bg-gray-50 flex flex-col z-30 absolute hidden-screen">
         <div class="bg-white p-3.5 shadow-sm flex justify-between items-center z-10 shrink-0 border-b">
             <button onclick="closeTpv()" class="text-gray-500 px-2 py-1"><i class="fas fa-arrow-left text-xl"></i></button>
@@ -475,7 +515,7 @@
             { dayTitle: "MIÉRCOLES", events: [ { time: "22:00h", title: "Cena Pescaíto", detail: "Tradicional cena", startISO: "2026-09-02T22:00:00" }, { time: "01:00h", title: "Grupo DE LUNARES", detail: "Flamenco / pop", startISO: "2026-09-03T01:00:00" }, { time: "A continuación", title: "DJ ÁLVARO ESCAMILLA", detail: "DJ hasta cierre", startISO: "2026-09-03T03:00:00" } ] },
             { dayTitle: "JUEVES NOCHE", events: [ { time: "23:00h", title: "DJ ÁLVARO ESCAMILLA", detail: "Noche de fiesta", startISO: "2026-09-03T23:00:00" } ] },
             { dayTitle: "VIERNES", events: [ { time: "17:30h", title: "Grupo ALPECE", detail: "Tarde de concierto", startISO: "2026-09-04T17:30:00" }, { time: "01:00h", title: "Grupo CASAVIEJA", detail: "Directo", startISO: "2026-09-05T01:00:00" }, { time: "A continuación", title: "DJ ÁLVARO ESCAMILLA", detail: "DJ", startISO: "2026-09-05T03:00:00" } ] },
-            { dayTitle: "SÁBADO", events: [ { time: "17:00h", title: "DJ ÁLVARO ESCAMILLA", detail: "Tardeo", startISO: "2026-09-05T17:00:00" }, { time: "01:00h", title: "Grupo TRASTEANDO 3.0", detail: "Concierto", startISO: "2026-09-06T01:00:00" }, { time: "03:00h", title: "DJ RUBÉN RODRÍGUEZ", detail: "Cierre", startISO: "2026-09-06T03:00:00" } ] },
+            { dayTitle: "SÁBADO", events: [ { time: "17:00h (Tarde)", title: "DJ ÁLVARO ESCAMILLA", detail: "Tardeo", startISO: "2026-09-05T17:00:00" }, { time: "01:00h", title: "Grupo TRASTEANDO 3.0", detail: "Concierto", startISO: "2026-09-06T01:00:00" }, { time: "03:00h", title: "DJ RUBÉN RODRÍGUEZ", detail: "Cierre", startISO: "2026-09-06T03:00:00" } ] },
             { dayTitle: "DOMINGO", events: [ { time: "18:00h", title: "Grupo POP GRASA", detail: "Fin de fiesta", startISO: "2026-09-06T18:00:00" } ] }
         ];
 
@@ -524,7 +564,7 @@
         };
 
         function showScreen(id) {
-            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule):not(#modal-privacy)').forEach(el => el.classList.add('hidden-screen'));
+            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule):not(#modal-privacy):not(#modal-summary)').forEach(el => el.classList.add('hidden-screen'));
             document.getElementById(id).classList.remove('hidden-screen');
         }
 
@@ -601,19 +641,108 @@
             closeResetModal(); loadData(); renderTpvMenu(); showScreen('screen-dashboard');
         }
 
+        // --- SISTEMA INTELIGENTE DE ACTUACIONES ---
         function openScheduleModal() { renderScheduleEvents(); document.getElementById('modal-schedule').classList.remove('hidden-screen'); }
         function closeScheduleModal() { document.getElementById('modal-schedule').classList.add('hidden-screen'); }
+        
         function renderScheduleEvents() {
             const container = document.getElementById('schedule-events-container'); container.innerHTML = ''; const now = new Date();
+            
             SCHEDULE_DATA.forEach(day => {
                 let html = `<div class="bg-gray-50 rounded-2xl p-3.5 border border-gray-200 shadow-2xs"><div class="font-extrabold text-red-700 text-xs uppercase tracking-wider mb-2.5 pb-1 border-b border-gray-200 flex items-center justify-between"><span>${day.dayTitle}</span><i class="fas fa-music text-[10px] text-gray-400"></i></div><div class="space-y-2">`;
-                day.events.forEach(ev => {
-                    const finishTime = new Date(new Date(ev.startISO).getTime() + (3 * 60 * 60 * 1000));
-                    let badge = now > finishTime ? `<span class="text-[10px] font-bold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fas fa-check"></i> Finalizada</span>` : (now >= new Date(ev.startISO) && now <= finishTime ? `<span class="text-[10px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-xs flex items-center gap-1"><span class="w-1.5 h-1.5 bg-white rounded-full"></span> ¡EN DIRECTO!</span>` : `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">⏳ Próximamente</span>`);
-                    html += `<div class="flex justify-between items-start p-2 rounded-xl bg-white border border-gray-100 ${now > finishTime ? 'opacity-50 grayscale' : ''}"><div><div class="flex items-center gap-1.5"><span class="text-xs font-mono font-bold text-red-600">${ev.time}</span><span class="text-xs font-bold text-gray-800">${ev.title}</span></div><p class="text-[11px] text-gray-500 mt-0.5">${ev.detail}</p></div><div class="shrink-0 ml-2">${badge}</div></div>`;
+                
+                day.events.forEach((ev, idx) => {
+                    const startT = new Date(ev.startISO);
+                    const finishT = (idx < day.events.length - 1) ? new Date(day.events[idx + 1].startISO) : new Date(startT.getTime() + (3 * 60 * 60 * 1000));
+                    
+                    let badge = now >= finishT 
+                        ? `<span class="text-[10px] font-bold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fas fa-check"></i> Finalizada</span>` 
+                        : (now >= startT && now < finishT 
+                            ? `<span class="text-[10px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-xs flex items-center gap-1"><span class="w-1.5 h-1.5 bg-white rounded-full"></span> ¡EN DIRECTO!</span>` 
+                            : `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">⏳ Próximamente</span>`);
+                    
+                    html += `<div class="flex justify-between items-start p-2 rounded-xl bg-white border border-gray-100 ${now >= finishT ? 'opacity-50 grayscale' : ''}"><div><div class="flex items-center gap-1.5"><span class="text-xs font-mono font-bold text-red-600">${ev.time}</span><span class="text-xs font-bold text-gray-800">${ev.title}</span></div><p class="text-[11px] text-gray-500 mt-0.5">${ev.detail}</p></div><div class="shrink-0 ml-2">${badge}</div></div>`;
                 });
                 container.innerHTML += html + `</div></div>`;
             });
+        }
+
+        // --- SISTEMA: RESUMEN FIN DE FERIA Y TROFEOS CHUPÓMETRO ---
+        function showFairSummary() {
+            if (allTickets.length === 0) {
+                alert("¡Aún no hay gastos registrados! Tómate algo primero en la caseta. 🍻");
+                return;
+            }
+            
+            let totalSpent = 0; let totalItems = 0; let itemCounts = {}; let daySpent = {};
+            const bebidasNames = DATA["Bebidas"].map(b => b.name);
+            let drinkPoints = 0; // Puntos para el trofeo
+            
+            allTickets.forEach(t => {
+                totalSpent += t.total;
+                if(!daySpent[t.date]) daySpent[t.date] = 0;
+                daySpent[t.date] += t.total;
+                
+                t.items.forEach(i => {
+                    if(!itemCounts[i.name]) itemCounts[i.name] = {qty: 0, icon: i.icon};
+                    itemCounts[i.name].qty += i.qty;
+                    totalItems += i.qty;
+
+                    // LÓGICA DE TROFEOS: Si es bebida, suma puntos. Las jarras valen x5.
+                    if (bebidasNames.includes(i.name)) {
+                        let pts = i.name.toLowerCase().includes("jarra") ? 5 : 1;
+                        drinkPoints += (i.qty * pts);
+                    }
+                });
+            });
+
+            // Matemáticas de Trofeos
+            let tName = ""; let tMsg = ""; let tColor = ""; let tPct = 0;
+            if (drinkPoints < 10) {
+                tName = "👶 CALENTANDO"; tMsg = `Te faltan ${10 - drinkPoints} tragos para el 🥉 BRONCE`; 
+                tColor = "text-white"; tPct = (drinkPoints/10)*100;
+            } else if (drinkPoints < 30) {
+                tName = "🥉 BRONCE"; tMsg = `Te faltan ${30 - drinkPoints} tragos para la 🥈 PLATA`;
+                tColor = "text-orange-300"; tPct = ((drinkPoints-10)/20)*100;
+            } else if (drinkPoints < 50) {
+                tName = "🥈 PLATA"; tMsg = `Te faltan ${50 - drinkPoints} tragos para el 🥇 ORO`;
+                tColor = "text-gray-300"; tPct = ((drinkPoints-30)/20)*100;
+            } else {
+                tName = "🥇 ORO LÍQUIDO"; tMsg = `¡Eres el Dios de La Premierr! 👑 (${drinkPoints} tragos totales)`;
+                tColor = "text-yellow-400"; tPct = 100;
+            }
+            
+            const trNameEl = document.getElementById('summary-trophy-name');
+            trNameEl.className = `text-xl font-black mb-1.5 drop-shadow-md ${tColor}`;
+            trNameEl.innerText = tName;
+            document.getElementById('summary-trophy-msg').innerText = tMsg;
+            // Pequeño timeout para que la barra haga la animación al abrir
+            setTimeout(() => { document.getElementById('summary-trophy-bar').style.width = tPct + '%'; }, 100);
+
+            // Calcular producto y día top
+            let topItem = {name: '-', qty: 0, icon: ''};
+            Object.keys(itemCounts).forEach(k => {
+                if(itemCounts[k].qty > topItem.qty) topItem = {name: k, qty: itemCounts[k].qty, icon: itemCounts[k].icon};
+            });
+
+            let topDay = {date: '-', spent: 0};
+            Object.keys(daySpent).forEach(d => {
+                if(daySpent[d] > topDay.spent) topDay = {date: d, spent: daySpent[d]};
+            });
+
+            document.getElementById('summary-total').innerText = totalSpent.toFixed(2).replace('.', ',') + ' €';
+            document.getElementById('summary-items').innerText = totalItems;
+            document.getElementById('summary-top-day').innerText = topDay.date;
+            
+            const iconHtml = topItem.icon ? `<span class="text-4xl block mb-2 drop-shadow-md">${topItem.icon}</span>` : `<span class="text-4xl block mb-2 drop-shadow-md">🍽️</span>`;
+            document.getElementById('summary-top-item').innerHTML = `${iconHtml}${topItem.name} <br><span class="text-sm font-normal text-yellow-200 mt-1 block">(${topItem.qty} veces pedido)</span>`;
+            
+            document.getElementById('modal-summary').classList.remove('hidden-screen');
+        }
+
+        function closeFairSummary() { 
+            document.getElementById('modal-summary').classList.add('hidden-screen'); 
+            document.getElementById('summary-trophy-bar').style.width = '0%'; // reset anim
         }
 
         function openRecharge() { document.getElementById('recharge-amount').value = ''; document.getElementById('recharge-preview').innerText = '0,00 €'; showScreen('screen-recharge'); }
