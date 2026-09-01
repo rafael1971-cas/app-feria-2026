@@ -24,7 +24,6 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .ticket-bg { background: white; position: relative; }
 
-        /* EFECTO NEÓN PARPADEANTE */
         @keyframes neonGlow {
             0%, 100% { box-shadow: 0 0 4px #facc15, 0 0 8px #eab308; border-color: #fef08a; transform: scale(1); }
             50% { box-shadow: 0 0 8px #f59e0b, 0 0 12px #ef4444; border-color: #ffffff; transform: scale(1.02); }
@@ -40,7 +39,6 @@
         }
         @keyframes blink { 0% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* ESTILO PREMIUM PARA LAS TARJETAS DE PRODUCTOS */
         .product-card {
             background: #ffffff; border: 1px solid #f3f4f6; border-radius: 16px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02), 0 4px 10px rgba(0,0,0,0.04);
@@ -51,180 +49,88 @@
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans antialiased h-screen w-screen overflow-hidden relative">
 
-    <!-- MODAL DE PRIVACIDAD (DISEÑO ELEGANTE) -->
+    <!-- MODAL DE ALERTA PERSONALIZADO -->
+    <div id="modal-alert" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-[70] hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl border border-gray-100">
+            <div class="w-14 h-14 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner"><i class="fas fa-exclamation-triangle"></i></div>
+            <p id="alert-msg" class="text-base font-bold text-gray-800 mb-6"></p>
+            <button onclick="closeCustomAlert()" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">Entendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO -->
+    <div id="modal-confirm" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-[70] hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl border border-gray-100">
+            <div class="w-14 h-14 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner"><i class="fas fa-question-circle"></i></div>
+            <p id="confirm-msg" class="text-base font-bold text-gray-800 mb-6"></p>
+            <div class="flex gap-3">
+                <button onclick="closeConfirm()" class="flex-1 bg-gray-100 text-gray-700 font-bold py-3.5 rounded-xl transition-all text-sm">Cancelar</button>
+                <button onclick="execConfirm()" class="flex-1 bg-red-600 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">Sí, seguro</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PRIVACIDAD -->
     <div id="modal-privacy" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
-            <div class="w-14 h-14 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner">
-                <i class="fas fa-shield-alt"></i>
-            </div>
+            <div class="w-14 h-14 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner"><i class="fas fa-shield-alt"></i></div>
             <h3 class="text-lg font-bold text-gray-900 mb-2">Privacidad y Cookies</h3>
             <p class="text-sm text-gray-500 mb-6">Documento legal en redacción. Estará disponible con todos los términos de uso una vez finalizada la feria.</p>
-            <button onclick="closePrivacyModal()" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">
-                Entendido
-            </button>
+            <button onclick="closePrivacyModal()" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">Entendido</button>
         </div>
     </div>
 
-    <!-- MODAL RESUMEN VACÍO (CUANDO NO HAY TICKETS AÚN) -->
-    <div id="modal-empty-summary" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
-            <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">
-                🍻
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">¡El vaso está vacío!</h3>
-            <p class="text-sm text-gray-500 mb-6">Aún no hay gastos registrados. Tómate algo primero en la barra para empezar a sumar puntos en el Chupómetro.</p>
-            <button onclick="closeEmptySummaryModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">
-                Ir a pedir algo
-            </button>
-        </div>
-    </div>
-
-    <!-- MODAL DE CONFIGURACIÓN Y REINICIO -->
-    <div id="modal-reset" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl border border-gray-100">
-            <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl shadow-inner">
-                <i class="fas fa-user-cog"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-1">Configurar y Reiniciar</h3>
-            <p class="text-xs text-gray-500 mb-4 leading-relaxed">
-                Elige tu modalidad para empezar la feria con tu saldo exacto:
-            </p>
-            
-            <div class="text-left mb-3">
-                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1 ml-1">Nombre del Socio / Pareja</label>
-                <input type="text" id="reset-input-name" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2 px-3 text-sm font-semibold focus:outline-none focus:border-red-500">
+    <!-- MODAL DE RONDAS PENDIENTES (ANTI-DOPAJE) -->
+    <div id="modal-pending" class="absolute inset-0 bg-black/80 backdrop-blur-sm z-[60] hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl border-t-4 border-red-600">
+            <div class="text-center mb-5">
+                <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner"><i class="fas fa-beer"></i></div>
+                <h3 class="text-lg font-black text-gray-900 mb-1">Reparto del Chupómetro</h3>
+                <p class="text-xs text-gray-500">¿Quién se ha bebido esto?</p>
+                <div id="pending-ticket-info" class="mt-2 inline-block bg-gray-100 px-3 py-1 rounded-full text-xs font-bold text-gray-700 font-mono">...</div>
             </div>
 
-            <div class="mb-5 text-left">
-                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1.5 ml-1">Modalidad de Cuota</label>
-                <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="setResetType('couple')" id="reset-btn-couple" class="p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all">
-                        <span>👫 Matrimonio</span>
-                        <span class="text-sm font-extrabold text-red-600">360,00 €</span>
-                    </button>
-                    <button type="button" onclick="setResetType('single')" id="reset-btn-single" class="p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60">
-                        <span>👤 Soltero(a)</span>
-                        <span class="text-sm font-extrabold text-gray-800">180,00 €</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-2.5">
-                <button onclick="executeReset()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">
-                    Guardar y Reiniciar a Cero
-                </button>
-                <button onclick="closeResetModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl transition-all text-xs">
-                    Cancelar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL RESUMEN FIN DE FERIA (CON SISTEMA DE TROFEOS 🍻) -->
-    <div id="modal-summary" class="absolute inset-0 bg-black/85 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
-        <div class="bg-gradient-to-br from-indigo-900 via-purple-900 to-gray-900 rounded-3xl p-6 w-full max-w-sm text-center shadow-[0_0_40px_rgba(139,92,246,0.4)] border border-purple-500/30 overflow-hidden relative">
-            <div class="absolute -top-10 -right-10 text-8xl opacity-10 rotate-12">🎡</div>
-            <div class="absolute -bottom-10 -left-10 text-8xl opacity-10 -rotate-12">💃</div>
-
-            <h3 class="text-xs font-bold text-purple-300 uppercase tracking-widest mb-1 relative z-10">Resumen Oficial</h3>
-            <h2 class="text-2xl font-black text-white mb-5 relative z-10">Tu Feria 2026 🏆</h2>
-            
-            <div class="space-y-3 relative z-10">
-                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col items-center">
-                    <span class="text-xs text-purple-200 font-medium uppercase mb-1">Inversión en Felicidad</span>
-                    <span class="text-4xl font-black text-yellow-400" id="summary-total">0,00 €</span>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex flex-col items-center">
-                        <span class="text-[10px] text-purple-200 uppercase font-bold mb-1">Raciones/Bebidas</span>
-                        <span class="text-2xl font-black text-white flex items-center gap-1.5"><i class="fas fa-utensils text-sm text-purple-400"></i> <span id="summary-items">0</span></span>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex flex-col items-center">
-                        <span class="text-[10px] text-purple-200 uppercase font-bold mb-1">Día más fiestero</span>
-                        <span class="text-sm font-black text-white mt-1 leading-tight flex items-center gap-1.5"><i class="fas fa-calendar-star text-purple-400"></i> <span id="summary-top-day">-</span></span>
+            <!-- UI PARA SOLTEROS -->
+            <div id="pending-single-ui" class="space-y-4 mb-6 hidden">
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-200">
+                    <span class="text-sm font-bold text-gray-800" id="pending-single-name">Socio</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changePending(1, -1)" class="w-8 h-8 bg-red-100 text-red-600 rounded-full font-bold active:bg-red-200 text-lg flex items-center justify-center">-</button>
+                        <span id="pending-s1-val" class="w-6 text-center font-black text-lg">0</span>
+                        <button onclick="changePending(1, 1)" class="w-8 h-8 bg-green-100 text-green-600 rounded-full font-bold active:bg-green-200 text-lg flex items-center justify-center">+</button>
                     </div>
                 </div>
+                <div class="text-xs font-semibold text-gray-400 text-right pr-2">
+                    Invitaciones (No suman): <span id="pending-single-guests" class="text-gray-600 font-bold">0</span> pts
+                </div>
+            </div>
 
-                <!-- EL CHUPÓMETRO (SISTEMA DE TROFEOS) -->
-                <div class="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-cyan-500/30 rounded-2xl p-3.5 flex flex-col items-center mt-2 relative overflow-hidden">
-                    <span class="text-[10px] text-cyan-200 font-bold uppercase mb-1"><i class="fas fa-medal"></i> Nivel de Feriante (Bebidas)</span>
-                    <div id="summary-trophy-name" class="text-xl font-black mb-1.5 drop-shadow-md text-white">...</div>
-                    <div class="w-full bg-black/40 rounded-full h-2 mb-1.5 overflow-hidden shadow-inner">
-                        <div id="summary-trophy-bar" class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
+            <!-- UI PARA PAREJAS -->
+            <div id="pending-couple-ui" class="space-y-3 mb-6 hidden">
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-200">
+                    <span class="text-sm font-bold text-gray-800 truncate pr-2" id="pending-p1-name">Socio 1</span>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="changePending(1, -1)" class="w-8 h-8 bg-red-100 text-red-600 rounded-full font-bold active:bg-red-200 text-lg flex items-center justify-center">-</button>
+                        <span id="pending-p1-val" class="w-6 text-center font-black text-lg">0</span>
+                        <button onclick="changePending(1, 1)" class="w-8 h-8 bg-green-100 text-green-600 rounded-full font-bold active:bg-green-200 text-lg flex items-center justify-center">+</button>
                     </div>
-                    <span id="summary-trophy-msg" class="text-[10.5px] text-cyan-100 font-medium tracking-wide">...</span>
                 </div>
-
-                <div class="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 rounded-2xl p-3.5 flex flex-col items-center mt-2">
-                    <span class="text-xs text-yellow-200 font-bold uppercase mb-2"><i class="fas fa-crown"></i> Tu Producto Estrella</span>
-                    <div id="summary-top-item" class="text-lg font-bold text-white leading-tight"></div>
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-200">
+                    <span class="text-sm font-bold text-gray-800 truncate pr-2" id="pending-p2-name">Socio 2</span>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="changePending(2, -1)" class="w-8 h-8 bg-red-100 text-red-600 rounded-full font-bold active:bg-red-200 text-lg flex items-center justify-center">-</button>
+                        <span id="pending-p2-val" class="w-6 text-center font-black text-lg">0</span>
+                        <button onclick="changePending(2, 1)" class="w-8 h-8 bg-green-100 text-green-600 rounded-full font-bold active:bg-green-200 text-lg flex items-center justify-center">+</button>
+                    </div>
+                </div>
+                <div class="text-xs font-semibold text-gray-400 text-right pr-2 mt-2 pt-2 border-t border-gray-100">
+                    Invitaciones (No suman): <span id="pending-couple-guests" class="text-gray-600 font-bold">0</span> pts
                 </div>
             </div>
 
-            <button onclick="closeFairSummary()" class="mt-6 w-full bg-white text-purple-900 font-black py-3.5 rounded-xl shadow-lg active:scale-95 transition-all text-base relative z-10">
-                ¡Olé mi Feria! Cerrar
+            <button onclick="savePendingRound()" class="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm flex justify-center items-center gap-2">
+                <i class="fas fa-save"></i> Guardar Reparto
             </button>
-        </div>
-    </div>
-
-    <!-- MODAL CANTIDAD (TPV) -->
-    <div id="modal-qty" class="absolute inset-0 bg-black/70 backdrop-blur-xs z-50 hidden-screen flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
-            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">¿Cuántas unidades?</h3>
-            <div id="modal-qty-name" class="text-xl font-bold text-gray-800 mb-6 flex flex-col items-center justify-center gap-2"></div>
-            
-            <div class="grid grid-cols-3 gap-3 mb-6">
-                <button onclick="confirmQty(1)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">1</button>
-                <button onclick="confirmQty(2)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">2</button>
-                <button onclick="confirmQty(3)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">3</button>
-                <button onclick="confirmQty(4)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">4</button>
-                <button onclick="confirmQty(5)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">5</button>
-                <button onclick="confirmQty(6)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">6</button>
-                <button onclick="confirmQty(7)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">7</button>
-                <button onclick="confirmQty(8)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">8</button>
-                <button onclick="confirmQty(9)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">9</button>
-                <button onclick="confirmQty(10)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">10</button>
-                <button onclick="confirmQty(15)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">15</button>
-                <button onclick="confirmQty(20)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">20</button>
-            </div>
-            
-            <button onclick="closeQtyModal()" class="text-gray-500 font-bold py-3 w-full border-2 border-gray-200 rounded-xl active:bg-gray-100">Cancelar</button>
-        </div>
-    </div>
-
-    <!-- MODAL: IMPORTE LIBRE / EXTRA -->
-    <div id="modal-custom" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg"><i class="fas fa-plus"></i></div>
-                <div>
-                    <h3 class="font-bold text-gray-900 text-lg">Añadir Extra / Libre</h3>
-                    <p class="text-xs text-gray-500">Para churros, tabaco o imprevistos</p>
-                </div>
-            </div>
-
-            <div class="space-y-3 mb-5">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Concepto</label>
-                    <input type="text" id="custom-name" placeholder="Ej. Churros, Tabaco..." class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-base font-semibold focus:outline-none focus:border-purple-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Importe (€)</label>
-                    <input type="number" id="custom-price" placeholder="0.00" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-2xl font-bold text-purple-700 focus:outline-none focus:border-purple-500" inputmode="decimal">
-                </div>
-            </div>
-
-            <div class="flex flex-wrap gap-1.5 mb-6">
-                <button onclick="fillCustomPreset('🥖 Churros')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">🥖 Churros</button>
-                <button onclick="fillCustomPreset('🚬 Tabaco')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">🚬 Tabaco</button>
-                <button onclick="fillCustomPreset('💰 Propina')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">💰 Propina</button>
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <button onclick="confirmCustomItem()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-base">Añadir a la Cuenta</button>
-                <button onclick="closeCustomModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl text-sm">Cancelar</button>
-            </div>
         </div>
     </div>
 
@@ -282,7 +188,7 @@
             <p class="text-[10px] text-gray-500 mt-1 italic">Con todo el Amor ❤️ para los compañeros de La Premierr</p>
             <div class="mt-3 flex items-center justify-center gap-3 text-[9px] text-gray-400 font-medium">
                 <button onclick="openPrivacyModal()" class="underline">Privacidad y Cookies</button>
-                <span>•</span><span>Versión 1.2.0</span>
+                <span>•</span><span>Versión 1.3.0</span>
             </div>
         </div>
     </div>
@@ -311,6 +217,13 @@
         </div>
 
         <div class="flex-1 p-4 overflow-y-auto">
+            <!-- BOTÓN ALERTA REPARTO RONDAS -->
+            <div id="dash-pending-alert" class="mb-5 hidden">
+                <button onclick="openPendingRounds()" class="w-full bg-amber-500 text-white font-extrabold py-3.5 rounded-xl shadow-[0_0_15px_rgba(245,158,11,0.6)] active:scale-95 transition-transform text-sm flex items-center justify-center gap-2 animate-bounce">
+                    <i class="fas fa-bell text-yellow-100 text-lg"></i> Tienes <span id="pending-count">0</span> ronda(s) sin repartir
+                </button>
+            </div>
+
             <div id="dash-open-tab-card" class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-5 shadow-sm hidden">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-2">
@@ -357,7 +270,7 @@
                 <p class="text-[10px] text-gray-500 mt-1 italic">Con todo el Amor ❤️ para los compañeros de La Premierr</p>
                 <div class="mt-3 flex items-center justify-center gap-3 text-[9px] text-gray-400 font-medium">
                     <button onclick="openPrivacyModal()" class="underline">Privacidad y Cookies</button>
-                    <span>•</span><span>Versión 1.2.0</span>
+                    <span>•</span><span>Versión 1.3.0</span>
                 </div>
             </div>
         </div>
@@ -430,7 +343,7 @@
                 <p class="text-[10px] text-gray-500 mt-1 italic">Con todo el Amor ❤️ para los compañeros de La Premierr</p>
                 <div class="mt-3 flex items-center justify-center gap-3 text-[9px] text-gray-400 font-medium">
                     <button onclick="openPrivacyModal()" class="underline">Privacidad y Cookies</button>
-                    <span>•</span><span>Versión 1.2.0</span>
+                    <span>•</span><span>Versión 1.3.0</span>
                 </div>
             </div>
         </div>
@@ -487,9 +400,9 @@
         </div>
     </div>
 
-    <!-- PANTALLA 5: RECIBO -->
+    <!-- PANTALLA 5: RECIBO LÍMPIO -->
     <div id="screen-receipt" class="h-full w-full bg-gray-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 z-50 absolute hidden-screen">
-        <div class="ticket-bg w-full max-w-sm rounded-lg shadow-2xl p-6 font-mono text-sm text-gray-800">
+        <div class="ticket-bg w-full max-w-sm rounded-lg shadow-2xl p-6 font-mono text-sm text-gray-800 max-h-[85vh] overflow-y-auto hide-scrollbar">
             <div class="text-center mb-3">
                 <h2 class="text-xl font-black uppercase text-gray-900">Caseta "La Premierr"</h2>
                 <p class="text-[11px] font-bold text-red-600 mt-0.5">Feria 2026 Tocina - Los Rosales</p>
@@ -513,9 +426,50 @@
             <div class="flex justify-between text-xs font-semibold text-gray-800 mt-1" id="receipt-new-bal-row">
                 <span>Saldo resultante:</span><span id="receipt-new-balance">0,00 €</span>
             </div>
-            <div class="text-center mt-6 text-[11px] text-gray-400"><p>*** GRACIAS POR SU VISITA ***</p></div>
+
+            <div class="text-center mt-5 text-[11px] text-gray-400 font-sans"><p>*** GRACIAS POR SU VISITA ***</p></div>
         </div>
-        <button onclick="closeReceipt()" class="mt-6 bg-red-600 text-white font-bold py-3.5 px-8 rounded-full active:scale-95 w-full max-w-sm">Cerrar Recibo</button>
+        <button onclick="closeReceipt()" class="mt-6 bg-red-600 text-white font-bold py-3.5 px-8 rounded-full active:scale-95 w-full max-w-sm shrink-0">Cerrar Recibo</button>
+    </div>
+
+    <!-- MODAL DE RESUMEN DE FERIA (CON CHUPÓMETROS Y PLATOS SEPARADOS) -->
+    <div id="modal-summary" class="absolute inset-0 bg-black/85 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-gradient-to-br from-indigo-900 via-purple-900 to-gray-900 rounded-3xl p-6 w-full max-w-sm text-center shadow-[0_0_40px_rgba(139,92,246,0.4)] border border-purple-500/30 overflow-y-auto max-h-[90vh] relative">
+            <div class="absolute -top-10 -right-10 text-8xl opacity-10 rotate-12 pointer-events-none">🎡</div>
+            <div class="absolute -bottom-10 -left-10 text-8xl opacity-10 -rotate-12 pointer-events-none">💃</div>
+
+            <h3 class="text-xs font-bold text-purple-300 uppercase tracking-widest mb-1 relative z-10">Resumen Oficial</h3>
+            <h2 class="text-2xl font-black text-white mb-5 relative z-10">Tu Feria 2026 🏆</h2>
+            
+            <div class="space-y-3 relative z-10">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col items-center">
+                    <span id="summary-total-label" class="text-[11px] text-purple-200 font-bold uppercase mb-1">Inversión en Felicidad (Bebidas)</span>
+                    <span class="text-4xl font-black text-yellow-400" id="summary-total">0,00 €</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex flex-col items-center">
+                        <span id="summary-items-label" class="text-[10px] text-purple-200 uppercase font-bold mb-1 text-center leading-tight h-6">Bebidas consumidas</span>
+                        <span class="text-2xl font-black text-white flex items-center gap-1.5"><i class="fas fa-glass-cheers text-sm text-purple-400"></i> <span id="summary-items">0</span></span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex flex-col items-center">
+                        <span class="text-[10px] text-purple-200 uppercase font-bold mb-1 text-center leading-tight h-6">Día más fiestero</span>
+                        <span class="text-sm font-black text-white mt-1 leading-tight flex items-center gap-1.5"><i class="fas fa-calendar-star text-purple-400"></i> <span id="summary-top-day">-</span></span>
+                    </div>
+                </div>
+
+                <div id="summary-chupometros-container" class="space-y-3"></div>
+
+                <div class="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 rounded-2xl p-3.5 flex flex-col items-center mt-2">
+                    <span class="text-xs text-yellow-200 font-bold uppercase mb-2"><i class="fas fa-utensils"></i> Tu Plato Estrella de Comida</span>
+                    <div id="summary-top-food" class="text-lg font-bold text-white leading-tight"></div>
+                </div>
+            </div>
+
+            <button onclick="closeFairSummary()" class="mt-6 w-full bg-white text-purple-900 font-black py-3.5 rounded-xl shadow-lg active:scale-95 transition-all text-base relative z-10">
+                ¡Olé mi Feria! Cerrar
+            </button>
+        </div>
     </div>
 
     <script>
@@ -523,6 +477,10 @@
         let ticketTotal = 0; let socioName = ""; let socioType = "couple"; let tempResetType = "couple";
         let favoriteNames = []; let receiptReturnScreen = 'screen-dashboard';
         let tempProdName = ""; let tempProdPrice = 0; let tempProdIcon = "";
+
+        // Variables de Rondas Pendientes
+        let currentPendingIdx = -1;
+        let tempP1 = 0; let tempP2 = 0;
 
         const SCHEDULE_DATA = [
             { dayTitle: "MARTES PRE-FERIA", events: [ { time: "22:00h", title: "Picoteo Socios", detail: "Apertura oficial caseta", startISO: "2026-09-01T22:00:00" }, { time: "00:00h", title: "Grupo TATEMAE", detail: "Música en directo", startISO: "2026-09-02T00:00:00" } ] },
@@ -576,9 +534,11 @@
                 {name: "Costillar", price: 12.00, icon: "🍖"}
             ]
         };
+        
+        const BEBIDAS_NAMES = DATA["Bebidas"].map(b => b.name);
 
         function showScreen(id) {
-            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule):not(#modal-privacy):not(#modal-summary):not(#modal-empty-summary)').forEach(el => el.classList.add('hidden-screen'));
+            document.querySelectorAll('body > div:not(#modal-qty):not(#screen-receipt):not(#modal-reset):not(#modal-custom):not(#modal-schedule):not(#modal-privacy):not(#modal-empty-summary):not(#modal-alert):not(#modal-confirm):not(#modal-pending)').forEach(el => el.classList.add('hidden-screen'));
             document.getElementById(id).classList.remove('hidden-screen');
         }
 
@@ -589,6 +549,14 @@
         };
 
         function acceptCredits() { showScreen('screen-login'); }
+
+        function showCustomAlert(msg) { document.getElementById('alert-msg').innerText = msg; document.getElementById('modal-alert').classList.remove('hidden-screen'); }
+        function closeCustomAlert() { document.getElementById('modal-alert').classList.add('hidden-screen'); }
+        
+        let confirmAction = null;
+        function showCustomConfirm(msg, callback) { document.getElementById('confirm-msg').innerText = msg; confirmAction = callback; document.getElementById('modal-confirm').classList.remove('hidden-screen'); }
+        function execConfirm() { if(confirmAction) confirmAction(); document.getElementById('modal-confirm').classList.add('hidden-screen'); }
+        function closeConfirm() { document.getElementById('modal-confirm').classList.add('hidden-screen'); }
 
         function selectSocioType(type) {
             socioType = type;
@@ -630,17 +598,84 @@
             const days = Object.keys(history).sort((a,b) => new Date(b) - new Date(a));
             if(days.length === 0) histContainer.innerHTML = '<p class="text-gray-400 text-sm italic py-2">No hay gastos registrados aún.</p>';
             else days.forEach(day => { histContainer.innerHTML += `<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center border border-gray-100"><span class="font-semibold text-gray-700">${day}</span> <span class="font-bold text-red-600">-${history[day].toFixed(2).replace('.', ',')} €</span></div>`; });
+            
+            checkPendingRounds();
         }
 
-        // FUNCIONES MODALES PRIVACIDAD Y RESUMEN VACÍO
+        // SISTEMA DE BUZÓN: REPARTO DE PUNTOS
+        function checkPendingRounds() {
+            let pending = allTickets.filter(t => t.totalDrinkPoints > 0 && !t.pointsDist.done);
+            let btn = document.getElementById('dash-pending-alert');
+            if (pending.length > 0) {
+                btn.classList.remove('hidden');
+                document.getElementById('pending-count').innerText = pending.length;
+            } else { btn.classList.add('hidden'); }
+        }
+
+        function openPendingRounds() {
+            currentPendingIdx = allTickets.findIndex(t => t.totalDrinkPoints > 0 && !t.pointsDist.done);
+            if (currentPendingIdx === -1) {
+                document.getElementById('modal-pending').classList.add('hidden-screen');
+                checkPendingRounds(); return;
+            }
+            let t = allTickets[currentPendingIdx];
+            tempP1 = 0; tempP2 = 0;
+            
+            document.getElementById('pending-ticket-info').innerText = `Ronda ${t.time} - ${t.totalDrinkPoints} Pts`;
+            
+            if (socioType === 'single') {
+                document.getElementById('pending-couple-ui').classList.add('hidden');
+                document.getElementById('pending-single-ui').classList.remove('hidden');
+                document.getElementById('pending-single-name').innerText = socioName;
+            } else {
+                document.getElementById('pending-single-ui').classList.add('hidden');
+                document.getElementById('pending-couple-ui').classList.remove('hidden');
+                let names = socioName.split(/ y | Y | e | E | & | - /);
+                document.getElementById('pending-p1-name').innerText = names[0] || 'Socio 1';
+                document.getElementById('pending-p2-name').innerText = names[1] || 'Socio 2';
+            }
+            updatePendingUI();
+            document.getElementById('modal-pending').classList.remove('hidden-screen');
+        }
+
+        function updatePendingUI() {
+            let t = allTickets[currentPendingIdx];
+            let total = t.totalDrinkPoints;
+            let guests = total - tempP1 - tempP2;
+            
+            if (socioType === 'single') {
+                document.getElementById('pending-s1-val').innerText = tempP1;
+                document.getElementById('pending-single-guests').innerText = guests;
+            } else {
+                document.getElementById('pending-p1-val').innerText = tempP1;
+                document.getElementById('pending-p2-val').innerText = tempP2;
+                document.getElementById('pending-couple-guests').innerText = guests;
+            }
+        }
+
+        function changePending(player, delta) {
+            let t = allTickets[currentPendingIdx];
+            let total = t.totalDrinkPoints;
+            if (player === 1) {
+                if (tempP1 + delta >= 0 && (tempP1 + tempP2 + delta) <= total) tempP1 += delta;
+            } else {
+                if (tempP2 + delta >= 0 && (tempP1 + tempP2 + delta) <= total) tempP2 += delta;
+            }
+            updatePendingUI();
+        }
+
+        function savePendingRound() {
+            allTickets[currentPendingIdx].pointsDist = { p1: tempP1, p2: tempP2, done: true };
+            localStorage.setItem('feria_all_tickets', JSON.stringify(allTickets));
+            openPendingRounds(); // Salta a la siguiente ronda si la hay, o cierra.
+        }
+
+
         function openPrivacyModal() { document.getElementById('modal-privacy').classList.remove('hidden-screen'); }
         function closePrivacyModal() { document.getElementById('modal-privacy').classList.add('hidden-screen'); }
         function closeEmptySummaryModal() { document.getElementById('modal-empty-summary').classList.add('hidden-screen'); }
 
-        function openResetModal() { 
-            tempResetType = socioType || 'couple'; document.getElementById('reset-input-name').value = socioName;
-            updateResetModalUI(); document.getElementById('modal-reset').classList.remove('hidden-screen'); 
-        }
+        function openResetModal() { tempResetType = socioType || 'couple'; document.getElementById('reset-input-name').value = socioName; updateResetModalUI(); document.getElementById('modal-reset').classList.remove('hidden-screen'); }
         function setResetType(type) { tempResetType = type; updateResetModalUI(); }
         function updateResetModalUI() {
             document.getElementById('reset-btn-couple').className = tempResetType === 'couple' ? "p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all shadow-xs" : "p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60";
@@ -656,105 +691,86 @@
             closeResetModal(); loadData(); renderTpvMenu(); showScreen('screen-dashboard');
         }
 
-        // --- SISTEMA INTELIGENTE DE ACTUACIONES ---
         function openScheduleModal() { renderScheduleEvents(); document.getElementById('modal-schedule').classList.remove('hidden-screen'); }
         function closeScheduleModal() { document.getElementById('modal-schedule').classList.add('hidden-screen'); }
-        
         function renderScheduleEvents() {
             const container = document.getElementById('schedule-events-container'); container.innerHTML = ''; const now = new Date();
-            
             SCHEDULE_DATA.forEach(day => {
                 let html = `<div class="bg-gray-50 rounded-2xl p-3.5 border border-gray-200 shadow-2xs"><div class="font-extrabold text-red-700 text-xs uppercase tracking-wider mb-2.5 pb-1 border-b border-gray-200 flex items-center justify-between"><span>${day.dayTitle}</span><i class="fas fa-music text-[10px] text-gray-400"></i></div><div class="space-y-2">`;
-                
                 day.events.forEach((ev, idx) => {
                     const startT = new Date(ev.startISO);
                     const finishT = (idx < day.events.length - 1) ? new Date(day.events[idx + 1].startISO) : new Date(startT.getTime() + (3 * 60 * 60 * 1000));
-                    
-                    let badge = now >= finishT 
-                        ? `<span class="text-[10px] font-bold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fas fa-check"></i> Finalizada</span>` 
-                        : (now >= startT && now < finishT 
-                            ? `<span class="text-[10px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-xs flex items-center gap-1"><span class="w-1.5 h-1.5 bg-white rounded-full"></span> ¡EN DIRECTO!</span>` 
-                            : `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">⏳ Próximamente</span>`);
-                    
+                    let badge = now >= finishT ? `<span class="text-[10px] font-bold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fas fa-check"></i> Finalizada</span>` : (now >= startT && now < finishT ? `<span class="text-[10px] font-black bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-xs flex items-center gap-1"><span class="w-1.5 h-1.5 bg-white rounded-full"></span> ¡EN DIRECTO!</span>` : `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">⏳ Próximamente</span>`);
                     html += `<div class="flex justify-between items-start p-2 rounded-xl bg-white border border-gray-100 ${now >= finishT ? 'opacity-50 grayscale' : ''}"><div><div class="flex items-center gap-1.5"><span class="text-xs font-mono font-bold text-red-600">${ev.time}</span><span class="text-xs font-bold text-gray-800">${ev.title}</span></div><p class="text-[11px] text-gray-500 mt-0.5">${ev.detail}</p></div><div class="shrink-0 ml-2">${badge}</div></div>`;
                 });
                 container.innerHTML += html + `</div></div>`;
             });
         }
 
-        // --- SISTEMA: RESUMEN FIN DE FERIA Y TROFEOS CHUPÓMETRO ---
+        function getTrophyHTML(name, points) {
+            let tName = ""; let tMsg = ""; let tColor = ""; let tPct = 0;
+            if (points < 10) { tName = "👶 CALENTANDO"; tMsg = `Faltan ${10 - points} para el 🥉 BRONCE`; tColor = "text-white"; tPct = (points/10)*100; } 
+            else if (points < 30) { tName = "🥉 BRONCE"; tMsg = `Faltan ${30 - points} para la 🥈 PLATA`; tColor = "text-orange-300"; tPct = ((points-10)/20)*100; } 
+            else if (points < 50) { tName = "🥈 PLATA"; tMsg = `Faltan ${50 - points} para el 🥇 ORO`; tColor = "text-gray-300"; tPct = ((points-30)/20)*100; } 
+            else { tName = "🥇 ORO LÍQUIDO"; tMsg = `¡Dios de La Premierr! 👑 (${points} tragos)`; tColor = "text-yellow-400"; tPct = 100; }
+            return `<div class="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-cyan-500/30 rounded-2xl p-3.5 flex flex-col items-center relative overflow-hidden"><span class="text-[10px] text-cyan-200 font-bold uppercase mb-1"><i class="fas fa-medal"></i> ${name}</span><div class="text-xl font-black mb-1.5 drop-shadow-md ${tColor}">${tName}</div><div class="w-full bg-black/40 rounded-full h-2 mb-1.5 overflow-hidden shadow-inner"><div class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full transition-all duration-1000" style="width: ${tPct}%"></div></div><span class="text-[10.5px] text-cyan-100 font-medium tracking-wide">${tMsg}</span></div>`;
+        }
+
         function showFairSummary() {
-            if (allTickets.length === 0) {
-                document.getElementById('modal-empty-summary').classList.remove('hidden-screen');
-                return;
-            }
+            if (allTickets.length === 0) { document.getElementById('modal-empty-summary').classList.remove('hidden-screen'); return; }
             
-            let totalSpent = 0; let totalItems = 0; let itemCounts = {}; let daySpent = {};
-            const bebidasNames = DATA["Bebidas"].map(b => b.name);
-            let drinkPoints = 0; 
+            let pendingUnresolved = allTickets.filter(t => t.totalDrinkPoints > 0 && !t.pointsDist.done);
+            if(pendingUnresolved.length > 0) return showCustomAlert("Tienes rondas pendientes de repartir en el buzón. Repártelas primero para ver tu puntuación real en el Chupómetro.");
+
+            let totalDrinkSpent = 0; let totalDrinkItems = 0; 
+            let foodCounts = {}; let daySpent = {};
+            let p1Pts = 0; let p2Pts = 0; let singlePts = 0;
             
             allTickets.forEach(t => {
-                totalSpent += t.total;
                 if(!daySpent[t.date]) daySpent[t.date] = 0;
-                daySpent[t.date] += t.total;
+                daySpent[t.date] += t.total; 
                 
                 t.items.forEach(i => {
-                    if(!itemCounts[i.name]) itemCounts[i.name] = {qty: 0, icon: i.icon};
-                    itemCounts[i.name].qty += i.qty;
-                    totalItems += i.qty;
-
-                    if (bebidasNames.includes(i.name)) {
-                        let pts = i.name.toLowerCase().includes("jarra") ? 5 : 1;
-                        drinkPoints += (i.qty * pts);
+                    if (BEBIDAS_NAMES.includes(i.name)) {
+                        totalDrinkSpent += (i.price * i.qty);
+                        totalDrinkItems += i.qty;
+                    } else {
+                        if(!foodCounts[i.name]) foodCounts[i.name] = {qty: 0, icon: i.icon};
+                        foodCounts[i.name].qty += i.qty;
                     }
                 });
+
+                if (t.pointsDist && t.pointsDist.done) {
+                    if (socioType === 'single') singlePts += t.pointsDist.p1;
+                    else { p1Pts += t.pointsDist.p1; p2Pts += t.pointsDist.p2; }
+                }
             });
 
-            let tName = ""; let tMsg = ""; let tColor = ""; let tPct = 0;
-            if (drinkPoints < 10) {
-                tName = "👶 CALENTANDO"; tMsg = `Te faltan ${10 - drinkPoints} tragos para el 🥉 BRONCE`; 
-                tColor = "text-white"; tPct = (drinkPoints/10)*100;
-            } else if (drinkPoints < 30) {
-                tName = "🥉 BRONCE"; tMsg = `Te faltan ${30 - drinkPoints} tragos para la 🥈 PLATA`;
-                tColor = "text-orange-300"; tPct = ((drinkPoints-10)/20)*100;
-            } else if (drinkPoints < 50) {
-                tName = "🥈 PLATA"; tMsg = `Te faltan ${50 - drinkPoints} tragos para el 🥇 ORO`;
-                tColor = "text-gray-300"; tPct = ((drinkPoints-30)/20)*100;
-            } else {
-                tName = "🥇 ORO LÍQUIDO"; tMsg = `¡Eres el Dios de La Premierr! 👑 (${drinkPoints} tragos totales)`;
-                tColor = "text-yellow-400"; tPct = 100;
-            }
+            document.getElementById('summary-total-label').innerText = socioType === 'couple' ? "Gastos Felicidad Pareja (Bebidas)" : "Inversión Felicidad (Bebidas)";
+            document.getElementById('summary-total').innerText = totalDrinkSpent.toFixed(2).replace('.', ',') + ' €';
+            document.getElementById('summary-items').innerText = totalDrinkItems;
             
-            const trNameEl = document.getElementById('summary-trophy-name');
-            trNameEl.className = `text-xl font-black mb-1.5 drop-shadow-md ${tColor}`;
-            trNameEl.innerText = tName;
-            document.getElementById('summary-trophy-msg').innerText = tMsg;
-            setTimeout(() => { document.getElementById('summary-trophy-bar').style.width = tPct + '%'; }, 100);
-
-            let topItem = {name: '-', qty: 0, icon: ''};
-            Object.keys(itemCounts).forEach(k => {
-                if(itemCounts[k].qty > topItem.qty) topItem = {name: k, qty: itemCounts[k].qty, icon: itemCounts[k].icon};
-            });
-
             let topDay = {date: '-', spent: 0};
-            Object.keys(daySpent).forEach(d => {
-                if(daySpent[d] > topDay.spent) topDay = {date: d, spent: daySpent[d]};
-            });
-
-            document.getElementById('summary-total').innerText = totalSpent.toFixed(2).replace('.', ',') + ' €';
-            document.getElementById('summary-items').innerText = totalItems;
+            Object.keys(daySpent).forEach(d => { if(daySpent[d] > topDay.spent) topDay = {date: d, spent: daySpent[d]}; });
             document.getElementById('summary-top-day').innerText = topDay.date;
+
+            let topFood = {name: 'Aún sin comida', qty: 0, icon: ''};
+            Object.keys(foodCounts).forEach(k => { if(foodCounts[k].qty > topFood.qty) topFood = {name: k, qty: foodCounts[k].qty, icon: foodCounts[k].icon}; });
+            const fIcon = topFood.icon ? `<span class="text-4xl block mb-2 drop-shadow-md">${topFood.icon}</span>` : `<span class="text-4xl block mb-2 drop-shadow-md">🍽️</span>`;
+            document.getElementById('summary-top-food').innerHTML = topFood.qty > 0 ? `${fIcon}${topFood.name} <br><span class="text-sm font-normal text-yellow-200 mt-1 block">(${topFood.qty} veces pedido)</span>` : `${fIcon}¡Pide algo de comer!`;
             
-            const iconHtml = topItem.icon ? `<span class="text-4xl block mb-2 drop-shadow-md">${topItem.icon}</span>` : `<span class="text-4xl block mb-2 drop-shadow-md">🍽️</span>`;
-            document.getElementById('summary-top-item').innerHTML = `${iconHtml}${topItem.name} <br><span class="text-sm font-normal text-yellow-200 mt-1 block">(${topItem.qty} veces pedido)</span>`;
-            
+            let chupoHtml = '';
+            if (socioType === 'single') {
+                chupoHtml = getTrophyHTML("Nivel de Feriante (Bebidas)", singlePts);
+            } else {
+                let names = socioName.split(/ y | Y | e | E | & | - /);
+                chupoHtml = getTrophyHTML(`Chupómetro: ${names[0] || 'Socio 1'}`, p1Pts) + getTrophyHTML(`Chupómetro: ${names[1] || 'Socio 2'}`, p2Pts);
+            }
+            document.getElementById('summary-chupometros-container').innerHTML = chupoHtml;
             document.getElementById('modal-summary').classList.remove('hidden-screen');
         }
 
-        function closeFairSummary() { 
-            document.getElementById('modal-summary').classList.add('hidden-screen'); 
-            document.getElementById('summary-trophy-bar').style.width = '0%'; 
-        }
+        function closeFairSummary() { document.getElementById('modal-summary').classList.add('hidden-screen'); }
 
         function openRecharge() { document.getElementById('recharge-amount').value = ''; document.getElementById('recharge-preview').innerText = '0,00 €'; showScreen('screen-recharge'); }
         function closeRecharge() { showScreen('screen-dashboard'); }
@@ -764,13 +780,22 @@
             if(val > 0) { balance += val * 1.20; localStorage.setItem('feria_balance', balance.toString()); loadData(); showScreen('screen-dashboard'); }
         }
 
+        // ESTRELLITAS MANUALES
+        function toggleFav(e, name) {
+            e.stopPropagation();
+            if(favoriteNames.includes(name)) favoriteNames = favoriteNames.filter(n => n !== name);
+            else favoriteNames.push(name);
+            localStorage.setItem('feria_favorites', JSON.stringify(favoriteNames));
+            renderTpvMenu();
+        }
+
         function renderTpvMenu() {
             let catHTML = `<button onclick="showCategory('Favs')" class="cat-btn px-4 py-2 rounded-full whitespace-nowrap font-semibold bg-red-600 text-white" id="cat-btn-Favs">⭐ Favs</button>`;
             Object.keys(DATA).forEach(cat => { catHTML += `<button onclick="showCategory('${cat}')" class="cat-btn px-4 py-2 rounded-full whitespace-nowrap font-semibold bg-gray-200 text-gray-700" id="cat-btn-${cat.replace(/\s+/g, '')}">${cat}</button>`; });
             document.getElementById('tpv-categories').innerHTML = catHTML;
 
             let prodHTML = `<div id="cat-Favs" class="cat-group grid grid-cols-2 gap-2">`;
-            if (favoriteNames.length === 0) prodHTML += `<div class="col-span-2 text-center text-gray-400 py-10 italic text-sm">Tus productos irán apareciendo aquí.</div>`;
+            if (favoriteNames.length === 0) prodHTML += `<div class="col-span-2 text-center text-gray-400 py-10 italic text-sm">Añade productos con la 🌟</div>`;
             else favoriteNames.forEach(f => { let p = null; Object.values(DATA).forEach(c => { let fd = c.find(x => x.name === f); if(fd) p = fd; }); if(p) prodHTML += createProductBtn(p); });
             prodHTML += `</div>`;
 
@@ -785,12 +810,15 @@
         function createProductBtn(prod) {
             const iconHtml = prod.icon ? `<div class="text-3xl mb-1 transform group-active:scale-110 transition-transform">${prod.icon}</div>` : `<div class="text-3xl mb-1 h-9"></div>`;
             const bgIconHtml = prod.icon ? `<div class="absolute -bottom-4 -right-2 text-6xl opacity-[0.04] rotate-12 pointer-events-none">${prod.icon}</div>` : ``;
+            const isFav = favoriteNames.includes(prod.name);
+            const starIcon = isFav ? `<i class="fas fa-star text-yellow-400"></i>` : `<i class="far fa-star text-gray-300"></i>`;
             
             return `
             <button onclick="openQtyModal('${prod.name}', ${prod.price}, '${prod.icon}')" class="product-card p-3 text-left flex flex-col justify-between h-28 relative overflow-hidden group">
+                <div class="absolute top-2 right-2 text-xl z-20" onclick="toggleFav(event, '${prod.name}')">${starIcon}</div>
                 ${iconHtml}
                 <div class="flex flex-col relative z-10">
-                    <span class="font-bold text-gray-800 text-[13px] leading-tight line-clamp-2">${prod.name}</span>
+                    <span class="font-bold text-gray-800 text-[13px] leading-tight line-clamp-2 pr-4">${prod.name}</span>
                     <span class="text-red-600 font-extrabold text-sm mt-0.5">${prod.price.toFixed(2).replace('.', ',')} €</span>
                 </div>
                 ${bgIconHtml}
@@ -826,7 +854,7 @@
         
         function confirmCustomItem() {
             const name = document.getElementById('custom-name').value.trim() || 'Extra / Varios'; const price = parseFloat(document.getElementById('custom-price').value);
-            if (!price || price <= 0) return alert("Introduce un importe válido");
+            if (!price || price <= 0) return showCustomAlert("Introduce un importe válido");
             let cIcon = "✨"; if(name.toLowerCase().includes("churro")) cIcon = "🥖"; if(name.toLowerCase().includes("tabaco")) cIcon = "🚬"; if(name.toLowerCase().includes("propina")) cIcon = "💰";
             currentTicket.push({name: name.replace(/🥖|🚬|💰/, '').trim(), price: price, qty: 1, icon: cIcon, isNew: true});
             updateTicketUI(); closeCustomModal(); if (navigator.vibrate) navigator.vibrate(50);
@@ -848,10 +876,7 @@
             return consolidated;
         }
 
-        function closeTpv() { 
-            currentTicket = consolidateTicket(currentTicket); 
-            saveOpenTab(); loadData(); showScreen('screen-dashboard'); 
-        }
+        function closeTpv() { currentTicket = consolidateTicket(currentTicket); saveOpenTab(); loadData(); showScreen('screen-dashboard'); }
         function saveOpenTab() { localStorage.setItem('feria_open_tab', JSON.stringify(currentTicket)); }
 
         function openQtyModal(name, price, icon) {
@@ -864,14 +889,12 @@
         
         function confirmQty(qty) {
             let existing = currentTicket.find(p => p.name === tempProdName && p.isNew === true);
-            if (existing) existing.qty += qty; 
-            else currentTicket.push({name: tempProdName, price: tempProdPrice, qty: qty, icon: tempProdIcon, isNew: true});
-            
+            if (existing) existing.qty += qty; else currentTicket.push({name: tempProdName, price: tempProdPrice, qty: qty, icon: tempProdIcon, isNew: true});
             updateTicketUI(); closeQtyModal(); if (navigator.vibrate) navigator.vibrate(50);
         }
         
         function removeLineItem(index) { currentTicket.splice(index, 1); updateTicketUI(); }
-        function clearCurrentTicket() { if (confirm("¿Vaciar mesa?")) { currentTicket = []; updateTicketUI(); } }
+        function clearCurrentTicket() { showCustomConfirm("¿Seguro que quieres vaciar la mesa entera?", () => { currentTicket = []; updateTicketUI(); }); }
 
         function updateTicketUI() {
             ticketTotal = 0; currentTicket.forEach(i => { ticketTotal += (i.price * i.qty); });
@@ -884,48 +907,37 @@
                 btnConfirm.disabled = true; btnEmpty.classList.add('hidden'); listEl.innerHTML = '<p class="text-center text-gray-400 text-sm py-4 italic">No hay productos en la mesa aún</p>';
             } else {
                 btnConfirm.disabled = false; btnEmpty.classList.remove('hidden');
-                
                 listEl.innerHTML = currentTicket.map((item, idx) => {
                     const isNewClass = item.isNew ? 'bg-green-50 border-l-4 border-green-500 rounded-r-md' : 'border-b border-gray-200';
                     const newBadge = item.isNew ? '<span class="text-[9px] bg-green-500 text-white font-bold px-1.5 py-0.5 rounded shadow-xs ml-2 animate-pulse">✨ NUEVO</span>' : '';
                     const itemIcon = item.icon ? `<span class="text-xl">${item.icon}</span>` : `<span class="w-5"></span>`;
-                    
-                    return `
-                    <div class="flex justify-between items-center py-2 px-2.5 mb-1 last:mb-0 ${isNewClass}">
-                        <div class="flex items-center gap-2">
-                            ${itemIcon}
-                            <span class="font-bold text-gray-800 text-sm flex items-center">${item.qty}x ${item.name} ${newBadge}</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="font-bold text-gray-900">${(item.price * item.qty).toFixed(2).replace('.', ',')} €</span>
-                            <button onclick="removeLineItem(${idx})" class="text-red-500 bg-red-100 hover:bg-red-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fas fa-trash-alt text-xs"></i></button>
-                        </div>
-                    </div>`;
+                    return `<div class="flex justify-between items-center py-2 px-2.5 mb-1 last:mb-0 ${isNewClass}"><div class="flex items-center gap-2">${itemIcon}<span class="font-bold text-gray-800 text-sm flex items-center">${item.qty}x ${item.name} ${newBadge}</span></div><div class="flex items-center gap-3"><span class="font-bold text-gray-900">${(item.price * item.qty).toFixed(2).replace('.', ',')} €</span><button onclick="removeLineItem(${idx})" class="text-red-500 bg-red-100 hover:bg-red-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fas fa-trash-alt text-xs"></i></button></div></div>`;
                 }).join('');
                 listEl.scrollTop = listEl.scrollHeight;
             }
         }
 
         function confirmTicket() {
-            if (ticketTotal > balance) return alert("No tienes saldo suficiente. ¡Recarga tickets antes de pagar!");
-            
+            if (ticketTotal > balance) return showCustomAlert("No tienes saldo suficiente. ¡Recarga tickets antes de pagar!");
             currentTicket = consolidateTicket(currentTicket);
             
             const oldBalance = balance; balance -= ticketTotal; localStorage.setItem('feria_balance', balance.toString());
             const now = new Date(); const dateStr = now.toLocaleDateString('es-ES'); const timeStr = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
             if(!history[dateStr]) history[dateStr] = 0; history[dateStr] += ticketTotal; localStorage.setItem('feria_history', JSON.stringify(history));
 
-            const finalTicket = { id: Math.floor(Math.random() * 90000) + 10000, date: dateStr, time: timeStr, items: [...currentTicket], total: ticketTotal, oldBal: oldBalance, newBal: balance, socio: socioName };
+            let pts = 0;
+            currentTicket.forEach(i => { if (BEBIDAS_NAMES.includes(i.name)) pts += i.qty * (i.name.toLowerCase().includes("jarra") ? 5 : 1); });
+
+            const finalTicket = { id: Math.floor(Math.random() * 90000) + 10000, date: dateStr, time: timeStr, items: [...currentTicket], total: ticketTotal, oldBal: oldBalance, newBal: balance, socio: socioName, totalDrinkPoints: pts, pointsDist: { p1: 0, p2: 0, done: pts === 0 } };
             allTickets.unshift(finalTicket); localStorage.setItem('feria_all_tickets', JSON.stringify(allTickets));
             
-            let updatedFavs = false; currentTicket.forEach(item => { if (!favoriteNames.includes(item.name)) { favoriteNames.push(item.name); updatedFavs = true; } });
-            if (updatedFavs) { localStorage.setItem('feria_favorites', JSON.stringify(favoriteNames)); renderTpvMenu(); }
-
             currentTicket = []; localStorage.setItem('feria_open_tab', JSON.stringify([]));
-            receiptReturnScreen = 'screen-dashboard'; showReceipt(finalTicket);
+            receiptReturnScreen = 'screen-dashboard'; showReceipt(0); 
+            checkPendingRounds();
         }
 
-        function showReceipt(ticket) {
+        function showReceipt(idx) {
+            let ticket = allTickets[idx];
             document.getElementById('receipt-socio').innerText = ticket.socio || socioName;
             document.getElementById('receipt-datetime').innerText = `${ticket.date} - ${ticket.time}`; document.getElementById('receipt-id').innerText = ticket.id;
             document.getElementById('receipt-items').innerHTML = ticket.items.map(i => `<div class="flex justify-between items-center py-0.5"><span class="truncate pr-2">${i.qty}x ${i.icon || ''} ${i.name}</span><span class="whitespace-nowrap font-bold">${(i.qty * i.price).toFixed(2).replace('.', ',')} €</span></div>`).join('');
@@ -934,8 +946,10 @@
                 document.getElementById('receipt-old-bal-row').classList.remove('hidden'); document.getElementById('receipt-new-bal-row').classList.remove('hidden');
                 document.getElementById('receipt-old-balance').innerText = ticket.oldBal.toFixed(2).replace('.', ',') + ' €'; document.getElementById('receipt-new-balance').innerText = ticket.newBal.toFixed(2).replace('.', ',') + ' €';
             } else { document.getElementById('receipt-old-bal-row').classList.add('hidden'); document.getElementById('receipt-new-bal-row').classList.add('hidden'); }
+            
             document.getElementById('screen-receipt').classList.remove('hidden-screen');
         }
+
         function closeReceipt() { document.getElementById('screen-receipt').classList.add('hidden-screen'); loadData(); showScreen(receiptReturnScreen); }
 
         function openHistory() {
@@ -946,7 +960,7 @@
                 listEl.innerHTML += `<div onclick="viewHistoryTicket(${idx})" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 active:bg-gray-100 active:scale-[0.99] transition-all cursor-pointer hover:border-red-400"><div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2"><span class="text-xs font-bold text-gray-600 flex items-center gap-1.5"><i class="far fa-clock text-red-500"></i> ${ticket.date} - ${ticket.time}</span><span class="text-[11px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-bold">#${ticket.id}</span></div><p class="text-sm text-gray-700 mb-3 truncate font-medium">${itemsPreview}</p><div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border border-gray-100"><span class="text-xs font-bold text-red-700 bg-red-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-2xs"><i class="fas fa-receipt"></i> Ver Ticket</span><span class="font-extrabold text-red-600 text-lg">-${ticket.total.toFixed(2).replace('.', ',')} €</span></div></div>`;
             }); showScreen('screen-history-list');
         }
-        function viewHistoryTicket(idx) { receiptReturnScreen = 'screen-history-list'; showReceipt(allTickets[idx]); }
+        function viewHistoryTicket(idx) { receiptReturnScreen = 'screen-history-list'; showReceipt(idx); }
     </script>
 </body>
 </html>
