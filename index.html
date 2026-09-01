@@ -453,7 +453,7 @@
                         <span class="text-2xl font-black text-white flex items-center gap-1.5"><i class="fas fa-glass-cheers text-sm text-purple-400"></i> <span id="summary-items">0</span></span>
                     </div>
                     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex flex-col items-center">
-                        <span class="text-[10px] text-purple-200 uppercase font-bold mb-1 text-center leading-tight h-6">Día más fiestero</span>
+                        <span id="summary-items-label" class="text-[10px] text-purple-200 uppercase font-bold mb-1 text-center leading-tight h-6">Día más fiestero</span>
                         <span class="text-sm font-black text-white mt-1 leading-tight flex items-center gap-1.5"><i class="fas fa-calendar-star text-purple-400"></i> <span id="summary-top-day">-</span></span>
                     </div>
                 </div>
@@ -469,6 +469,100 @@
             <button onclick="closeFairSummary()" class="mt-6 w-full bg-white text-purple-900 font-black py-3.5 rounded-xl shadow-lg active:scale-95 transition-all text-base relative z-10">
                 ¡Olé mi Feria! Cerrar
             </button>
+        </div>
+    </div>
+
+    <!-- MODAL CANTIDAD (TPV) -->
+    <div id="modal-qty" class="absolute inset-0 bg-black/70 backdrop-blur-xs z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">¿Cuántas unidades?</h3>
+            <div id="modal-qty-name" class="text-xl font-bold text-gray-800 mb-6 flex flex-col items-center justify-center gap-2"></div>
+            
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <button onclick="confirmQty(1)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">1</button>
+                <button onclick="confirmQty(2)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">2</button>
+                <button onclick="confirmQty(3)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">3</button>
+                <button onclick="confirmQty(4)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">4</button>
+                <button onclick="confirmQty(5)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">5</button>
+                <button onclick="confirmQty(6)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">6</button>
+                <button onclick="confirmQty(7)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">7</button>
+                <button onclick="confirmQty(8)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">8</button>
+                <button onclick="confirmQty(9)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">9</button>
+                <button onclick="confirmQty(10)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">10</button>
+                <button onclick="confirmQty(15)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">15</button>
+                <button onclick="confirmQty(20)" class="bg-gray-100 active:bg-red-500 active:text-white py-4 rounded-2xl text-2xl font-bold transition-colors">20</button>
+            </div>
+            
+            <button onclick="closeQtyModal()" class="text-gray-500 font-bold py-3 w-full border-2 border-gray-200 rounded-xl active:bg-gray-100">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL: IMPORTE LIBRE / EXTRA -->
+    <div id="modal-custom" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg"><i class="fas fa-plus"></i></div>
+                <div>
+                    <h3 class="font-bold text-gray-900 text-lg">Añadir Extra / Libre</h3>
+                    <p class="text-xs text-gray-500">Para churros, tabaco o imprevistos</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 mb-5">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Concepto</label>
+                    <input type="text" id="custom-name" placeholder="Ej. Churros, Tabaco..." class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-base font-semibold focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Importe (€)</label>
+                    <input type="number" id="custom-price" placeholder="0.00" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-2xl font-bold text-purple-700 focus:outline-none focus:border-purple-500" inputmode="decimal">
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5 mb-6">
+                <button onclick="fillCustomPreset('🥖 Churros')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">🥖 Churros</button>
+                <button onclick="fillCustomPreset('🚬 Tabaco')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">🚬 Tabaco</button>
+                <button onclick="fillCustomPreset('💰 Propina')" class="text-xs bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg text-gray-700 font-medium">💰 Propina</button>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <button onclick="confirmCustomItem()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-base">Añadir a la Cuenta</button>
+                <button onclick="closeCustomModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl text-sm">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURACIÓN Y REINICIO -->
+    <div id="modal-reset" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl border border-gray-100">
+            <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl shadow-inner"><i class="fas fa-user-cog"></i></div>
+            <h3 class="text-xl font-bold text-gray-900 mb-1">Configurar y Reiniciar</h3>
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">Elige tu modalidad para empezar la feria con tu saldo exacto:</p>
+            <div class="text-left mb-3">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1 ml-1">Nombre del Socio / Pareja</label>
+                <input type="text" id="reset-input-name" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2 px-3 text-sm font-semibold focus:outline-none focus:border-red-500">
+            </div>
+            <div class="mb-5 text-left">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase mb-1.5 ml-1">Modalidad de Cuota</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="setResetType('couple')" id="reset-btn-couple" class="p-2.5 border-2 border-red-600 bg-red-50 text-red-900 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all"><span>👫 Matrimonio</span><span class="text-sm font-extrabold text-red-600">360,00 €</span></button>
+                    <button type="button" onclick="setResetType('single')" id="reset-btn-single" class="p-2.5 border-2 border-gray-200 bg-white text-gray-700 rounded-xl font-bold text-xs flex flex-col items-center gap-0.5 transition-all opacity-60"><span>👤 Soltero(a)</span><span class="text-sm font-extrabold text-gray-800">180,00 €</span></button>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2.5">
+                <button onclick="executeReset()" class="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">Guardar y Reiniciar a Cero</button>
+                <button onclick="closeResetModal()" class="w-full bg-gray-100 text-gray-700 font-semibold py-2.5 rounded-xl transition-all text-xs">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RESUMEN VACÍO -->
+    <div id="modal-empty-summary" class="absolute inset-0 bg-black/75 backdrop-blur-sm z-50 hidden-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
+            <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">🍻</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">¡El vaso está vacío!</h3>
+            <p class="text-sm text-gray-500 mb-6">Aún no hay gastos registrados. Tómate algo primero en la barra para empezar a sumar puntos en el Chupómetro.</p>
+            <button onclick="closeEmptySummaryModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all text-sm">Ir a pedir algo</button>
         </div>
     </div>
 
@@ -667,9 +761,8 @@
         function savePendingRound() {
             allTickets[currentPendingIdx].pointsDist = { p1: tempP1, p2: tempP2, done: true };
             localStorage.setItem('feria_all_tickets', JSON.stringify(allTickets));
-            openPendingRounds(); // Salta a la siguiente ronda si la hay, o cierra.
+            openPendingRounds(); 
         }
-
 
         function openPrivacyModal() { document.getElementById('modal-privacy').classList.remove('hidden-screen'); }
         function closePrivacyModal() { document.getElementById('modal-privacy').classList.add('hidden-screen'); }
@@ -814,15 +907,17 @@
             const starIcon = isFav ? `<i class="fas fa-star text-yellow-400"></i>` : `<i class="far fa-star text-gray-300"></i>`;
             
             return `
-            <button onclick="openQtyModal('${prod.name}', ${prod.price}, '${prod.icon}')" class="product-card p-3 text-left flex flex-col justify-between h-28 relative overflow-hidden group">
-                <div class="absolute top-2 right-2 text-xl z-20" onclick="toggleFav(event, '${prod.name}')">${starIcon}</div>
-                ${iconHtml}
-                <div class="flex flex-col relative z-10">
+            <div onclick="openQtyModal('${prod.name}', ${prod.price}, '${prod.icon}')" class="product-card p-3 text-left flex flex-col justify-between h-28 relative overflow-hidden group cursor-pointer">
+                <div class="absolute top-1 right-1 text-2xl z-30 p-2" onclick="toggleFav(event, '${prod.name}')">${starIcon}</div>
+                <div class="pointer-events-none">
+                    ${iconHtml}
+                </div>
+                <div class="flex flex-col relative z-10 pointer-events-none">
                     <span class="font-bold text-gray-800 text-[13px] leading-tight line-clamp-2 pr-4">${prod.name}</span>
                     <span class="text-red-600 font-extrabold text-sm mt-0.5">${prod.price.toFixed(2).replace('.', ',')} €</span>
                 </div>
                 ${bgIconHtml}
-            </button>`;
+            </div>`;
         }
 
         function showCategory(catId) {
